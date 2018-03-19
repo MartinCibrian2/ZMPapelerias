@@ -31,6 +31,7 @@ interface Producto {
 export class VentasPage implements OnInit {
   //productos: Producto[];
   productos: any[];
+  productoporcomprar: string;
   constructor(public navCtrl: NavController, public navParams: NavParams,private http:HttpClient, public ListaProductos: DatosVentasProvider) {
   }
   ngOnInit(): void 
@@ -51,7 +52,7 @@ export class VentasPage implements OnInit {
     )
       }    
 
-    
+  agregaproducto(productoporcomprar) { console.log(productoporcomprar);  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VentasPage');

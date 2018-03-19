@@ -13,21 +13,9 @@
 </ion-header>
 <ion-content>
   <ion-list inset>
-    <!--
-    // <ion-item *ngFor="let user of productos">
-      <h2>{{user.key}}</h2>
-      <p>{{user.value}}</p>
+    <ion-item *ngFor="let producto of productos">
+      <h2 (click) = "agregaproducto(producto.value)" >{{producto.key}}</h2>
+      <p>{{producto.value}}</p>
     </ion-item>
-    -->
-
   </ion-list>
-  <ul>
-      <li *ngFor="let producto of productos">
-          {{producto.key}}
-      </li> 
-  </ul>
-</ion-content>
-
-<ion-content padding>
-
 </ion-content>
