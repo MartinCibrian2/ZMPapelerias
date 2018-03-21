@@ -14,5 +14,39 @@
 
 
 <ion-content padding>
-
-</ion-content>
+	<ion-grid>
+		<ion-row >
+			<ion-col col-12 >	
+				<ion-input [(ngModel)]="nombre" name="nombre" placeholder="Nombre del Producto"></ion-input>
+				<hr class="horizontal">	
+				<ion-input [(ngModel)]="descripcion" name="descripcion" placeholder="Descripcion detallada"></ion-input>
+        <hr class="horizontal">	
+        <ion-input [(ngModel)]="unidad" name="unidad" placeholder="Unidad de venta"></ion-input>
+				<hr class="horizontal">	
+				<ion-input [(ngModel)]="preciopublico" name="preciopublico" placeholder="Precio al Publico"></ion-input>
+        <hr class="horizontal">	
+        <ion-input [(ngModel)]="costo" name="costo" placeholder="Costo de Adquisicion"></ion-input>
+				<hr class="horizontal">	
+				<ion-input [(ngModel)]="descuentomayoreo" name="descuentomayoreo" placeholder="Descuento por mayoreo"></ion-input>
+        <hr class="horizontal">	
+        <ion-input [(ngModel)]="descuentomaximo" name="descuentomaximo" placeholder="Descuento maximo del producto"></ion-input>
+        <hr class="horizontal">	
+        <ion-input [(ngModel)]="mayoreo" name="mayoreo" placeholder="Cantidad para aplicar mayoreo"></ion-input>
+				<hr class="horizontal">	
+				<ion-input [(ngModel)]="iva" name="iva" placeholder="Tasa de Impuesto iva"></ion-input>
+        <hr class="horizontal">	
+        <ion-input [(ngModel)]="inventariominimo" name="inventariominimo" placeholder="Cantidad minima de inventario"></ion-input>
+				<hr class="horizontal">	
+				<ion-input [(ngModel)]="inventarioactual" name="inventarioactual" placeholder="Existencia actual"></ion-input>
+        <hr class="horizontal">	
+			</ion-col>
+			<ion-col col-3 >
+			</ion-col>
+			<ion-col col-6 >
+				<button ion-button color="secondary"  (click)="nuevoproducto()">Crear Producto</button>
+			</ion-col>
+			<ion-col col-3 >
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-content> 

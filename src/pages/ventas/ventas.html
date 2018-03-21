@@ -14,8 +14,8 @@
 <ion-content>
   <ion-list inset>
     <ion-item *ngFor="let producto of productos">
-      <h2 (click) = "agregaproducto(producto.value)" >{{producto.key}}</h2>
-      <p>{{producto.value}}</p>
+      <h2 (click) = "agregaproducto(producto._id)" >{{producto.nombre}}</h2>
+      <p>{{producto.descripcion}}</p>
     </ion-item>
   </ion-list>
 </ion-content>
