@@ -9,12 +9,34 @@
   <ion-navbar>
     <ion-title>Ventas</ion-title>
   </ion-navbar>
-
 </ion-header>
 <ion-content>
+  <table style="width:100%">
+    <tr>
+      <th>Cantidad</th>
+      <th>Articulo</th>
+      <th>Precio</th>
+      <th>Descuento</th>
+      <th>Importe</th>
+    </tr>
+    <tr *ngFor="let art of detalleticket ">
+      <td>{{art.cantidadart}}</td>
+      <td>{{art.nombreart}}</td>
+      <td>{{art.precioart}}</td>
+      <td>{{art.descuentoart}}</td>
+      <td>{{art.importeart}}</td>
+    </tr>
+    <tr>
+      <td>Eve</td>
+      <td>Jackson</td>
+      <td>94</td>
+    </tr>
+  </table> 
   <ion-list inset>
     <ion-item *ngFor="let producto of productos">
-      <h2 (click) = "agregaproducto(producto._id)" >{{producto.nombre}}</h2>
+
+<button ion-button round outline (click) = "agregaproducto(producto._id)" >{{producto.nombre}}</button>
+ <!--     <h2 (click) = "agregaproducto(producto._id)" >{{producto.nombre}}</h2> -->
       <p>{{producto.descripcion}}</p>
     </ion-item>
   </ion-list>

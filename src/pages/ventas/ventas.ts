@@ -14,7 +14,7 @@ import {
  import { LoadingController } from 'ionic-angular';
  import { AlertController } from 'ionic-angular';
  import PouchDB from 'pouchdb';
-
+ import { lineaticket } from '../../app/datos';
 /**
  * Generated class for the VentasPage page.
  *
@@ -37,14 +37,27 @@ interface Producto {
   inventarioactual:string
  }
 
+interface Ticketenc 
+{
+  folio:number;
+  estado:string;
+  clienteid:string;
+  clientenom:string;
+  fecha:Date;
+  subtotal:number;
+  impuesto:number;
+  total:number
+}
+
 @IonicPage()
 @Component({
   selector: 'page-ventas',
   templateUrl: 'ventas.html',
 })
 export class VentasPage implements OnInit {
-  //productos: Producto[];
   productos: any[];
+  ticketenc: Ticketenc;
+  detalleticket: any[];
   productoporcomprar: string;
   datos: Producto[];
   remoto:any;
@@ -52,7 +65,7 @@ export class VentasPage implements OnInit {
   datoslocales:Producto[];
   productonombre:any;
   productoprecio:any;
-
+  articulo: Producto;
   constructor
   ( public navCtrl: NavController, public navParams: NavParams,private http:HttpClient, 
     public ListaProductos: DatosVentasProvider, public alertCtrl: AlertController
@@ -61,20 +74,64 @@ export class VentasPage implements OnInit {
   }
 
 
+
   ngOnInit(): void 
   {
    this.obtenlista();         
   }
 
-  obtenlista() {
-      this.ListaProductos.ListalosProductos().then((datos) => {
+  obtenlista() 
+    {
+      this.ListaProductos.ListalosProductos().then((datos) => 
+      {
         this.productos = datos;
         console.log(datos)
       });
    
     } 
 
-  agregaproducto(productoporcomprar) { console.log(productoporcomprar);  }
+  agregaproducto(productoporcomprar) 
+  { 
+    console.log('El producto a comprar es' + productoporcomprar);  
+   // this.ticket.push ( this.productos.find ( articulo => articulo.id == productoporcomprar ));
+   this.articulo =  this.productos.find ( articulo => articulo._id == productoporcomprar );
+   console.log('El articulo a comprar es ' + this.articulo.nombre);
+   console.log(this.articulo);
+   console.log(parseFloat(this.articulo.preciopublico));
+
+   var ticketidarticulo:string = productoporcomprar;
+   console.log(ticketidarticulo);
+   var ticketnombreart = this.articulo.nombre;
+   console.log(ticketnombreart)
+    var ticketunidadart = this.articulo.unidad;
+   console.log(ticketunidadart);
+   var ticketcantidadart = 2;
+   console.log(ticketcantidadart);
+   var ticketprecioart = parseFloat (this.articulo.preciopublico);
+   console.log(ticketprecioart);
+   var ticketdescuentoart = parseFloat (this.articulo.descuentomayoreo);
+   console.log(ticketdescuentoart);
+   var ticketivaart = parseFloat(this.articulo.iva);
+   console.log(ticketivaart);
+   var ticketimporteart = ( ticketcantidadart * ticketprecioart);
+   console.log(ticketimporteart);
+   if (this.detalleticket == undefined) 
+    {
+      this.detalleticket = 
+      [ 
+        new lineaticket(ticketidarticulo,ticketnombreart, ticketunidadart, ticketcantidadart, ticketprecioart, ticketdescuentoart, ticketivaart, ticketimporteart )
+      ];
+    }
+    else 
+    {
+      this.detalleticket.push 
+      (
+        new lineaticket(ticketidarticulo,ticketnombreart, ticketunidadart, ticketcantidadart, ticketprecioart, ticketdescuentoart, ticketivaart, ticketimporteart ),
+      );
+    }
+   //this.ticket.push ( this.ticketart );
+   console.log(this.detalleticket);
+     }
 
 
  

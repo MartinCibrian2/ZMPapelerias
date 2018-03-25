@@ -17,26 +17,37 @@
 	<ion-grid>
 		<ion-row >
 			<ion-col col-12 >	
+					<ion-label stacked>Nombre</ion-label>
 				<ion-input [(ngModel)]="nombre" name="nombre" placeholder="Nombre del Producto"></ion-input>
 				<hr class="horizontal">	
+				<ion-label stacked>Descripcion</ion-label>
 				<ion-input [(ngModel)]="descripcion" name="descripcion" placeholder="Descripcion detallada"></ion-input>
-        <hr class="horizontal">	
-        <ion-input [(ngModel)]="unidad" name="unidad" placeholder="Unidad de venta"></ion-input>
 				<hr class="horizontal">	
+				<ion-label stacked>Unidad de Venta</ion-label>
+        <ion-input [(ngModel)]="unidad" name="unidad" placeholder="Unidad de venta"></ion-input>
+				<hr class="horizontal">
+				<ion-label stacked>Precio de Lista</ion-label>
 				<ion-input [(ngModel)]="preciopublico" name="preciopublico" placeholder="Precio al Publico"></ion-input>
-        <hr class="horizontal">	
+				<hr class="horizontal">
+				<ion-label stacked>Costo</ion-label>
         <ion-input [(ngModel)]="costo" name="costo" placeholder="Costo de Adquisicion"></ion-input>
 				<hr class="horizontal">	
+				<ion-label stacked>Descuento de Mayoreo</ion-label>
 				<ion-input [(ngModel)]="descuentomayoreo" name="descuentomayoreo" placeholder="Descuento por mayoreo"></ion-input>
-        <hr class="horizontal">	
+				<hr class="horizontal">	
+				<ion-label stacked>Descuento Maximo</ion-label>
         <ion-input [(ngModel)]="descuentomaximo" name="descuentomaximo" placeholder="Descuento maximo del producto"></ion-input>
-        <hr class="horizontal">	
+				<hr class="horizontal">	
+				<ion-label stacked>Cantidad para aplicar mayoreo</ion-label>
         <ion-input [(ngModel)]="mayoreo" name="mayoreo" placeholder="Cantidad para aplicar mayoreo"></ion-input>
 				<hr class="horizontal">	
+				<ion-label stacked>Tasa de IVA</ion-label>
 				<ion-input [(ngModel)]="iva" name="iva" placeholder="Tasa de Impuesto iva"></ion-input>
-        <hr class="horizontal">	
+				<hr class="horizontal">
+				<ion-label stacked>Inventario Minimo</ion-label>
         <ion-input [(ngModel)]="inventariominimo" name="inventariominimo" placeholder="Cantidad minima de inventario"></ion-input>
 				<hr class="horizontal">	
+				<ion-label stacked>Existencias</ion-label>
 				<ion-input [(ngModel)]="inventarioactual" name="inventarioactual" placeholder="Existencia actual"></ion-input>
         <hr class="horizontal">	
 			</ion-col>

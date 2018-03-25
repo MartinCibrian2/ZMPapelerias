@@ -26,6 +26,7 @@ export class ComprasPage {
   iva:any;
   inventariominimo:any;
   inventarioactual:any;
+
   constructor
   ( public navCtrl: NavController, public navParams: NavParams, 
     public ListaProductos: DatosVentasProvider
@@ -43,16 +44,27 @@ export class ComprasPage {
         "nombre": this.nombre,
         "descripcion": this.descripcion,
         "unidad": this.unidad,
-        "precio-publico": this.preciopublico,
+        "preciopublico": this.preciopublico,
         "costo": this.costo,
-        "descuento-mayoreo": this.descuentomayoreo,
-        "descuento-maximo": this.descuentomaximo,
+        "descuentomayoreo": this.descuentomayoreo,
+        "descuentomaximo": this.descuentomaximo,
         "mayoreo": this.mayoreo,
         "iva": this.iva,
-        "inventario-minimo": this.inventariominimo,
-        "inventario-actual": this.inventarioactual
+        "inventariominimo": this.inventariominimo,
+        "inventarioactual": this.inventarioactual
       };
       this.ListaProductos.creaunproducto(productonuevo);
+      this.nombre="";
+      this.descripcion="";
+      this.unidad="";
+      this.preciopublico="";
+      this.costo="";
+      this.descuentomayoreo="";
+      this.descuentomaximo="";
+      this.mayoreo="";
+      this.iva="";
+      this.inventariominimo="";
+      this.inventarioactual="";
     }
   }
 

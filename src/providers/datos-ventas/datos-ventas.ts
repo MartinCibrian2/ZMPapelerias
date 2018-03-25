@@ -10,10 +10,7 @@ import {
    debounceTime, distinctUntilChanged, switchMap
  } from 'rxjs/operators';
 
-
- 
-
-/*
+ /*
   Generated class for the DatosVentasProvider provider.
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
