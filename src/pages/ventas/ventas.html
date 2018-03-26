@@ -11,32 +11,31 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <table style="width:100%">
-    <tr>
-      <th>Cantidad</th>
+    <p>Ticket de Venta</p>
+  <table style="width:80%">
+    <tr border= "3px solid red">
+      <th >Cantidad</th>
       <th>Articulo</th>
       <th>Precio</th>
       <th>Descuento</th>
       <th>Importe</th>
     </tr>
     <tr *ngFor="let art of detalleticket ">
-      <td>{{art.cantidadart}}</td>
-      <td>{{art.nombreart}}</td>
-      <td>{{art.precioart}}</td>
-      <td>{{art.descuentoart}}</td>
-      <td>{{art.importeart}}</td>
-    </tr>
-    <tr>
-      <td>Eve</td>
-      <td>Jackson</td>
-      <td>94</td>
+      <td class="detalletexto">{{art.cantidadart}}</td>
+      <td class="detalletexto">{{art.nombreart}}</td>
+      <td class="detalletexto">{{art.precioart}}</td>
+      <td class="detalletexto">{{art.descuentoart}}</td>
+      <td class="detalletexto">{{art.importeart}}</td>
     </tr>
   </table> 
+  <div *ngIf="(detalleticket != undefined)">
+      <p>Total del ticket = $ {{encticket.total}}</p>
+    </div>
   <ion-list inset>
     <ion-item *ngFor="let producto of productos">
 
 <button ion-button round outline (click) = "agregaproducto(producto._id)" >{{producto.nombre}}</button>
- <!--     <h2 (click) = "agregaproducto(producto._id)" >{{producto.nombre}}</h2> -->
+<button ion-button color="danger" round outline  (click) = "borrarproducto(producto._id,producto._rev)" ><ion-icon name="trash"></ion-icon> Borrar </button>
       <p>{{producto.descripcion}}</p>
     </ion-item>
   </ion-list>

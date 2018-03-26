@@ -14,7 +14,7 @@ import {
  import { LoadingController } from 'ionic-angular';
  import { AlertController } from 'ionic-angular';
  import PouchDB from 'pouchdb';
- import { lineaticket } from '../../app/datos';
+ import { lineaticket,encabezadoticket } from '../../app/datos';
 /**
  * Generated class for the VentasPage page.
  *
@@ -58,6 +58,7 @@ export class VentasPage implements OnInit {
   productos: any[];
   ticketenc: Ticketenc;
   detalleticket: any[];
+  encticket:any;
   productoporcomprar: string;
   datos: Producto[];
   remoto:any;
@@ -98,44 +99,72 @@ export class VentasPage implements OnInit {
    console.log('El articulo a comprar es ' + this.articulo.nombre);
    console.log(this.articulo);
    console.log(parseFloat(this.articulo.preciopublico));
-
+   var totalticket:number;
    var ticketidarticulo:string = productoporcomprar;
    console.log(ticketidarticulo);
    var ticketnombreart = this.articulo.nombre;
-   console.log(ticketnombreart)
-    var ticketunidadart = this.articulo.unidad;
-   console.log(ticketunidadart);
-   var ticketcantidadart = 2;
-   console.log(ticketcantidadart);
+   var ticketunidadart = this.articulo.unidad;
+   var ticketcantidadart = 1;
    var ticketprecioart = parseFloat (this.articulo.preciopublico);
-   console.log(ticketprecioart);
    var ticketdescuentoart = parseFloat (this.articulo.descuentomayoreo);
-   console.log(ticketdescuentoart);
    var ticketivaart = parseFloat(this.articulo.iva);
-   console.log(ticketivaart);
    var ticketimporteart = ( ticketcantidadart * ticketprecioart);
-   console.log(ticketimporteart);
    if (this.detalleticket == undefined) 
     {
+      totalticket=0;
+      totalticket= ticketimporteart;
       this.detalleticket = 
       [ 
         new lineaticket(ticketidarticulo,ticketnombreart, ticketunidadart, ticketcantidadart, ticketprecioart, ticketdescuentoart, ticketivaart, ticketimporteart )
       ];
-    }
-    else 
-    {
-      this.detalleticket.push 
+      this.encticket =
       (
-        new lineaticket(ticketidarticulo,ticketnombreart, ticketunidadart, ticketcantidadart, ticketprecioart, ticketdescuentoart, ticketivaart, ticketimporteart ),
+        new encabezadoticket(1,"pagado","aad34-234df","Publico en general","AARR-001122-MK5", "gastos generales", "Efectivo", "24-03-2018","Cihuatlan",48970, totalticket)
       );
     }
-   //this.ticket.push ( this.ticketart );
-   console.log(this.detalleticket);
-     }
+    else
+    {
+      let encontrado:boolean;
+      encontrado = false;
+      let idtemp:string;
+      let longitud:number;
+      longitud = this.detalleticket.length;
+      console.log("La longitud es: "+ longitud);
+      for (var i = 0; i < longitud; i++) {
+        idtemp = this.detalleticket[i].idarticulo;
+        if (idtemp == productoporcomprar) {
+          this.detalleticket[i].cantidadart += 1;
+          this.detalleticket[i].importeart = this.detalleticket[i].cantidadart * this.detalleticket[i].precioart;
+          ticketimporteart = this.detalleticket[i].importeart;
+          encontrado = true;
+        }
+      }
+      totalticket=0;
+
+      if (encontrado)
+      {
+        totalticket= ticketimporteart;
+        this.encticket.total = (parseFloat(this.encticket.total) + ticketprecioart);
+        console.log("articulo encontrado en el array");
+      }
+      else 
+      {
+        totalticket= ticketimporteart;
+        this.encticket.total = (parseFloat(this.encticket.total) + totalticket);
+        this.detalleticket.push 
+        (
+          new lineaticket(ticketidarticulo,ticketnombreart, ticketunidadart, ticketcantidadart, ticketprecioart, ticketdescuentoart, ticketivaart, ticketimporteart ),
+        )
+      }
+
+    }
+  }
 
 
- 
-
+  borrarproducto(productoporborrar,productoporborrarrev) 
+  {
+    this.ListaProductos.borraunproducto(productoporborrar,productoporborrarrev);
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VentasPage');

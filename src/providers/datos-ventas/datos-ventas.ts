@@ -83,6 +83,13 @@ export class DatosVentasProvider
           console.log(err);
         });
       }
+    	borraunproducto (idproducto,revproducto) {
+        this.PouchDBLocal.remove(idproducto,revproducto).then(function (response) {
+          console.log("se borro el producto:"+ idproducto + revproducto);
+          }).catch(function (err) {
+          console.log(err);
+        });
+      }
 
       handleChange(change){
 

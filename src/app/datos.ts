@@ -13,3 +13,22 @@ export class lineaticket {
       { 
       }
   }
+
+  export class encabezadoticket {
+    constructor
+    (
+      public folio:number,
+      public estadoticket:string,
+      public idcliente: string,
+      public nombrecliente: string,
+      public rfccliente:string,
+      public usofactcliente:string,
+      public formapagocliente:string,
+      public fecha:string,
+      public lugar:string,
+      public codigopostal:number,
+      public total:number
+    )
+      { 
+      }
+  }
