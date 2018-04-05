@@ -1,4 +1,5 @@
 export class lineaticket {
+<<<<<<< HEAD
     constructor
     (
       public idarticulo: string,
@@ -32,3 +33,19 @@ export class lineaticket {
       { 
       }
   }
+=======
+  constructor(
+    public idarticulo: string,
+    public nombreart: string,
+    public unidadart:string,
+    public cantidadart:number,
+    public precioart:number,
+    public descuentoart:number,
+    public ivaart:string,
+    public importeart:number,
+    public claveProdServ: any
+  ){
+    
+  }
+}
+>>>>>>> 4ec404ccf33e868881f00d8b35260610e7c8551f

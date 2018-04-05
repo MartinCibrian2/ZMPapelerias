@@ -1,15 +1,10 @@
-<!--
-  Generated template for the VentasPage page.
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>Ventas</ion-title>
+    <ion-title>Ventas - ZMPapelerias</ion-title>
   </ion-navbar>
 </ion-header>
+<<<<<<< HEAD
 <ion-content>
     <p>Ticket de Venta</p>
   <table style="width:80%">
@@ -36,6 +31,53 @@
 
 <button ion-button round outline (click) = "agregaproducto(producto._id)" >{{producto.nombre}}</button>
 <button ion-button color="danger" round outline  (click) = "borrarproducto(producto._id,producto._rev)" ><ion-icon name="trash"></ion-icon> Borrar </button>
+=======
+
+<ion-content padding="">
+    <h2>
+        Realizar Venta
+    </h2>
+
+    <ion-grid>
+        <ion-card>
+            <ion-card-header>
+                <ion-buttons>
+                    Lista de venta
+                </ion-buttons>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-row>
+                    <ion-col>Cant.</ion-col>
+                    <ion-col>Articulo</ion-col>
+                    <ion-col>Precio</ion-col>
+                    <ion-col>Prec. Sug.</ion-col>
+                    <ion-col>Desc.</ion-col>
+                </ion-row>
+                <ion-row *ngFor="let item of detalleticket; let i= index">
+                    <ion-col>{{ item.cantidadart }}</ion-col>
+                    <ion-col>{{ item.nombreart }}</ion-col>
+                    <ion-col>$ {{ item.precioart }}</ion-col>
+                    <ion-col>$ {{ item.descuentoart }}</ion-col>
+                    <ion-col>$ {{ item.importeart }}</ion-col>
+                </ion-row>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-row>
+            <button ion-button block (click)="closeBuy( )"
+                    [disabled]="!detalleticket.length">
+                Cerrar Compra
+            </button>
+        </ion-row>
+    </ion-grid>
+
+  <ion-list inset>
+    <ion-item *ngFor="let producto of productos">
+
+    <button ion-button round outline (click) = "agregaproducto(producto._id)" >
+      {{producto.nombre}}
+    </button>
+>>>>>>> 4ec404ccf33e868881f00d8b35260610e7c8551f
       <p>{{producto.descripcion}}</p>
     </ion-item>
   </ion-list>

@@ -1,0 +1,51 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Facturación - ZMPapelerias</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <h2>
+        Realizar Factura
+    </h2>
+
+    <form novalidate [formGroup]="checkinForm" (submit)="makeBill()">
+        <ion-grid>
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <ion-label staked>
+                        Cliente
+                    </ion-label>
+                    <ion-input  formControlName="client" placeholder="Nombre de persona física o moral"></ion-input>
+                </ion-item>
+            </ion-row>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <ion-label staked>
+                        RFC
+                    </ion-label>
+                    <ion-input  formControlName="rfc" placeholder="Registro Federal de Contriyentes"></ion-input>
+                </ion-item>
+            </ion-row>
+
+            <ion-item col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-label staket>Tickets </ion-label>
+                <ion-select  formControlName="tickets" multiple="true">
+                    <ion-option *ngFor="let _ticket of tickets" value="{{_ticket._id}}">
+                            {{ _ticket['NoIdentificacion'] }}
+                    </ion-option>
+                </ion-select>
+            </ion-item>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <button ion-button block 
+                        type="submit"
+                        [disabled]="checkinForm.invalid">
+                    Facturar
+                </button>
+            </ion-row>
+        </ion-grid>
+    </form>
+
+</ion-content>

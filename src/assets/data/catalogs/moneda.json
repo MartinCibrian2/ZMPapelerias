@@ -1,0 +1,15 @@
+{
+    "c_Moneda": [
+        {
+            "c_Moneda": "MXN",
+            "Descripción": "Peso Mexicano",
+            "Decimales": 2,
+            "Porcentaje variación": "35%"
+        }, {
+            "c_Moneda": "USD",
+            "Descripción": "Dolar Americano",
+            "Decimales": 2,
+            "Porcentaje variación": "35%"
+        }
+    ]
+}

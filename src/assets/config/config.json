@@ -1,0 +1,27 @@
+{
+    "env": "developement",
+    "dir": "",
+    "paths" : {
+        "ventas":     "inventario",
+        "compras":    "inventario",
+        "billing":    "billing",
+        "clients":    "client"
+    },
+    "databases": {
+        "inventory": {
+            "database": "inventario",
+            "views": {
+                "productosxnombre": "/_design/productos_x_nombre/_view/productosxnombre"
+            }
+        },
+        "tickets": {
+            "database": "ticket"
+        },
+        "billing": {
+            "database": "facturacion"
+        },
+        "clients": {
+            "database": "cliente"
+        }
+    }
+}

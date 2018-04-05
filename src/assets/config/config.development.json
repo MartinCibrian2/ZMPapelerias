@@ -1,0 +1,5 @@
+{
+    "host": "http://admin:1957@localhost:5984/",
+    "dir": "",
+    "paths" : {}
+}
