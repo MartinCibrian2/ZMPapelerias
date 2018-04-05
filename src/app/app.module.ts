@@ -6,6 +6,11 @@ import { MyApp } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 
+// Import modules custom
+import { ConfiguracionPageModule } from '../pages/configuracion/configuracion.module';
+import { AddClientPageModule } from '../pages/configuracion/clients/add/add-client.module';
+import { EditClientPageModule } from '../pages/configuracion/clients/edit/edit-client.module';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { DatosVentasProvider } from '../providers/datos-ventas/datos-ventas';
@@ -13,7 +18,6 @@ import { DatosVentasProvider } from '../providers/datos-ventas/datos-ventas';
 import { BillingPage } from '../pages/billing/billing';
 import { ClientsPage } from '../pages/configuracion/clients/clients';
 import { ClientPage } from '../pages/configuracion/clients/client/client';
-import { AddClientPage } from '../pages/configuracion/clients/add/add-client';
 
 import { AppSettings } from './common/api.path';
 import { LoadSettings } from './common/load.settings';
@@ -28,23 +32,26 @@ import { SearchPipe } from './pipes/search.pipe';
     BillingPage,
     ClientsPage,
     ClientPage,
-    AddClientPage,
 
     SearchPipe
   ],
   imports: [
-    BrowserModule,HttpClientModule,
+    BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot( MyApp ),
     CommonModule,
-    HttpModule
+    HttpModule,
+    // Import modules custom
+    ConfiguracionPageModule,
+    AddClientPageModule,
+    EditClientPageModule
   ],
   bootstrap: [ IonicApp ],
   entryComponents: [
     MyApp,
     BillingPage,
     ClientsPage,
-    ClientPage,
-    AddClientPage
+    ClientPage
   ],
   providers: [
     StatusBar,

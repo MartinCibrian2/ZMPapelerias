@@ -9,5 +9,8 @@ import { ConfiguracionPage } from './configuracion';
     imports: [
         IonicPageModule.forChild( ConfiguracionPage ),
     ],
+    exports: [
+        
+    ]
 })
 export class ConfiguracionPageModule {}

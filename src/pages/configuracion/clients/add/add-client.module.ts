@@ -7,7 +7,10 @@ import { AddClientPage } from './add-client';
     AddClientPage,
   ],
   imports: [
-    IonicPageModule.forChild( AddClientPage ),
+    IonicPageModule.forChild( AddClientPage )
   ],
+  exports: [
+    AddClientPage
+  ]
 })
 export class AddClientPageModule {}

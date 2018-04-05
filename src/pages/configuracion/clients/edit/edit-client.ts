@@ -8,12 +8,12 @@ import { ClientsPage } from '../clients';
 @IonicPage()
 @Component({
   selector: 'page-client',
-  templateUrl: 'add-client.html',
+  templateUrl: '../add/add-client.html',
   providers: [
       ClientService
   ]
 })
-export class AddClientPage implements OnInit
+export class EditClientPage implements OnInit
 {
     public title: string;
     // Form
@@ -26,7 +26,7 @@ export class AddClientPage implements OnInit
         public frmBuilder: FormBuilder,
         private clientService: ClientService
     ){
-        this.title         = "Registrar";
+        this.title         = "Actualizar";
         this.clientForm    = this.makeForm();
     }
 
@@ -35,7 +35,7 @@ export class AddClientPage implements OnInit
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad AddClientPage');
+        console.log('ionViewDidLoad EditClientPage');
     }
 
     saveClient( ): void {
@@ -43,7 +43,7 @@ export class AddClientPage implements OnInit
             var _doc   = this.clientForm.value;
 
             this.clientService
-            .post( _doc )
+            .put( _doc )
             .then(( response ) => {
                 console.log( JSON.stringify( response ))
                 this.navCtlr.setRoot( ClientsPage );
@@ -64,6 +64,26 @@ export class AddClientPage implements OnInit
             'rfc':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             'tel':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]]
         };
+
+        if( Object.keys( this.navParams.data ).length ){
+            if( this.navParams.data.hasOwnProperty('item') ){
+                this.item    = this.navParams.data.item;
+                Object
+                .keys( this.item )
+                .forEach(( _field ) => {
+                    //if( _group.hasOwnProperty( _field )){
+                        let _val    = this.item[ _field ];
+                        _group[ _field ]   = _val;
+                    /*} else {
+                        // The name field does not exist in form.
+                    }*/
+                });
+            } else {
+                // Do not sent data.
+            }
+        } else {
+            // Do not sent data.
+        }
 
         return this.frmBuilder.group( _group );
     }

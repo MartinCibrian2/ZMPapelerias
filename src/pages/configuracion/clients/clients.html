@@ -1,7 +1,7 @@
 
 <ion-header>
     <ion-navbar>
-        <ion-title>Clients - ZMPapelerias</ion-title>
+        <ion-title>Clientes - ZMPapelerias</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -21,13 +21,16 @@
         </ion-row>
     </ion-grid>
     <ion-list>
-        <button ion-item *ngFor="let item of clients | search: searching" (click)="openNavDetailsClient( item )" icon-start>
+        <button ion-item *ngFor="let item of clients | search: searching" 
+                (click)="openNavDetailsClient( item )" icon-start>
         <!-- <ion-icon [name]="'logo-' + item.icon" [ngStyle]="{'color': item.color}" item-start></ion-icon> -->
         {{ item.nombre }} <small>{{ item.rfc }}</small>
         </button>
     </ion-list>
 
-    <div class="form-group">
-        <textarea class="form-control" rows="8" style="font-family: Courier New; font-size: 10px; min-width: 100%">{{ dataPouchdbString }}</textarea>
-    </div>
+    <!-- <div class="form-group">
+        <textarea class="form-control" rows="8" style="font-family: Courier New; font-size: 10px; min-width: 100%">
+            {{ dataPouchdbString }}
+        </textarea>
+    </div> -->
 </ion-content>

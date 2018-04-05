@@ -41,7 +41,7 @@ export class PouchDbAdapter {
     }
     // pretty basic and crude function
     // return a Promise with the first 20 docs from allDocs as is
-    get20Docs(): Promise<any> {
+    getDocs(): Promise<any> {
         return new Promise(resolve => {
             this._pouchDB.allDocs({
                 include_docs: true,
@@ -56,24 +56,21 @@ export class PouchDbAdapter {
         });
     }
 
-    getDocs(): Promise<any> {
-        return new Promise(resolve => {
-            this._pouchDB.allDocs({
-                include_docs: true,
-                descending: true
-            })
-            .then((result) => {
-                resolve(result);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        });
-    }
-
     post( doc ): Promise<any> {
         return new Promise(resolve => {
             this._pouchDB.post( doc )
+                .then(( response => {
+                    resolve( response );
+                }))
+                .catch(( error ) => {
+                    console.log(error);
+                });
+        });
+    }
+
+    put( doc ): Promise<any> {
+        return new Promise(resolve => {
+            this._pouchDB.put( doc )
                 .then(( response => {
                     resolve( response );
                 }))
