@@ -1,0 +1,27 @@
+{
+    "c_FormaPago": [
+        { "cFormaPago": "01", "Descripción": "Efectivo" },
+        { "cFormaPago": "02", "Descripción": "Cheque nominativo" },
+        { "cFormaPago": "03", "Descripción": "Transferencia electrónica de fondos" },
+        { "cFormaPago": "04", "Descripción": "Tarjeta de crédito" },
+        { "cFormaPago": "05", "Descripción": "Monedero electrónico" },
+        { "cFormaPago": "06", "Descripción": "Dinero electrónico" },
+        { "cFormaPago": "08", "Descripción": "Vales de despensa" },
+        { "cFormaPago": "12", "Descripción": "Dación en pago" },
+        { "cFormaPago": "13", "Descripción": "Pago por subrogación" },
+        { "cFormaPago": "14", "Descripción": "Pago por consignación" },
+        { "cFormaPago": "15", "Descripción": "Condonación" },
+        { "cFormaPago": "17", "Descripción": "Compensación" },
+        { "cFormaPago": "23", "Descripción": "Noavación" },
+        { "cFormaPago": "24", "Descripción": "Confusión" },
+        { "cFormaPago": "25", "Descripción": "Remisión de deuda" },
+        { "cFormaPago": "26", "Descripción": "Prescripción o caducidad" },
+        { "cFormaPago": "27", "Descripción": "A satisfacción del acreedor" },
+        { "cFormaPago": "28", "Descripción": "Tarjeta de débito" },
+        { "cFormaPago": "29", "Descripción": "Tarjeta de servicios" },
+        { "cFormaPago": "30", "Descripción": "Aplicación de anticipos" },
+        { "cFormaPago": "31", "Descripción": "Intermediario pagos" },
+        { "cFormaPago": "99", "Descripción": "Por definir" },
+        
+    ]
+}

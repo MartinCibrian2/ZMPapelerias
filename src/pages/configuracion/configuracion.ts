@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the ConfiguracionPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { BillingPage } from '../billing/billing';
+import { ClientsPage } from './clients/clients';
 
 @IonicPage()
 @Component({
@@ -14,8 +10,13 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'configuracion.html',
 })
 export class ConfiguracionPage {
+  public billingPage = BillingPage;
+  public clientsPage = ClientsPage;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams
+  ){
   }
 
   ionViewDidLoad() {

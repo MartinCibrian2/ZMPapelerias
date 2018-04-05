@@ -2,25 +2,21 @@ import { Component, OnInit, Input } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DatosVentasProvider } from '../../providers/datos-ventas/datos-ventas';
 import { HttpClient } from '@angular/common/http';
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
-import { Subject }    from 'rxjs/Subject';
-import { of }         from 'rxjs/observable/of';
+//import 'rxjs/add/operator/map';
+//import { Observable } from 'rxjs/Observable';
+//import { Subject }    from 'rxjs/Subject';
+//import { of }         from 'rxjs/observable/of';
 import * as _ from 'lodash';
-import {
+/* import {
    debounceTime, distinctUntilChanged, switchMap
- } from 'rxjs/operators';
+ } from 'rxjs/operators'; */
  import { Storage } from '@ionic/storage';
  import { LoadingController } from 'ionic-angular';
  import { AlertController } from 'ionic-angular';
  import PouchDB from 'pouchdb';
  import { lineaticket } from '../../app/datos';
-/**
- * Generated class for the VentasPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+
+//import { CheckinService } from '../../providers/billing/checkin.service';
 
 interface Producto {
   id: string;
@@ -34,7 +30,8 @@ interface Producto {
   mayoreo:string;
   iva:string;
   inventariominimo:string;
-  inventarioactual:string
+  inventarioactual:string,
+  claveProdServ: string
  }
 
 interface Ticketenc 
@@ -53,92 +50,80 @@ interface Ticketenc
 @Component({
   selector: 'page-ventas',
   templateUrl: 'ventas.html',
+  providers: []
 })
 export class VentasPage implements OnInit {
-  productos: any[];
-  ticketenc: Ticketenc;
-  detalleticket: any[];
-  productoporcomprar: string;
-  datos: Producto[];
-  remoto:any;
-  db: any;
-  datoslocales:Producto[];
-  productonombre:any;
-  productoprecio:any;
-  articulo: Producto;
-  constructor
-  ( public navCtrl: NavController, public navParams: NavParams,private http:HttpClient, 
-    public ListaProductos: DatosVentasProvider, public alertCtrl: AlertController
-  ) 
-  {
-  }
+    productos: any[];
+    ticketenc: Ticketenc;
+    detalleticket: any[] = new Array;
+    productoporcomprar: string;
+    datos: Producto[];
+    remoto:any;
+    db: any;
+    datoslocales:Producto[];
+    productonombre:any;
+    productoprecio:any;
+    articulo: Producto;
+    claveProdServ: any;
 
+    constructor(
+        public navCtrl: NavController, 
+        public navParams: NavParams,
+        private http:HttpClient, 
+        public ListaProductos: DatosVentasProvider, 
+        public alertCtrl: AlertController
+    ) { }
 
+    ngOnInit(): void {
+        this.obtenlista();         
+    }
 
-  ngOnInit(): void 
-  {
-   this.obtenlista();         
-  }
-
-  obtenlista() 
-    {
-      this.ListaProductos.ListalosProductos().then((datos) => 
-      {
-        this.productos = datos;
-        console.log(datos)
-      });
-   
+    obtenlista() {
+        this.ListaProductos.ListalosProductos()
+        .then(
+            ( datos ) => {
+                this.productos = datos;
+        });
     } 
 
-  agregaproducto(productoporcomprar) 
-  { 
-    console.log('El producto a comprar es' + productoporcomprar);  
-   // this.ticket.push ( this.productos.find ( articulo => articulo.id == productoporcomprar ));
-   this.articulo =  this.productos.find ( articulo => articulo._id == productoporcomprar );
-   console.log('El articulo a comprar es ' + this.articulo.nombre);
-   console.log(this.articulo);
-   console.log(parseFloat(this.articulo.preciopublico));
+    agregaproducto( productoporcomprar ){
+        // this.ticket.push ( this.productos.find ( articulo => articulo.id == productoporcomprar ));
+        this.articulo =  this.productos.find ( articulo => articulo._id == productoporcomprar );
+        console.log('El articulo a comprar es ' + this.articulo.nombre);
+        console.log( this.articulo )
 
-   var ticketidarticulo:string = productoporcomprar;
-   console.log(ticketidarticulo);
-   var ticketnombreart = this.articulo.nombre;
-   console.log(ticketnombreart)
-    var ticketunidadart = this.articulo.unidad;
-   console.log(ticketunidadart);
-   var ticketcantidadart = 2;
-   console.log(ticketcantidadart);
-   var ticketprecioart = parseFloat (this.articulo.preciopublico);
-   console.log(ticketprecioart);
-   var ticketdescuentoart = parseFloat (this.articulo.descuentomayoreo);
-   console.log(ticketdescuentoart);
-   var ticketivaart = parseFloat(this.articulo.iva);
-   console.log(ticketivaart);
-   var ticketimporteart = ( ticketcantidadart * ticketprecioart);
-   console.log(ticketimporteart);
-   if (this.detalleticket == undefined) 
-    {
-      this.detalleticket = 
-      [ 
-        new lineaticket(ticketidarticulo,ticketnombreart, ticketunidadart, ticketcantidadart, ticketprecioart, ticketdescuentoart, ticketivaart, ticketimporteart )
-      ];
+        var ticketidarticulo:string = productoporcomprar;
+        var ticketnombreart = this.articulo.nombre;
+        var ticketunidadart = this.articulo.unidad;
+        var ticketcantidadart = 2;
+        var ticketprecioart = parseFloat (this.articulo.preciopublico);
+        var ticketdescuentoart = parseFloat (this.articulo.descuentomayoreo);
+        var ticketivaart = this.articulo.iva;
+        var ticketimporteart = ( ticketcantidadart * ticketprecioart);
+
+        var _tickeDetail = new lineaticket(
+            ticketidarticulo,
+            ticketnombreart,
+            ticketunidadart,
+            ticketcantidadart,
+            ticketprecioart,
+            ticketdescuentoart,
+            ticketivaart,
+            ticketimporteart,
+            this.articulo.claveProdServ
+        );
+
+        this.detalleticket.push( _tickeDetail );
+        //this.ticket.push ( this.ticketart );
     }
-    else 
-    {
-      this.detalleticket.push 
-      (
-        new lineaticket(ticketidarticulo,ticketnombreart, ticketunidadart, ticketcantidadart, ticketprecioart, ticketdescuentoart, ticketivaart, ticketimporteart ),
-      );
+
+    ionViewDidLoad() {
+        console.log('ionViewDidLoad VentasPage');
     }
-   //this.ticket.push ( this.ticketart );
-   console.log(this.detalleticket);
-     }
 
+    closeBuy( ){
+        this.ListaProductos.saveTicket( this.detalleticket );
+    }
 
- 
-
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad VentasPage');
-      };
-  }
+}
 

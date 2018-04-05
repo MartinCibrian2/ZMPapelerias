@@ -1,0 +1,51 @@
+
+<ion-header>
+  <ion-navbar>
+    <ion-title>Configuración / Registrar Cliente - ZMPapelerias</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-list>
+        <ion-list-header>
+            Registrar Cliente
+        </ion-list-header>
+    </ion-list>
+    <form novalidate [formGroup]="clientForm" (submit)="saveClient()">
+        <ion-grid>
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Cliente
+                    </ion-label>
+                    <ion-input  formControlName="nombre" placeholder="Nombre de persona física o moral"></ion-input>
+                </ion-item>
+            </ion-row>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        RFC
+                    </ion-label>
+                    <ion-input  formControlName="rfc" placeholder="Registro Federal de Contriyentes"></ion-input>
+                </ion-item>
+            </ion-row>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <!-- <ion-label stacked>Teléfono</ion-label> -->
+                    <ion-label stacked>Teléfono</ion-label>
+                    <ion-input type="text" formControlName="tel" placeholder="Número teléfono" clearInput></ion-input>
+                </ion-item>
+            </ion-row>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <button ion-button block 
+                        type="submit"
+                        [disabled]="clientForm.invalid">
+                    Guardar
+                </button>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>
