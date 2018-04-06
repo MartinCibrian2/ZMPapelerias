@@ -211,10 +211,20 @@ export class VentasPage implements OnInit {
     this.ListaProductos.borraunproducto(productoporborrar,productoporborrarrev);
   }
 
-  buscaproducto(termino)
+  buscaproducto(termino:any)
   {
-    this.ListaProductos.BuscarProductos(termino);
-    console.log(this.resproductos);
+    this.ListaProductos.ListalosProductos().then((datos) => 
+    {
+      this.resproductos = datos;
+      console.log(datos);
+      let val = termino.target.value;
+      // if the value is an empty string don't filter the items
+    if (val && val.trim() != '') {
+      this.resproductos  = this.resproductos.filter((articulo) => {
+        return (articulo.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      })
+    }
+    });
   }
 
   ionViewDidLoad() {
