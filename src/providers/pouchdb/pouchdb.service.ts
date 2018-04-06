@@ -27,7 +27,7 @@ export class PouchdbService
     }
     // wrapper for the get 20docs method in the adpater class
     get20Docs(): Promise<any> {
-        return Promise.resolve(this._pouchDbAdapter.get20Docs());
+        return Promise.resolve(this._pouchDbAdapter.getDocs());
     }
 
     post(doc): Promise<any> {

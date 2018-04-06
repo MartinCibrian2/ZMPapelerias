@@ -4,42 +4,13 @@
     <ion-title>Ventas - ZMPapelerias</ion-title>
   </ion-navbar>
 </ion-header>
-<<<<<<< HEAD
-<ion-content>
-    <p>Ticket de Venta</p>
-  <table style="width:80%">
-    <tr border= "3px solid red">
-      <th >Cantidad</th>
-      <th>Articulo</th>
-      <th>Precio</th>
-      <th>Descuento</th>
-      <th>Importe</th>
-    </tr>
-    <tr *ngFor="let art of detalleticket ">
-      <td class="detalletexto">{{art.cantidadart}}</td>
-      <td class="detalletexto">{{art.nombreart}}</td>
-      <td class="detalletexto">{{art.precioart}}</td>
-      <td class="detalletexto">{{art.descuentoart}}</td>
-      <td class="detalletexto">{{art.importeart}}</td>
-    </tr>
-  </table> 
-  <div *ngIf="(detalleticket != undefined)">
-      <p>Total del ticket = $ {{encticket.total}}</p>
-    </div>
-  <ion-list inset>
-    <ion-item *ngFor="let producto of productos">
-
-<button ion-button round outline (click) = "agregaproducto(producto._id)" >{{producto.nombre}}</button>
-<button ion-button color="danger" round outline  (click) = "borrarproducto(producto._id,producto._rev)" ><ion-icon name="trash"></ion-icon> Borrar </button>
-=======
 
 <ion-content padding="">
     <h2>
         Realizar Venta
     </h2>
-
     <ion-grid>
-        <ion-card>
+          <ion-card>
             <ion-card-header>
                 <ion-buttons>
                     Lista de venta
@@ -62,22 +33,22 @@
                 </ion-row>
             </ion-card-content>
         </ion-card>
-
-        <ion-row>
-            <button ion-button block (click)="closeBuy( )"
-                    [disabled]="!detalleticket.length">
-                Cerrar Compra
-            </button>
+             <ion-row ng-if="!encticket.total == 0">
+            Total del Ticket: $ {{ encticket.total}}
+        </ion-row>
+          <ion-row>
+            <button ion-button round outline (click)="cobrarticket(encticket.folio)">Cobrar</button>
+            <button ion-button round outline (click) = "facturarticket(encticket.folio)"> Facturar</button>
+            <button ion-button round outline (click) = "cancelarticket(encticket.folio)"> Cancelar</button>
+            <button ion-button round outline (click) = "imprimirticket(encticket.folio)"> Imprimir</button>
         </ion-row>
     </ion-grid>
 
   <ion-list inset>
     <ion-item *ngFor="let producto of productos">
-
-    <button ion-button round outline (click) = "agregaproducto(producto._id)" >
+    <button ion-button round outline (click) = "agregaproducto(producto._id)">
       {{producto.nombre}}
     </button>
->>>>>>> 4ec404ccf33e868881f00d8b35260610e7c8551f
       <p>{{producto.descripcion}}</p>
     </ion-item>
   </ion-list>
