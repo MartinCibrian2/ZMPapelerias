@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { ClientService } from '../../../providers/clients/client.service';
@@ -33,7 +33,8 @@ export class ClientsPage {
         public navCtrl: NavController,
         public navParams: NavParams,
         private clientService: ClientService,
-        private ngZone: NgZone
+        private ngZone: NgZone,
+        public alertCtrl: AlertController
     ){
         this.clientService.syncStatus
         .subscribe(( result ) => {
@@ -66,6 +67,38 @@ export class ClientsPage {
                 this._clients.push( row.doc );
             });
         });
+    }
+
+    deleteClient( item: any): void {
+        let confirm = this.alertCtrl.create({
+            title: "Seguro de eliminar " + item.nombre + " ?",
+            message: "Si acepta eliminar " + item.nombre + " ya no podrá recuperarlo.",
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    handler: () => {
+                        console.log('Cancelar clicked');
+                    }
+                }, {
+                    text: 'Aceptar',
+                    handler: () => {
+                        console.log( item, this.navParams.data );
+                        console.log('Aceptar clicked');
+                        this.clientService
+                        .delete( item )
+                        .then(( response ) => {
+                            //this.message;
+                            console.log( response );
+                            this.navCtrl.setRoot( ClientsPage );
+                        })
+                        .catch(( error ) => {
+                            console.log( error );
+                        });
+                    }
+                }
+            ]
+        });
+        confirm.present();
     }
 
     openNavDetailsClient( item ){

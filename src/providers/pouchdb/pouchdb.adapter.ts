@@ -79,6 +79,20 @@ export class PouchDbAdapter {
                 });
         });
     }
+
+    delete( doc ): Promise <any> {
+        return new Promise( resolve => {
+            this._pouchDB
+            .remove( doc._id, doc._rev )
+            .then(( response  ) => {
+                console.log("Se elimnino el item: "+ doc._id +' '+ doc._rev );
+                resolve( response );
+            })
+            .catch(( error ) => {
+                console.log( error );
+            });
+        });
+    }
     // function to call the below functions
     // then update the rxjs BehaviourSubjects with the 
     // results

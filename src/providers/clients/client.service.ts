@@ -48,6 +48,10 @@ export class ClientService
         return Promise.resolve( this._pouchDbAdapter.put( _client ));
     }
 
+    delete( _doc ): Promise <any> {
+        return Promise.resolve( this._pouchDbAdapter.delete( _doc ));
+    }
+
     getCatalogClaveProdServs(): Observable<any> {
         var _urlJson = '../../'+ this.appSettings._urlConfigs +'data/catalogs/clave-prod-serv.json';
 
