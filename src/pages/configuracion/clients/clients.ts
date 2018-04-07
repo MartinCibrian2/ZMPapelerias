@@ -1,9 +1,9 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ToastController } 
+    from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { ClientService } from '../../../providers/clients/client.service';
-import { ClientModel } from '../../../app/models/client.model';
 
 import { AddClientPage } from './add/add-client';
 import { EditClientPage } from './edit/edit-client';
@@ -17,10 +17,11 @@ import { EditClientPage } from './edit/edit-client';
   ]
 })
 export class ClientsPage {
-    public clientModel: ClientModel;
     public clients = [];
     public _clients = [];
     public searching;
+    public optionsResult: any;
+
     // For sync
     remoteCouchDbAddress: string;
     dataPouchdbString: string;
@@ -34,7 +35,8 @@ export class ClientsPage {
         public navParams: NavParams,
         private clientService: ClientService,
         private ngZone: NgZone,
-        public alertCtrl: AlertController
+        public alertCtrl: AlertController,
+        public toastCtrl: ToastController
     ){
         this.clientService.syncStatus
         .subscribe(( result ) => {
@@ -56,6 +58,12 @@ export class ClientsPage {
         this.getClients();
     }
 
+    searchItems2( eve ){
+        let val = eve.target.value;
+        this.clientService.BuscarProductos( val );
+        console.log( val )
+    }
+
     getClients(){
         this.clientService
         .getClients()
@@ -70,6 +78,12 @@ export class ClientsPage {
     }
 
     deleteClient( item: any): void {
+        this.optionsResult    = {
+            "message": item.nombre + " se ha eliminado",
+            "duration": 5000,
+            "position": 'bottom'
+        }
+
         let confirm = this.alertCtrl.create({
             title: "Seguro de eliminar " + item.nombre + " ?",
             message: "Si acepta eliminar " + item.nombre + " ya no podrá recuperarlo.",
@@ -77,23 +91,34 @@ export class ClientsPage {
                 {
                     text: 'Cancelar',
                     handler: () => {
-                        console.log('Cancelar clicked');
+                        this.optionsResult.message    = "Se Canceló Eliminar " + item.nombre;
+                        this.presentToast( this.optionsResult );
                     }
                 }, {
                     text: 'Aceptar',
                     handler: () => {
-                        console.log( item, this.navParams.data );
-                        console.log('Aceptar clicked');
+                        // Action delete item.
+                        item.active    = false;
                         this.clientService
-                        .delete( item )
+                        .put( item )
                         .then(( response ) => {
-                            //this.message;
-                            console.log( response );
-                            this.navCtrl.setRoot( ClientsPage );
+                            this.getClients();
+                            this.presentToast( this.optionsResult );
                         })
                         .catch(( error ) => {
                             console.log( error );
                         });
+                        // Delete forever.
+                        /* this.clientService
+                        .delete( item )
+                        .then(( response ) => {
+                             this.getClients();
+                             // this.navCtrl.popToRoot();
+                             this.presentToast( this.optionsResult );
+                        })
+                        .catch(( error ) => {
+                            console.log( error );
+                        }); */
                     }
                 }
             ]
@@ -103,6 +128,22 @@ export class ClientsPage {
 
     openNavDetailsClient( item ){
         this.navCtrl.push( EditClientPage, { item: item });
+    }
+
+    presentToast( _options: any ): void {
+        let _default    = {
+            message: 'Action completed',
+            duration: 3000
+        };
+
+        if( Object.keys( _options ).length ){
+            // Contains values.
+        } else {
+            _options    = Object.create( _default );
+        }
+
+        let toast = this.toastCtrl.create( _options );
+        toast.present();
     }
 
 }
@@ -130,4 +171,4 @@ export class ClientsPage {
         existsWord( search: string, stack: any ){
             return ( stack.toLowerCase().indexOf( search.toLowerCase() ) > -1 );
         }
-    } */
+    */

@@ -5,6 +5,8 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+// https://github.com/eakoriakin/ionic-select-searchable
+import { SelectSearchableModule } from 'ionic-select-searchable';
 
 // Import modules custom
 import { ConfiguracionPageModule } from '../pages/configuracion/configuracion.module';
@@ -41,6 +43,8 @@ import { SearchPipe } from './pipes/search.pipe';
     IonicModule.forRoot( MyApp ),
     CommonModule,
     HttpModule,
+    // Import Select searchable
+    SelectSearchableModule,
     // Import modules custom
     ConfiguracionPageModule,
     AddClientPageModule,

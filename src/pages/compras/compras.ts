@@ -1,20 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { DatosVentasProvider } from '../../providers/datos-ventas/datos-ventas';
-/**
- * Generated class for the ComprasPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-@IonicPage()
 
+import { DatosVentasProvider } from '../../providers/datos-ventas/datos-ventas';
+import { CheckinService } from '../../providers/billing/checkin.service';
+
+@IonicPage()
 @Component({
   selector: 'page-compras',
   templateUrl: 'compras.html',
 })
-export class ComprasPage {
+export class ComprasPage implements OnInit {
 
+  public claveProdServs: any = new Array();
   nombre:any;
   descripcion:any;
   unidad:any;
@@ -26,13 +23,37 @@ export class ComprasPage {
   iva:any;
   inventariominimo:any;
   inventarioactual:any;
+  claveProdServ: any;
 
-  constructor
-  ( public navCtrl: NavController, public navParams: NavParams, 
-    public ListaProductos: DatosVentasProvider
-  ) 
-  {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams, 
+    public ListaProductos: DatosVentasProvider,
+    private checkinService: CheckinService
+  ) {
   }
+
+  ngOnInit(){
+      this.getClaveProdServs();
+  }
+
+  getClaveProdServs(){
+      this.checkinService
+      .getCatalogClaveProdServs()
+      .subscribe(
+          response => {
+              if( response.c_ClaveProdServ ){
+                  this.claveProdServs = response.c_ClaveProdServ;
+              } else {
+                  console.log( response );
+              }
+          },
+    error => {
+      console.log( <any> error );
+    }
+      );
+  }
+
   nuevoproducto()
   {
     if (
@@ -51,7 +72,8 @@ export class ComprasPage {
         "mayoreo": this.mayoreo,
         "iva": this.iva,
         "inventariominimo": this.inventariominimo,
-        "inventarioactual": this.inventarioactual
+        "inventarioactual": this.inventarioactual,
+        "claveProdServ": this.claveProdServ
       };
       this.ListaProductos.creaunproducto(productonuevo);
       this.nombre="";
@@ -65,6 +87,7 @@ export class ComprasPage {
       this.iva="";
       this.inventariominimo="";
       this.inventarioactual="";
+      this.claveProdServ = "";
     }
   }
 

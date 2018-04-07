@@ -2,13 +2,15 @@ declare function require( name: string );
 
 import PouchDB from 'pouchdb';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 PouchDB.plugin( require('pouchdb-upsert'));
+PouchDB.plugin( require('pouchdb-find'));
 
 export class PouchDbAdapter {
 
-    private _pouchDB: any;
-    private _couchDB: any;
+    public _pouchDB: any;
+    public _couchDB: any;
     private _remoteCouchDBAddress: string;
     private _pouchDbName: string;
     // rxjs behaviour subjects to expose stats flags
@@ -42,40 +44,50 @@ export class PouchDbAdapter {
     // pretty basic and crude function
     // return a Promise with the first 20 docs from allDocs as is
     getDocs(): Promise<any> {
-        return new Promise(resolve => {
+        return new Promise( resolve => {
             this._pouchDB.allDocs({
                 include_docs: true,
                 //limit: 20
             })
-            .then((result) => {
+            .then(( result ) => {
                 resolve(result);
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(( error ) => {
+                console.log( error );
+            });
+        });
+    }
+    
+    findById( _id ){
+        return new Observable( observer => {
+            this._pouchDB
+            .get( _id )
+            .then(( doc ) => {
+                observer.next( doc.data );
             });
         });
     }
 
-    post( doc ): Promise<any> {
-        return new Promise(resolve => {
+    post( doc: any ): Promise<any> {
+        return new Promise( resolve => {
             this._pouchDB.post( doc )
                 .then(( response => {
                     resolve( response );
                 }))
                 .catch(( error ) => {
-                    console.log(error);
+                    console.log( error );
                 });
         });
     }
 
     put( doc ): Promise<any> {
-        return new Promise(resolve => {
+        return new Promise( resolve => {
             this._pouchDB.put( doc )
                 .then(( response => {
                     resolve( response );
                 }))
                 .catch(( error ) => {
-                    console.log(error);
+                    console.log( error );
                 });
         });
     }

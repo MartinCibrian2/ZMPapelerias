@@ -45,10 +45,9 @@ export class AddClientPage implements OnInit
             this.clientService
             .post( _doc )
             .then(( response ) => {
-                console.log( JSON.stringify( response ))
                 this.navCtlr.setRoot( ClientsPage );
             })
-            .then(( error ) => {
+            .catch(( error ) => {
                 console.log( error );
             });
         } else {
