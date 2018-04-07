@@ -10,11 +10,11 @@ import { EditClientPage } from './edit/edit-client';
 
 @IonicPage()
 @Component({
-  selector: 'page-clients',
-  templateUrl: 'clients.html',
-  providers: [
-      ClientService
-  ]
+    selector: 'page-clients',
+    templateUrl: 'clients.html',
+    providers: [
+        ClientService
+    ]
 })
 export class ClientsPage {
     public clients = [];
@@ -24,7 +24,6 @@ export class ClientsPage {
 
     // For sync
     remoteCouchDbAddress: string;
-    dataPouchdbString: string;
     syncStatus: boolean;
     couchDbUp: boolean;
 
@@ -56,38 +55,50 @@ export class ClientsPage {
     }
 
     ngOnInit(): void {
-        this.getClients();
+        this.getClients( );
     }
 
-    searchItems2( eve ){
+    searchClientByString( eve ){
         let val = eve.target.value;
         this.clientService
-        .SearchClient( val )
+        .searchClientByString( val )
         .then(( data: any ) => {
             if( data.length ){
                 this.clients = [];
                 data.forEach(( row, i )=> {
-                    console.log( row, i )
                     this.clients.push( row );
                 });
             } else {
                 // There are not data.
             }
-            console.log( data )
         });
-        console.log( val )
     }
 
     getClients(){
         this.clientService
-        .getClients()
+        .getClients( {} )
         .then(( data ) => {
-            this.dataPouchdbString    = JSON.stringify( data.rows, undefined, 2 );
             this.clients = [];
             data.rows.map(( row ) => {
                 this.clients.push( row.doc );
-                this._clients.push( row.doc );
+                //this._clients.push( row.doc );
             });
+        });
+    }
+
+    searchItems2( eve ){
+        let val = eve.target.value;
+        this.clientService
+        .searchClientByString( val )
+        .then(( data: any ) => {
+            if( data.length ){
+                this.clients = [];
+                data.forEach(( row, i )=> {
+                    this.clients.push( row );
+                });
+            } else {
+                // There are not data.
+            }
         });
     }
 
@@ -165,7 +176,8 @@ export class ClientsPage {
 
 
 
-    /* searchItems( ev: any ){
+    /* // Search in data exists in memory list.
+     searchItems( ev: any ){
         // Reset items back to all of the items
         this.clients    = this._clients;
         // set val to the value of the searchbar

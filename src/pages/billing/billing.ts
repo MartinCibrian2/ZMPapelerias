@@ -58,6 +58,29 @@ export class BillingPage implements OnInit {
         // Asigns the client selected.
         //console.log('port:', event.value, this.checkinForm.value );
     }
+    // Pending, I have developing this method
+    searchClients( event: { component: SelectSearchable, text: string }) {
+        let text = (event.text || '').trim().toLowerCase();
+
+        if (!text) {
+            event.component.items = [];
+            return;
+        } else if (event.text.length < 3) {
+            return;
+        }
+
+        event.component.isSearching = true;
+
+        this.clientService.getClientsAsync()
+        .subscribe(ports => {
+            event.component.items = ports.filter(port => {
+                return port.name.toLowerCase().indexOf(text) !== -1 ||
+                    port.country.toLowerCase().indexOf(text) !== -1;
+            });
+
+            event.component.isSearching = false;
+        });
+    }
 
     getTickets(){
         this.checkingService.getTickets()
@@ -70,7 +93,7 @@ export class BillingPage implements OnInit {
 
     getClients(){
         this.clientService
-        .getClients()
+        .getClients( {} )
         .then(( data ) => {
             this.clients = [];
             data.rows.map(( row ) => {

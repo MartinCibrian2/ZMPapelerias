@@ -1,9 +1,9 @@
 declare function require( name: string );
 
-import PouchDB from 'pouchdb';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
+import PouchDB from 'pouchdb';
 PouchDB
 .plugin( require('pouchdb-quick-search'))
 .plugin( require('pouchdb-find'))
@@ -39,18 +39,18 @@ export class PouchDbAdapter {
         this._pouchDB.sync( this._couchDB, {
             live: true,
             retry: true,
+            continuous: true
         })
         .on('paused', err => { this.syncStatusUpdate(); })
         .on('change', info => { this.syncStatusUpdate(); });
     }
     // pretty basic and crude function
     // return a Promise with the first 20 docs from allDocs as is
-    getDocs(): Promise<any> {
+    getAllDocs( params: any ): Promise<any> {
+        let _params = Object.assign( { include_docs: true }, params );
+
         return new Promise( resolve => {
-            this._pouchDB.allDocs({
-                include_docs: true,
-                //limit: 20
-            })
+            this._pouchDB.allDocs( _params )
             .then(( result ) => {
                 resolve(result);
             })
@@ -59,7 +59,37 @@ export class PouchDbAdapter {
             });
         });
     }
-    
+
+    getDocsByString( texto ){
+        var regex, _list;
+
+        return new Promise( resolve => {
+            this._pouchDB
+            .query( function( doc, emit ){
+                    var regex = new RegExp( texto.toLowerCase(), "i");
+                    if( doc.nombre ){
+                        if( doc.nombre.toLowerCase().match( regex ) && doc.active === true ){
+                            emit( doc.nombre );
+                        }
+                    }
+                }, {
+                    include_docs: true
+                }
+            )
+            .then( function( result ){
+                _list  = [];
+                result.rows
+                .map(( row ) => {
+                    _list.push( row.doc );
+                });
+                resolve( _list );
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    // It is lack to try.
     findById( _id ){
         return new Observable( observer => {
             this._pouchDB
