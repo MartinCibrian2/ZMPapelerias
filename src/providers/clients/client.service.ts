@@ -66,62 +66,38 @@ export class ClientService
         return this.httpClient.get( _urlJson );
     }
 
-    BuscarProductos(texto: string){
+    SearchClient( texto: string ){
         console.log(texto);
-        var regex = new RegExp( texto, "i");
-
-        return new Promise( resolve => {	
-            this._pouchDbAdapter._pouchDB
-            .query( function( doc, emit ){
-                    if(( doc.nombre.toLowerCase().indexOf( texto.toLowerCase() ) > -1 ) && doc.active === true ){
-                        console.log( doc.nombre, doc.active )
-                    }
-                    emit( doc );
-                },
-                { include_docs: true, key: texto, is_checkin: false }
-            )
-            .then( function( result ){
-                    console.log( result )
-                    /* this.clients  = [];
-                    let docs = result.rows
-                    .map(( row ) => {
-                        this.clients.push( row.doc );
-                    }); */
-                    resolve( result );
-            });
-          }).catch((error) => {
-            console.log(error);
-          });
-      }
-
-    /*getClients1() {
-        if ( this.clients ) {
-            return Promise.resolve( this.clients );
-        }
+        var regex, _list;
 
         return new Promise( resolve => {
-            this.pouchdbClients
+            this._pouchDbAdapter._pouchDB
             .query( function( doc, emit ){
-                emit( doc );
-            }, { include_docs: true, is_checkin: false })
-            .then( function( result ){
-                ( result ) => {
-                    this.clients  = [];
-                    let docs = result.rows
-                    .map(( row ) => {
-                        this.clients.push( row.doc );
-                    });
-                    resolve( this.clients );
-                    this.pouchdbClients
-                    .changes({live: true, since: 'now', include_docs: true})
-                    .on('change', ( change ) => {
-                        this.handleChange( change );
-                    });
+                    var regex = new RegExp( texto, "i");
+                    //if(( doc.nombre.toLowerCase().indexOf( texto.toLowerCase() ) > -1 ) && doc.active === true ){
+                    if(( doc.nombre.match( regex ) ) && doc.active === true ){
+                        console.log( doc.nombre, doc.active )
+                        // emit( doc._id, { nombre: doc.nombre } );
+                        emit( doc.nombre );
+                    }
+                }, {
+                    startkey: texto,
+                    endkey: texto + '\ufff0',
+                    include_docs: true
                 }
-            }); 
-        }).catch(( error ) => {
-            console.log( error );
+            )
+            .then( function( result ){
+                _list  = [];
+                result.rows
+                .map(( row ) => {
+                    _list.push( row.doc );
+                });
+                resolve( _list );
+            });
+        })
+        .catch((error) => {
+            console.log(error);
         });
-    }*/
+    }
 
 }

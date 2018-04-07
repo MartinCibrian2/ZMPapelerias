@@ -9,12 +9,13 @@
     <ion-grid>
         <ion-row>
             <ion-col col-10>
-                <!-- <ion-searchbar (ionInput)="searchItems2( $event )"> -->
-                <ion-searchbar [(ngModel)]="searching">
+                <ion-searchbar (ionInput)="searchItems2( $event )">
+                <!-- <ion-searchbar [(ngModel)]="searching"> -->
                 </ion-searchbar>
             </ion-col>
             <ion-col col-2>
-                <button ion-button  [navPush]="addClientPage">
+                <button ion-button  [navPush]="addClientPage"
+                        [navParams]="paramsClient">
                     <ion-icon name="add"></ion-icon>
                 </button>
             </ion-col>

@@ -4,8 +4,10 @@ import PouchDB from 'pouchdb';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-PouchDB.plugin( require('pouchdb-upsert'));
-PouchDB.plugin( require('pouchdb-find'));
+PouchDB
+.plugin( require('pouchdb-quick-search'))
+.plugin( require('pouchdb-find'))
+.plugin( require('pouchdb-upsert'));
 
 export class PouchDbAdapter {
 

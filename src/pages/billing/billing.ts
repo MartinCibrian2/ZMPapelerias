@@ -6,6 +6,7 @@ import { SelectSearchable } from 'ionic-select-searchable';
 
 import { CheckinService } from '../../providers/billing/checkin.service';
 import { ClientService } from '../../providers/clients/client.service';
+import { AddClientPage } from '../configuracion/clients/add/add-client';
 
 class Port {
     public id: number;
@@ -23,9 +24,8 @@ class Port {
 })
 
 export class BillingPage implements OnInit {
-    ports: Port[];
-    port: Port;
-
+    public addClientPage = AddClientPage;
+    public paramsClient  = { page: BillingPage };
     public tickets: any[] = new Array;
     public clients: any[] = new Array;
     // Form
@@ -48,6 +48,10 @@ export class BillingPage implements OnInit {
 
     ionViewDidLoad() {
         console.log('ionViewDidLoad BillingPage');
+    }
+
+    goAddClient(){
+        this.navCtrl.setRoot( AddClientPage );
     }
 
     clientChange( event: { component: SelectSearchable, value: any }){

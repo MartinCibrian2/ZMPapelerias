@@ -29,6 +29,7 @@ export class ClientsPage {
     couchDbUp: boolean;
 
     public addClientPage = AddClientPage;
+    public paramsClient  = { page: ClientsPage };
 
     constructor(
         public navCtrl: NavController,
@@ -60,7 +61,20 @@ export class ClientsPage {
 
     searchItems2( eve ){
         let val = eve.target.value;
-        this.clientService.BuscarProductos( val );
+        this.clientService
+        .SearchClient( val )
+        .then(( data: any ) => {
+            if( data.length ){
+                this.clients = [];
+                data.forEach(( row, i )=> {
+                    console.log( row, i )
+                    this.clients.push( row );
+                });
+            } else {
+                // There are not data.
+            }
+            console.log( data )
+        });
         console.log( val )
     }
 
