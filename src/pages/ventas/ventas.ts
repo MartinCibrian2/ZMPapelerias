@@ -19,7 +19,7 @@ import {    debounceTime, distinctUntilChanged, switchMap  } from 'rxjs/operator
  import { LoadingController } from 'ionic-angular';
  import { AlertController } from 'ionic-angular';
  import PouchDB from 'pouchdb';
- import { lineaticket,encabezadoticket } from '../../app/datos';
+ import { lineaticket,encabezadoticket } from '../../app/models/venta.model';
 /**
  * Generated class for the VentasPage page.
  *
@@ -208,12 +208,20 @@ export class VentasPage implements OnInit {
 
   borrarproducto(productoporborrar,productoporborrarrev) 
   {
-    this.ListaProductos.borraunproducto(productoporborrar,productoporborrarrev);
+        this.ListaProductos.borraunproducto(productoporborrar,productoporborrarrev);
   }
 
   buscaproducto(termino)
   {
-    this.ListaProductos.BuscarProductos(termino);
+
+    this.resproductos = this.productos;
+    let cadena=termino.target.value;
+     // if the value is an empty string don't filter the items
+      if (cadena && cadena.trim() != '') {
+        this.resproductos = this.resproductos.filter((item) => {
+          return (item.nombre.toLowerCase().indexOf(cadena.toLowerCase()) > -1);
+        })
+      }
     console.log(this.resproductos);
   }
 

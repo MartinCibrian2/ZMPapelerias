@@ -37,18 +37,27 @@
             Total del Ticket: $ {{ encticket.total}}
         </ion-row>
           <ion-row>
-            <button ion-button round outline (click)="cobrarticket(encticket.folio)">Cobrar</button>
-            <button ion-button round outline (click) = "facturarticket(encticket.folio)"> Facturar</button>
-            <button ion-button round outline (click) = "cancelarticket(encticket.folio)"> Cancelar</button>
-            <button ion-button round outline (click) = "imprimirticket(encticket.folio)"> Imprimir</button>
+            <button ion-button round (click)="cobrarticket(encticket.folio)">Cobrar</button>
+            <button ion-button color="dark" round (click) = "imprimirticket(encticket.folio)"> Imprimir</button>
+            <button ion-button color="secondary" round (click) = "facturarticket(encticket.folio)"> Facturar</button>
+            <button ion-button color="danger" round (click) = "cancelarticket(encticket.folio)"> Cancelar</button>
         </ion-row>
     </ion-grid>
 
+    <ion-searchbar (ionInput)="buscaproducto($event)"></ion-searchbar>
+    <ion-list>
+      <ion-item *ngFor="let prod of resproductos">
+        <button ion-button round outline (click) = "agregaproducto(prod._id)">
+            {{prod.nombre}}
+          </button>
+            <p>{{prod.descripcion}}</p>
+      </ion-item>
+    </ion-list>
+
   <ion-list inset>
     <ion-item *ngFor="let producto of productos">
-    <button ion-button round outline (click) = "agregaproducto(producto._id)">
-      {{producto.nombre}}
-    </button>
+    <button ion-button round outline (click) = "agregaproducto(producto._id)"> {{producto.nombre}}</button>
+    <button ion-button color="danger" round outline (click) = "borrarproducto(producto._id,producto._rev)">Borrar</button>
       <p>{{producto.descripcion}}</p>
     </ion-item>
   </ion-list>
