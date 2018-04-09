@@ -46,7 +46,6 @@ export class EditClientPage implements OnInit
             this.clientService
             .put( _doc )
             .then(( response ) => {
-                console.log( JSON.stringify( response ))
                 this.navCtlr.setRoot( ClientsPage );
             })
             .then(( error ) => {

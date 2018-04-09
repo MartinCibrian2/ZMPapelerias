@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
+import { Observable } from 'rxjs/Observable';
+import { delay } from 'rxjs/operators';
 import { SelectSearchable } from 'ionic-select-searchable';
 
 import { CheckinService } from '../../providers/billing/checkin.service';
 import { ClientService } from '../../providers/clients/client.service';
+import { WayToPayService } from '../../providers/waytopay/way-to-pay.service';
 import { AddClientPage } from '../configuracion/clients/add/add-client';
+import { ConfiguracionPage } from '../configuracion/configuracion';
 
 class Port {
     public id: number;
@@ -19,7 +23,8 @@ class Port {
   templateUrl: 'billing.html',
   providers: [
     CheckinService,
-    ClientService
+    ClientService,
+    WayToPayService
   ]
 })
 
@@ -28,6 +33,7 @@ export class BillingPage implements OnInit {
     public paramsClient  = { page: BillingPage };
     public tickets: any[] = new Array;
     public clients: any[] = new Array;
+    public waystopay: any[] = new Array;
     // Form
     public checkinForm: FormGroup;
 
@@ -36,7 +42,8 @@ export class BillingPage implements OnInit {
         public navParams: NavParams,
         public frmBuilder: FormBuilder,
         private checkingService: CheckinService,
-        private clientService: ClientService
+        private clientService: ClientService,
+        private waytopayService: WayToPayService
     ) {
         this.checkinForm    = this.makeForm();
     }
@@ -44,6 +51,7 @@ export class BillingPage implements OnInit {
     ngOnInit(){
         this.getTickets();
         this.getClients();
+        this.getWaytoPay();
     }
 
     ionViewDidLoad() {
@@ -62,22 +70,20 @@ export class BillingPage implements OnInit {
     searchClients( event: { component: SelectSearchable, text: string }) {
         let text = (event.text || '').trim().toLowerCase();
 
-        if (!text) {
+        if( !text ){
             event.component.items = [];
             return;
-        } else if (event.text.length < 3) {
+        } else if ( event.text.length < 3 ){
             return;
         }
 
         event.component.isSearching = true;
 
-        this.clientService.getClientsAsync()
-        .subscribe(ports => {
-            event.component.items = ports.filter(port => {
-                return port.name.toLowerCase().indexOf(text) !== -1 ||
-                    port.country.toLowerCase().indexOf(text) !== -1;
+        this.clientService.getClientsAsync( text )
+        .subscribe( _clients => {
+            event.component.items    = _clients.rows.map( row => {
+                return row.doc;
             });
-
             event.component.isSearching = false;
         });
     }
@@ -99,6 +105,21 @@ export class BillingPage implements OnInit {
             data.rows.map(( row ) => {
                 this.clients.push( row.doc );
             });
+        });
+    }
+
+    getWaytoPay(){
+        this.waytopayService.getWaysToPay()
+        .subscribe(( data ) => {
+            data.c_FormaPago
+            .forEach(( row, i ) => {
+                if( row.active === true ){
+                    this.waystopay.push( row );
+                } else {
+                    // The row is active equal false.
+                }
+            })
+            console.log( this.waystopay )
         });
     }
 
@@ -127,7 +148,7 @@ export class BillingPage implements OnInit {
                     // It is ignored.
                 }
             }); */
-console.log( _form, _Tickets )
+
             if( _Tickets.length ){
                 let _xml    = this.checkingService
                 .prepareJsonForDocument( _Tickets );
@@ -135,8 +156,12 @@ console.log( _form, _Tickets )
                 _xml["cfdi:Comprobante"]["cfdi:Receptor"]["@Nombre"]    = _form.client.nombre;
                 _xml["cfdi:Comprobante"]["cfdi:Receptor"]["@Rfc"]       = _form.client.rfc;
 
-                this.checkingService
+                _xml    = this.checkingService
                 .checking( _xml );
+
+                if( _xml ){
+                    this.navCtrl.setRoot( ConfiguracionPage );
+                }
             } else {
                 // It is show a message.
             }
@@ -151,6 +176,7 @@ console.log( _form, _Tickets )
             'client':  ['', [ Validators.required ]], //Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             //'rfc':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             //'date_deposit':  [ new Date(Date.now()).toISOString(), [ Validators.required, Validators.pattern( /^(\d{4})-(\d{1,2})-(\d{1,2})$/ )]],
+            'waytopay':     ['', [ Validators.required ]],
             'tickets':     ['', [ Validators.required ]]
         });
     }

@@ -86,22 +86,6 @@ export class ClientsPage {
         });
     }
 
-    searchItems2( eve ){
-        let val = eve.target.value;
-        this.clientService
-        .searchClientByString( val )
-        .then(( data: any ) => {
-            if( data.length ){
-                this.clients = [];
-                data.forEach(( row, i )=> {
-                    this.clients.push( row );
-                });
-            } else {
-                // There are not data.
-            }
-        });
-    }
-
     deleteClient( item: any): void {
         this.optionsResult    = {
             "message": item.nombre + " se ha eliminado",

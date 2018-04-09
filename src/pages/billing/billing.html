@@ -36,9 +36,10 @@
                                 itemValueField="_id"
                                 itemTextField="nombre"
                                 [canSearch]="true"
-                                (onChange)="clientChange( $event )">
-                                <!-- searchPlaceholder="Ingresa 3 o más caracteres"
-                                (onSearch)="searchClients( $event )" -->
+                                searchPlaceholder="Ingresa 3 o más caracteres"
+                                (onSearch)="searchClients( $event )"
+                                (onChange)="clientChange( $event )"
+                                >
                             </select-searchable>
                         </ion-item>
                     </ion-item-group>
@@ -51,8 +52,40 @@
                 </ion-col>
             </ion-row>
 
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-6>
+                <ion-item>
+                    <ion-label stacket>
+                        Forma de pago
+                    </ion-label>
+                    <ion-select formControlName="waytopay">
+                        <ion-option *ngFor="let _waytopay of waystopay" value="{{ _waytopay.cFormaPago }}">
+                            {{ _waytopay["Descripción"] }}
+                        </ion-option>
+                    </ion-select>
+                </ion-item>
+            </ion-row>
+
+            <!-- <ion-row col-12 col-sm-9 col-md-6 col-lg-6 col-xl-6>
+                <ion-col col-10>
+                    <ion-item-group margin-bottom>
+                        <ion-item>
+                            <select-searchable
+                                title="Forma de Pago"
+                                formControlName="waytopay"
+                                [items]="waystopay"
+                                itemValueField="c_FormaPago"
+                                [canSearch]="true"
+                                multiple="true"
+                                (onChange)="searchWayToPay( $event )"
+                                (onChange)="wayToPayChange( $event )">
+                            </select-searchable>
+                        </ion-item>
+                    </ion-item-group>
+                </ion-col>
+            </ion-row> -->
+
             <!-- <ion-item col-12 col-sm-9 col-md-6 col-lg-6 col-xl-6>
-                <ion-label staket>Tickets </ion-label>
+                <ion-label stacket>Tickets </ion-label>
                 <ion-select  formControlName="tickets" multiple="true">
                     <ion-option *ngFor="let _ticket of tickets" value="{{_ticket._id}}">
                             {{ _ticket['NoIdentificacion'] }}
@@ -61,20 +94,22 @@
             </ion-item> -->
 
             <ion-row col-12 col-sm-9 col-md-6 col-lg-6 col-xl-6>
-                <ion-item-group margin-bottom>
-                    <ion-item>
-                        <select-searchable
-                            title="Tickets"
-                            formControlName="tickets"
-                            [items]="tickets"
-                            itemValueField="_id"
-                            itemTextField="NoIdentificacion"
-                            [canSearch]="true"
-                            multiple="true"
-                            (onChange)="clientChange( $event )">
-                        </select-searchable>
-                    </ion-item>
-                </ion-item-group>
+                <ion-col col-10>
+                    <ion-item-group margin-bottom>
+                        <ion-item>
+                            <select-searchable
+                                title="Tickets"
+                                formControlName="tickets"
+                                [items]="tickets"
+                                itemValueField="_id"
+                                itemTextField="NoIdentificacion"
+                                [canSearch]="true"
+                                multiple="true"
+                                (onChange)="clientChange( $event )">
+                            </select-searchable>
+                        </ion-item>
+                    </ion-item-group>
+                </ion-col>
             </ion-row>
 
             <ion-row col-12 col-sm-9 col-md-6 col-lg-6 col-xl-6>

@@ -2,6 +2,7 @@ declare function require( name: string );
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/from';
 
 import PouchDB from 'pouchdb';
 PouchDB
@@ -58,6 +59,25 @@ export class PouchDbAdapter {
                 console.log( error );
             });
         });
+    }
+
+    getDocsByStringObservable( texto ): Observable <any> {
+        var regex, _list;
+
+        return Observable.from( 
+            this._pouchDB
+            .query( function( doc, emit ){
+                    var regex = new RegExp( texto.toLowerCase(), "i");
+                    if( doc.nombre ){
+                        if( doc.nombre.toLowerCase().match( regex ) && doc.active === true ){
+                            emit( doc.nombre );
+                        }
+                    }
+                }, {
+                    include_docs: true
+                }
+            )
+        );
     }
 
     getDocsByString( texto ){

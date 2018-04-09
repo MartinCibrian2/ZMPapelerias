@@ -14,6 +14,12 @@ import { AppSettings } from '../../app/common/api.path';
 import { ClientModel } from '../../app/models/client.model';
 import { log } from 'util';
 
+export class Port {
+    public id: number;
+    public name: string;
+    public country: string;
+}
+
 @Injectable()
 
 export class ClientService
@@ -92,12 +98,10 @@ export class ClientService
     searchClientByString( texto ){
         return Promise.resolve( this._pouchDbAdapter.getDocsByString( texto ) );
     }
-// Pending, I have developing this method
-    getClientsAsync(page: number = 1, size: number = 15): Observable<any[]> {
-        return new Observable<any[]>(observer => {
-            /* observer.next( this.getPorts( page, size )); */
-            observer.complete()
-        }).pipe( delay( 2000 ));
+    // Pending, I have developing this method
+    getClientsAsync( text ): Observable <any> {
+        return this._pouchDbAdapter.getDocsByStringObservable( text )
+        .pipe( delay( 2000 ));
     }
 
 }

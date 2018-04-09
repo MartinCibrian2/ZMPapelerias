@@ -21,7 +21,7 @@
         { "cFormaPago": "29", "Descripción": "Tarjeta de servicios", "active": false },
         { "cFormaPago": "30", "Descripción": "Aplicación de anticipos", "active": false },
         { "cFormaPago": "31", "Descripción": "Intermediario pagos", "active": false },
-        { "cFormaPago": "99", "Descripción": "Por definir", "active": false },
+        { "cFormaPago": "99", "Descripción": "Por definir", "active": false }
         
     ]
 }
