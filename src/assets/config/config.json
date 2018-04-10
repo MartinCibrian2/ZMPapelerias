@@ -22,6 +22,9 @@
         },
         "clients": {
             "database": "cliente"
+        },
+        "buys": {
+            "database": "compras"
         }
     }
 }

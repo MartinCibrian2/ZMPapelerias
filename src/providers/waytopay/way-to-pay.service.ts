@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
-import { Headers, Response, RequestOptions } from '@angular/http';
+import { Response } from '@angular/http';
 
 import { AppSettings } from '../../app/common/api.path';
 
@@ -27,12 +27,12 @@ export class WayToPayService
     }
 
     postWayToPay( wayToPay: any ){
-        let _headers    = new Headers({'Content-Type': 'application/json'});
-        let options    = new RequestOptions({ "headers": _headers });
+        let _headers    = new HttpHeaders({'Content-Type': 'application/json'});
+        let options    = { "headers": _headers };
         let body       = JSON.stringify( wayToPay );
 
         return this.httpClient
-        .post('/app/food', body, _headers )
+        .post('/app/food', body, options )
         .map(( res:Response ) => res.json() );
     }
 

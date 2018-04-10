@@ -66,12 +66,12 @@ export class BillingPage implements OnInit {
         // Asigns the client selected.
         //console.log('port:', event.value, this.checkinForm.value );
     }
-    // Pending, I have developing this method
+
     searchClients( event: { component: SelectSearchable, text: string }) {
         let text = (event.text || '').trim().toLowerCase();
 
         if( !text ){
-            event.component.items = [];
+            event.component.items = this.clients;
             return;
         } else if ( event.text.length < 3 ){
             return;
@@ -79,7 +79,8 @@ export class BillingPage implements OnInit {
 
         event.component.isSearching = true;
 
-        this.clientService.getClientsAsync( text )
+        this.clientService
+        .getClientsAsync( text )
         .subscribe( _clients => {
             event.component.items    = _clients.rows.map( row => {
                 return row.doc;

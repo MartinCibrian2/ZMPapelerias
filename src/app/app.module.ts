@@ -12,6 +12,7 @@ import { SelectSearchableModule } from 'ionic-select-searchable';
 import { ConfiguracionPageModule } from '../pages/configuracion/configuracion.module';
 import { AddClientPageModule } from '../pages/configuracion/clients/add/add-client.module';
 import { EditClientPageModule } from '../pages/configuracion/clients/edit/edit-client.module';
+import { BuysPageModule } from '../pages/configuracion/buys/buys.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -48,7 +49,8 @@ import { SearchPipe } from './pipes/search.pipe';
     // Import modules custom
     ConfiguracionPageModule,
     AddClientPageModule,
-    EditClientPageModule
+    EditClientPageModule,
+    BuysPageModule
   ],
   bootstrap: [ IonicApp ],
   entryComponents: [

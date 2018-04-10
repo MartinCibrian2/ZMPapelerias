@@ -61,6 +61,20 @@ export class PouchDbAdapter {
         });
     }
 
+    getAllDocsObservable( params: any ): Observable<any> {
+        let _params = Object.assign( { include_docs: true }, params );
+
+        return Observable.from(
+            this._pouchDB.allDocs( _params )
+            .query(( doc, emit ) => {
+                    console.log( doc )
+                }, {
+                    include_docs: true
+                }
+            )
+        );
+    }
+
     getDocsByStringObservable( texto ): Observable <any> {
         var regex, _list;
 
