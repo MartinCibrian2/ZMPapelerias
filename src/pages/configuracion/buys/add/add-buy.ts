@@ -61,8 +61,17 @@ export class AddBuyPage implements OnInit
     makeForm( ){
         let _group    = {
             'nombre':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'rfc':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'tel':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]]
+            'descripcion':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'unidad':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'preciopublico':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
+            'costo':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
+            'descuentomayoreo':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
+            'descuentomaximo':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
+            'mayoreo':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
+            'iva':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
+            'inventariominimo':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
+            'inventarioactual':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
+            'claveProdServ':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]]
         };
 
         return this.frmBuilder.group( _group );

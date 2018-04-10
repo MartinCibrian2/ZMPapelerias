@@ -30,6 +30,10 @@ export class EditBuyPage implements OnInit
         this.sellForm    = this.makeForm();
     }
 
+    ngOnInit(){
+        
+    }
+
     ionViewDidLoad() {
         console.log('ionViewDidLoad EditSellPage');
     }

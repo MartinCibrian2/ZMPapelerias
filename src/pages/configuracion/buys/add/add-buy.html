@@ -8,14 +8,58 @@
 <ion-content padding>
     <form novalidate [formGroup]="buyForm" (submit)="saveBuy()">
         <ion-grid>
+            <ion-col col-6 col-sm-9 col-md-6 col-lg-6 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Producto
+                    </ion-label>
+                    <ion-input  formControlName="nombre" placeholder="Nombre del producto"></ion-input>
+                </ion-item>
+            </ion-col>
 
-            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+            <ion-col col-6 col-sm-9 col-md-6 col-lg-6 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Descripción
+                    </ion-label>
+                    <ion-input  formControlName="descripcion" placeholder="Descripción del producto"></ion-input>
+                </ion-item>
+            </ion-col>
+
+            <!-- <ion-item>
+                    <ion-label staket>Descripción Sat </ion-label>
+                    <ion-select [(ngModel)]="claveProdServ">
+                            <ion-option *ngFor="let _claveProdServ of claveProdServs" value="{{_claveProdServ.c_ClaveProdServ}}">
+                                    {{ _claveProdServ['Descripción'] }}
+                            </ion-option>
+                    </ion-select>
+            </ion-item> -->
+
+            <ion-col col-6 col-sm-9 col-md-6 col-lg-6 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Unidad de Venta
+                    </ion-label>
+                    <ion-input formControlName="unidad" placeholder="Unidad de venta"></ion-input>
+                </ion-item>
+            </ion-col>
+
+            <ion-col col-6 col-sm-9 col-md-6 col-lg-6 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Precio de Lista
+                    </ion-label>
+                    <ion-input formControlName="preciopublico" placeholder="Precio al público"></ion-input>
+                </ion-item>
+            </ion-col>
+
+            <ion-col col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3>
                 <button ion-button block 
                         type="submit"
                         [disabled]="buyForm.invalid">
                     Guardar
                 </button>
-            </ion-row>
+            </ion-col>
         </ion-grid>
     </form>
 </ion-content>
