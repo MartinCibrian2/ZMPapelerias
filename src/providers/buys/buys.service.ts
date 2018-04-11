@@ -48,16 +48,13 @@ export class BuysService
         return this._pouchDbAdapter.postObservable( _buy );
     }
 
-    put( _buy ): Observable <any> {
-        /* let _rev    = _buy._rev;
-        _buy     = new ProductModel( _buy._id, _buy.nombre, _buy.rfc, _buy.tel, _buy.active );
-        _buy._rev    = _rev; */
+    put( _buy: ProductModel ): Observable <any> {
 
-        return //Observable.resolve( this._pouchDbAdapter.put( _buy ));
+        return this._pouchDbAdapter.putObservable( _buy );
     }
 
     delete( _doc ): Observable <any> {
-        return //Observable.resolve( this._pouchDbAdapter.delete( _doc ));
+        return // this._pouchDbAdapter.deleteObservable( _doc );
     }
 
     searchBuyByString( text ){

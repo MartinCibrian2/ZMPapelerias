@@ -51,9 +51,9 @@ export class AddBuyPage implements OnInit
                     console.log( response );
                 }
             },
-      error => {
-        console.log( <any> error );
-      }
+            error => {
+                console.log( <any> error );
+            }
         );
     }
 

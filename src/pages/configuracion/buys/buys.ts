@@ -103,14 +103,14 @@ export class BuysPage {
                         item.active    = false;
                         this.buyService
                         .put( item )
-                        /* .then(( response ) => {
+                        .subscribe(( response ) => {
                             this.getBuys();
                             this.presentToast( this.optionsResult );
-                        })
-                        .catch(( error ) => {
+                        },
+                        ( error ) => {
                             console.log( error );
                         });
- */                    }
+                     }
                 }
             ]
         });

@@ -1,6 +1,7 @@
 
 export class ProductModel
 {
+    public _rev: any;
     public _id: string;
     public nombre: string;
     public descripcion: string;
@@ -14,4 +15,5 @@ export class ProductModel
     public inventariominimo: string;
     public inventarioactual: string;
     public claveProdServ: string;
+    public active: string;
 }

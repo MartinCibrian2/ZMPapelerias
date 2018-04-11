@@ -67,7 +67,11 @@ export class PouchDbAdapter {
         return Observable.from(
             this._pouchDB
             .query(( doc, emit ) => {
-                    emit( doc )
+                if( doc.nombre ){
+                    if( doc.active === true ){
+                        emit( doc.nombre );
+                    }
+                }
                 }, {
                     include_docs: true
                 }
@@ -97,6 +101,13 @@ export class PouchDbAdapter {
     postObservable( doc: any ): Observable<any> {
         return Observable.from(
             this._pouchDB.post( doc )
+        );
+    }
+
+    putObservable( doc: any ): Observable<any> {
+        console.log( doc )
+        return Observable.from(
+            this._pouchDB.put( doc )
         );
     }
 

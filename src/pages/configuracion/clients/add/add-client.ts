@@ -40,7 +40,8 @@ export class AddClientPage implements OnInit
 
     saveClient( ): void {
         if( this.clientForm.valid ){
-            var _doc   = this.clientForm.value;
+            var _doc       = this.clientForm.value;
+            _doc.active    = true;
 
             this.clientService
             .post( _doc )
