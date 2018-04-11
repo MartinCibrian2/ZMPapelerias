@@ -59,7 +59,8 @@ export class AddBuyPage implements OnInit
 
     saveBuy( ): void {
         if( this.buyForm.valid ){
-            var _doc   = this.buyForm.value;
+            var _doc       = this.buyForm.value;
+            _doc.active    = true;
 
             this.buysService
             .post( _doc )

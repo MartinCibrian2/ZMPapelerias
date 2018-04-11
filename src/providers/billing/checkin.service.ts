@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
+import { Platform } from 'ionic-angular';
+
+import { File } from '@ionic-native/file';
+import { saveAs } from 'file-saver';
 
 import PouchDB from 'pouchdb';
-import xml2js from 'xml2js';
+// import xml2js from 'xml2js';
 import xmlbuilder from 'xmlbuilder';
 
 import moment from 'moment';
@@ -27,7 +31,8 @@ export class CheckinService {
     constructor(
         private httpClient: HttpClient,
         private http: Http,
-        public appSettings: AppSettings
+        public appSettings: AppSettings,
+        public platform: Platform
     ){
         this.apiPaths      = appSettings.getPaths();
         this.billingUrl    = this.apiPaths["billing"];
@@ -230,9 +235,22 @@ console.log( bill, xml );
     }
 
     sendFile( xmlString: string ){
+        var _url = '../../'+ this.appSettings._urlConfigs +'data/',
+            file_xml = "file_xml.xml";
+
         var xmlBlob = new Blob([ xmlString ], {"type": "text/xml"}),
             pdfBlob = new Blob([ xmlString ], {"type": "text/pdf"});
 
+            if( !this.platform.is('android')){
+                saveAs( xmlBlob, _url+file_xml ); 
+            } else {
+                File.writeFile( _url, file_xml, xmlBlob, true).then(()=> {
+                    alert("file created at: " + _url);
+                }).catch(()=>{
+                   alert("error creating file at :" + _url);
+                })
+            }
+console.log( _url );
         let _billing    = {
             "_id": "One",
             "_attachments": {
