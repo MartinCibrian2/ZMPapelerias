@@ -20,7 +20,6 @@ import { DatosVentasProvider } from '../providers/datos-ventas/datos-ventas';
 
 import { BillingPage } from '../pages/billing/billing';
 import { ClientsPage } from '../pages/configuracion/clients/clients';
-import { ClientPage } from '../pages/configuracion/clients/client/client';
 
 import { AppSettings } from './common/api.path';
 import { LoadSettings } from './common/load.settings';
@@ -34,7 +33,6 @@ import { SearchPipe } from './pipes/search.pipe';
     MyApp,
     BillingPage,
     ClientsPage,
-    ClientPage,
 
     SearchPipe
   ],
@@ -56,8 +54,7 @@ import { SearchPipe } from './pipes/search.pipe';
   entryComponents: [
     MyApp,
     BillingPage,
-    ClientsPage,
-    ClientPage
+    ClientsPage
   ],
   providers: [
     StatusBar,

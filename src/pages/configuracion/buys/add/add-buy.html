@@ -8,52 +8,135 @@
 <ion-content padding>
     <form novalidate [formGroup]="buyForm" (submit)="saveBuy()">
         <ion-grid>
-            <ion-col col-6 col-sm-9 col-md-6 col-lg-6 col-xl-3>
-                <ion-item>
-                    <ion-label stacked>
-                        Producto
-                    </ion-label>
-                    <ion-input  formControlName="nombre" placeholder="Nombre del producto"></ion-input>
-                </ion-item>
-            </ion-col>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Producto
+                        </ion-label>
+                        <ion-input  formControlName="nombre" placeholder="Nombre del producto"></ion-input>
+                    </ion-item>
+                    <ion-item *ngIf="buyForm.get('nombre').errors && buyForm.get('nombre').dirty">
+                        <p color="danger" *ngIf="buyForm.get('nombre').hasError('required')">
+                            Este campo es requerido
+                        </p>
+                        <p color="danger" *ngIf="buyForm.get('nombre').hasError('pattern')">
+                            Nombre no valido
+                        </p>
+                    </ion-item>
+                </ion-col>
 
-            <ion-col col-6 col-sm-9 col-md-6 col-lg-6 col-xl-3>
-                <ion-item>
-                    <ion-label stacked>
-                        Descripción
-                    </ion-label>
-                    <ion-input  formControlName="descripcion" placeholder="Descripción del producto"></ion-input>
-                </ion-item>
-            </ion-col>
-
-            <!-- <ion-item>
-                    <ion-label staket>Descripción Sat </ion-label>
-                    <ion-select [(ngModel)]="claveProdServ">
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Descripción
+                        </ion-label>
+                        <ion-input  formControlName="descripcion" placeholder="Descripción del producto"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>Descripción Sat </ion-label>
+                        <ion-select formControlName="claveProdServ">
                             <ion-option *ngFor="let _claveProdServ of claveProdServs" value="{{_claveProdServ.c_ClaveProdServ}}">
-                                    {{ _claveProdServ['Descripción'] }}
+                                {{ _claveProdServ['Descripción'] }}
                             </ion-option>
-                    </ion-select>
-            </ion-item> -->
+                        </ion-select>
+                    </ion-item>
+                    <ion-item *ngIf="buyForm.get('claveProdServ').errors && buyForm.get('claveProdServ').dirty">
+                        <p color="danger" *ngIf="buyForm.get('claveProdServ').hasError('required')">
+                            Este campo es requerido
+                        </p>
+                        <p color="danger" *ngIf="buyForm.get('claveProdServ').hasError('pattern')">
+                            Clave no valida
+                        </p>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Unidad de Venta
+                        </ion-label>
+                        <ion-input formControlName="unidad" placeholder="Unidad de venta"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Precio de Lista
+                        </ion-label>
+                        <ion-input formControlName="preciopublico" placeholder="Precio de lista"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Costo
+                        </ion-label>
+                        <ion-input formControlName="costo" placeholder="Costo de Adquisición"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Descuento de Mayoreo
+                        </ion-label>
+                        <ion-input formControlName="descuentomayoreo" placeholder="Descuento de Mayoreo"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Descuento Máximo
+                        </ion-label>
+                        <ion-input formControlName="descuentomaximo" placeholder="Descuento de Mayoreo"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Cantidad para aplicar mayoreo
+                        </ion-label>
+                        <ion-input formControlName="mayoreo" placeholder="Cantidad para aplicar mayoreo"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Tasas de IVA
+                        </ion-label>
+                        <ion-input formControlName="iva" placeholder="Tasa de impuesto"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Inventario Mínimo
+                        </ion-label>
+                        <ion-input formControlName="inventariominimo" placeholder="Cantidad mínima de inventario"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Existencias
+                        </ion-label>
+                        <ion-input formControlName="inventarioactual" placeholder="Existencia actual"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
 
-            <ion-col col-6 col-sm-9 col-md-6 col-lg-6 col-xl-3>
-                <ion-item>
-                    <ion-label stacked>
-                        Unidad de Venta
-                    </ion-label>
-                    <ion-input formControlName="unidad" placeholder="Unidad de venta"></ion-input>
-                </ion-item>
-            </ion-col>
-
-            <ion-col col-6 col-sm-9 col-md-6 col-lg-6 col-xl-3>
-                <ion-item>
-                    <ion-label stacked>
-                        Precio de Lista
-                    </ion-label>
-                    <ion-input formControlName="preciopublico" placeholder="Precio al público"></ion-input>
-                </ion-item>
-            </ion-col>
-
-            <ion-col col-12 col-sm-9 col-md-6 col-lg-6 col-xl-3>
+            <ion-col col-12>
                 <button ion-button block 
                         type="submit"
                         [disabled]="buyForm.invalid">

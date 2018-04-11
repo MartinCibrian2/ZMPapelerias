@@ -4,6 +4,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { BuysPage } from './buys';
 import { AddBuyPageModule } from './add/add-buy.module';
 import { AddBuyPage } from './add/add-buy';
+import { EditBuyPage } from './edit/edit-buy';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AddBuyPage } from './add/add-buy';
     AddBuyPageModule
   ],
   entryComponents: [
-    AddBuyPage
+    AddBuyPage,
+    EditBuyPage
   ],
   exports: [
     AddBuyPage

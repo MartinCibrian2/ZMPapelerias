@@ -31,7 +31,7 @@ export class BuysService
         public appSettings: AppSettings
     ){
         let databases    = this.appSettings.getDatabases();
-        this.buyUrl    = databases.buys.database;
+        this.buyUrl      = databases.buys.database;
 
         this._pouchDbAdapter    = new PouchDbAdapter( this.buyUrl );
         this.syncStatus         = this._pouchDbAdapter.syncStatus.asObservable();
@@ -40,18 +40,17 @@ export class BuysService
 
     getBuys( params: any ): Observable <any> {
         // For all buy
-        return this._pouchDbAdapter.getDocsByStringObservable( {} );
+        return this._pouchDbAdapter.getAllDocsObservable( {} );
     }
 
-    post( _buy ): Observable <any> {
-        //_buy    = new SellModel( '', _buy.nombre, _buy.rfc, _buy.tel, true );
+    post( _buy: ProductModel ): Observable <any> {
 
-        return //Observable.resolve( this._pouchDbAdapter.post( _buy ));
+        return this._pouchDbAdapter.postObservable( _buy );
     }
 
     put( _buy ): Observable <any> {
         /* let _rev    = _buy._rev;
-        _buy     = new sellModel( _buy._id, _buy.nombre, _buy.rfc, _buy.tel, _buy.active );
+        _buy     = new ProductModel( _buy._id, _buy.nombre, _buy.rfc, _buy.tel, _buy.active );
         _buy._rev    = _rev; */
 
         return //Observable.resolve( this._pouchDbAdapter.put( _buy ));
@@ -61,8 +60,9 @@ export class BuysService
         return //Observable.resolve( this._pouchDbAdapter.delete( _doc ));
     }
 
-    searchBuyByString( texto ){
-        return this._pouchDbAdapter.getAllDocsObservable( texto )
+    searchBuyByString( text ){
+
+        return this._pouchDbAdapter.getDocsByStringObservable( text )
         .pipe( delay( 2000 ));
     }
     // Pending, I have developing this method

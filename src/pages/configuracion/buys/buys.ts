@@ -50,7 +50,7 @@ export class BuysPage {
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad BuysPage');
+        // console.log('ionViewDidLoad BuysPage');
     }
 
     ngOnInit(): void {
@@ -71,13 +71,12 @@ export class BuysPage {
     getBuys(){
         this.buyService
         .getBuys( {} )
-        /* .then(( data ) => {
-            this.Buys = [];
+        .subscribe(( data ) => {
+            this.buys = [];
             data.rows.map(( row ) => {
-                this.Buys.push( row.doc );
-                //this._Buys.push( row.doc );
+                this.buys.push( row.doc );
             });
-        }); */
+        });
     }
 
     deleteBuy( item: any): void {

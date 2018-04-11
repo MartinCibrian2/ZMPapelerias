@@ -22,24 +22,24 @@
     </ion-grid>
 
 
-    <!-- <ion-list>
-        <ion-item-sliding *ngFor="let item of clients | search: searching">
+    <ion-list>
+        <ion-item-sliding *ngFor="let item of buys">
             <ion-item>
                 <h2>{{ item.nombre }}</h2>
-                <p>{{ item.rfc }}</p>
+                <p>{{ item["descripcion"] }} ${{ item.costo }} {{ item.unidad }} </p>
             </ion-item>
             <ion-item-options>
                 <button ion-button color="primary"
-                        (click)="openNavDetailsClient( item )" icon-start>
+                        (click)="openNavDetailsBuy( item )" icon-start>
                     <ion-icon name="create"></ion-icon>
                     Actualizar
                 </button>
                 <button ion-button color="danger" 
-                        (click)="deleteClient( item )" icon-start>
+                        (click)="deleteBuy( item )" icon-start>
                     <ion-icon name="trash"></ion-icon>
                     Borrar
                 </button>
             </ion-item-options>
         </ion-item-sliding>
-    </ion-list> -->
+    </ion-list>
 </ion-content>

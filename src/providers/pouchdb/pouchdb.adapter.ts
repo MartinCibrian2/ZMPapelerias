@@ -65,9 +65,9 @@ export class PouchDbAdapter {
         let _params = Object.assign( { include_docs: true }, params );
 
         return Observable.from(
-            this._pouchDB.allDocs( _params )
+            this._pouchDB
             .query(( doc, emit ) => {
-                    console.log( doc )
+                    emit( doc )
                 }, {
                     include_docs: true
                 }
@@ -75,13 +75,13 @@ export class PouchDbAdapter {
         );
     }
 
-    getDocsByStringObservable( texto ): Observable <any> {
-        var regex, _list;
+    getDocsByStringObservable( text ): Observable <any> {
+        var regex;
 
         return Observable.from( 
             this._pouchDB
             .query( function( doc, emit ){
-                    var regex = new RegExp( texto.toLowerCase(), "i");
+                    var regex = new RegExp( text.toLowerCase(), "i");
                     if( doc.nombre ){
                         if( doc.nombre.toLowerCase().match( regex ) && doc.active === true ){
                             emit( doc.nombre );
@@ -94,6 +94,13 @@ export class PouchDbAdapter {
         );
     }
 
+    postObservable( doc: any ): Observable<any> {
+        return Observable.from(
+            this._pouchDB.post( doc )
+        );
+    }
+
+    /* Promises */
     getDocsByString( texto ){
         var regex, _list;
 
@@ -171,6 +178,9 @@ export class PouchDbAdapter {
             });
         });
     }
+
+
+    
     // function to call the below functions
     // then update the rxjs BehaviourSubjects with the 
     // results
