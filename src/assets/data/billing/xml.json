@@ -65,19 +65,6 @@
                     "@Importe": 0.00
                 }]
             }
-        },
-        "cfdi:Complemento": {
-            "tfd:TimbreFiscalDigital": {
-                "@xmlns:tfd": "http://www.sat.gob.mx/TimbreFiscalDigital",
-                "@xsi:schemaLocation": "http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd",
-                "@Version": "1.1",
-                "@UUID": "10865254-4E6C-4B0C-913B-3CE2BB639160",
-                "@FechaTimbrado": "",
-                "@RfcProvCertificado": "SAT970701NN3",
-                "@SelloCFDI": "KKuJWKeoAgGjmJNfotaEDtQdDGDSeIib3KkEvz86qPAhB8V/SyBGDlZKhUe+HcymrYt0RDlzNt2/7AU3WmICHmS1HfbBo4W9+CJdr/R0DTjJz+6Jduy9mLA3aTnz0KWzPnB14PPzIzIvLgiiWyc97Og5m6y3QUMaRlG/HYfcvZo/g6jySOuY5nPtUp8P/ADlBpRnDC/ClMZuBz5KDCC527dBwLfWqXDJMNB2M7fmAUTmhviEhp920JcY33OOZpo/qqACFSxseaZis7yd+aGBb9qifGS9vP1LpeXV2uHX40QybrOfdQp1s6ZqAxdupbGyjVm/kL1zr1pGHk2+r4DZvA==",
-                "@NoCertificadoSAT": "00001000000403258748",
-                "@SelloSAT": "Tntbmbod4u5fAXv/o47eqebUQEF99Fnl2O8zoqdzgixAGVlFq1VnyODuz65nyCVmp8sh+5um4gcg7LPKwVhO+/xhYJOTqzipwl794lFk3EhjkyFdWUA8rJNDIW+YyU9Rb+8s91bEG3R690gz+gurjHrFEL9WpU4fBjzYlIZmdvt4kZR+IEOKo3jM82ptOZ2wG9Xcrm6OJ1/ewODliC5X1KMT7Tn+vXpu50NCEhfdH8c93DkX46JQfpOmVW7ue74FRo1hJ0sUkvmjabbCxJsWk2FpnboANTh9kZfu0BB/pywnDbzubmojT21Zt/O2tLq8cFdWsc4HGpuCqnuM/Vsm5g=="
-            }
         }
     }
 }

@@ -55,7 +55,7 @@ export class BillingPage implements OnInit {
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad BillingPage');
+        // console.log('ionViewDidLoad BillingPage');
     }
 
     goAddClient(){
@@ -120,7 +120,6 @@ export class BillingPage implements OnInit {
                     // The row is active equal false.
                 }
             })
-            console.log( this.waystopay )
         });
     }
 
@@ -156,6 +155,7 @@ export class BillingPage implements OnInit {
 
                 _xml["cfdi:Comprobante"]["cfdi:Receptor"]["@Nombre"]    = _form.client.nombre;
                 _xml["cfdi:Comprobante"]["cfdi:Receptor"]["@Rfc"]       = _form.client.rfc;
+                _xml["cfdi:Comprobante"]["@FormaPago"]                  = _form.waytopay;
 
                 _xml    = this.checkingService
                 .checking( _xml );
