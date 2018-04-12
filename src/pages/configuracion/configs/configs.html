@@ -1,0 +1,49 @@
+
+<ion-header>
+    <ion-navbar>
+        <ion-title>Catalogos - ZMPapelerias</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-10>
+                <ion-searchbar (ionInput)="searchConfigByString( $event )">
+                </ion-searchbar>
+            </ion-col>
+            <ion-col col-2>
+                <button ion-button  [navPush]="addConfigPage"
+                        [navParams]="paramsConfig">
+                    <ion-icon name="add"></ion-icon>
+                </button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-list>
+        <ion-item-sliding *ngFor="let item of catalogs">
+            <ion-item>
+                <h2>Catalogo {{ item }}</h2>
+            </ion-item>
+            <ion-item-options>
+                <button ion-button color="secondary"
+                        [navPush]="catalogsPage" icon-start
+                        [navParams]="paramConfig">
+                    <ion-icon name="add"></ion-icon>
+                    Extender
+                </button>
+                <button ion-button color="primary"
+                        (click)="openNavDetailsConfig( item )" icon-start>
+                    <ion-icon name="create"></ion-icon>
+                    Actualizar
+                </button>
+                <button ion-button color="danger" 
+                        (click)="deleteConfig( item )" icon-start>
+                    <ion-icon name="trash"></ion-icon>
+                    Borrar
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+</ion-content>
