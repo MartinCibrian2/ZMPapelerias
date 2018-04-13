@@ -1,0 +1,47 @@
+
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ title}} Compra - ZMPapelerias</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <!-- <form novalidate [formGroup]="configForm" (submit)="saveConfig()">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Producto
+                        </ion-label>
+                        <ion-input  formControlName="nombre" placeholder="Nombre del producto"></ion-input>
+                    </ion-item>
+                    <ion-item *ngIf="configForm.get('nombre').errors && configForm.get('nombre').dirty">
+                        <p color="danger" *ngIf="configForm.get('nombre').hasError('required')">
+                            Este campo es requerido
+                        </p>
+                        <p color="danger" *ngIf="configForm.get('nombre').hasError('pattern')">
+                            Nombre no valido
+                        </p>
+                    </ion-item>
+                </ion-col>
+
+                <ion-col>
+                    <ion-item>
+                        <ion-label stacked>
+                            Descripción
+                        </ion-label>
+                        <ion-input  formControlName="descripcion" placeholder="Descripción del producto"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-col col-12>
+                <button ion-button block 
+                        type="submit"
+                        [disabled]="configForm.invalid">
+                    Guardar
+                </button>
+            </ion-col>
+        </ion-grid>
+    </form> -->
+</ion-content>

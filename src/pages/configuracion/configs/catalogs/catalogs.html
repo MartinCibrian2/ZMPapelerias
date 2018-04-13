@@ -1,7 +1,7 @@
 
 <ion-header>
     <ion-navbar>
-        <ion-title>Catalogos - ZMPapelerias</ion-title>
+        <ion-title>Catalogo {{ nameField }} - ZMPapelerias</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -9,12 +9,12 @@
     <ion-grid>
         <ion-row>
             <ion-col col-10>
-                <ion-searchbar (ionInput)="searchConfigByString( $event )">
+                <ion-searchbar [(ngModel)]="searching">
                 </ion-searchbar>
             </ion-col>
             <ion-col col-2>
-                <button ion-button  [navPush]="addConfigPage"
-                        [navParams]="paramsConfig">
+                <button ion-button  [navPush]="addCatalogPage"
+                        [navParams]="paramsCatalog">
                     <ion-icon name="add"></ion-icon>
                 </button>
             </ion-col>
@@ -24,21 +24,16 @@
     <ion-list>
         <ion-item-sliding *ngFor="let item of catalogs">
             <ion-item>
-                <h2>Catalogo {{ item }}</h2>
+                <h2>{{ nameField }} {{ item[ nameField ] }}</h2>
             </ion-item>
             <ion-item-options>
-                <button ion-button color="secondary"
-                        (click)="openNavDetailsConfig( item )" icon-start>
-                    <ion-icon name="add"></ion-icon>
-                    Agregar
-                </button>
                 <button ion-button color="primary"
-                        (click)="openNavDetailsConfig( item )" icon-start>
+                        (click)="openNavDetails( item )" icon-start>
                     <ion-icon name="create"></ion-icon>
                     Actualizar
                 </button>
                 <button ion-button color="danger" 
-                        (click)="deleteConfig( item )" icon-start>
+                        (click)="delete( item )" icon-start>
                     <ion-icon name="trash"></ion-icon>
                     Borrar
                 </button>

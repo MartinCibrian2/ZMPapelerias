@@ -27,14 +27,13 @@
                 <h2>Catalogo {{ item }}</h2>
             </ion-item>
             <ion-item-options>
-                <button ion-button color="secondary"
-                        [navPush]="catalogsPage" icon-start
-                        [navParams]="paramConfig">
+                <button ion-button color="secondary" icon-start
+                        (click)="openNavPage( catalogsPage, item )">
                     <ion-icon name="add"></ion-icon>
                     Extender
                 </button>
                 <button ion-button color="primary"
-                        (click)="openNavDetailsConfig( item )" icon-start>
+                        (click)="openNavPage( editConfigPage, item )" icon-start>
                     <ion-icon name="create"></ion-icon>
                     Actualizar
                 </button>

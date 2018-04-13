@@ -3,9 +3,9 @@ import { IonicPage, NavController, NavParams, AlertController, ToastController }
     from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
-//import { CatalogsService } from '../../../providers/catalogs/catalogs.service';
+import { ConfigsService } from '../../../../providers/configs/configs.service';
 
-//import { AddCatalogPage } from './add/add-catalog';
+import { AddCatalogPage } from './add/add-catalog';
 //import { EditcatalogPage } from './edit/edit-catalog';
 
 @IonicPage()
@@ -18,20 +18,18 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 })
 export class CatalogsPage 
 {
+    public nameField: string;
     public catalogs    = [];
     public searching;
     public optionsResult: any;
 
-    //public addConfigPage = AddCatalogPage;
-    public paramsConfig  = { page: CatalogsPage };
-
-    public catalogsPage   = CatalogsPage;
-    //public paramsCatalogs = { page: CatalogsPage };
+    public addCatalogPage = AddCatalogPage;
+    public paramsCatalog  = { page: CatalogsPage };
 
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
-        //private catalogService: CatalogsService,
+        private configService: ConfigsService,
         public alertCtrl: AlertController,
         public toastCtrl: ToastController
     ){
@@ -52,22 +50,40 @@ export class CatalogsPage
     }
 
     ngOnInit(): void {
-        this.getCatalogs( );
+        let _params    = this.navParams.data;
+
+        if( Object.keys( _params ).length ){
+            if( _params.hasOwnProperty('catalog')){
+                this.nameField    = _params.catalog;
+                this.getCatalog( _params.catalog );
+                this,this.postCatalog()
+            }
+        }
     }
 
-    getCatalogs(){
-        /* this.catalogService
-        .getCatalogs( {} )
+    getCatalog( _catalog: string ){
+        this.configService
+        .getConfigs( {} )
         .subscribe(( data ) => {
-            this.catalogs    = [];
-            Object.keys( data )
-            .forEach(( _catalog ) => {
-                this.catalogs.push( data[ _catalog ]);
-            });
-        }); */
+            this.catalogs    = data[ _catalog ];
+        });
     }
 
-    searchConfigByString( eve ){
+    postCatalog(){
+        let _doc = {
+            c_Moneda: "ARG",
+            Descripción: "Peso Argentino",
+            Decimales: 2,
+            "Porcentaje variación": "35%"
+        };
+        this.configService.post( _doc ).subscribe(( response ) => {
+            console.log( response )
+        }, ( error ) => {
+            console.log( error )
+        });
+    }
+
+    searchByString( eve ){
         let val = eve.target.value;
         /* this.catalogService
         .searchConfigByString( val )
@@ -78,7 +94,7 @@ export class CatalogsPage
         }); */
     }
 
-    deleteConfig( item: any): void {
+    delete( item: any): void {
         /* this.optionsResult    = {
             "message": item.nombre + " se ha eliminado",
             "duration": 5000,
@@ -116,8 +132,8 @@ export class CatalogsPage
         confirm.present(); */
     }
 
-    openNavDetailsConfig( item ){
-        //this.navCtrl.push( EditConfigPage, { item: item });
+    openNavDetailsCatalog( item ){
+        //this.navCtrl.push( EditCatalogPage, { item: item });
     }
 
     presentToast( _options: any ): void {

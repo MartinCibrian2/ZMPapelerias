@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { delay } from 'rxjs/operators';
+import { delay, catchError } from 'rxjs/operators';
 
 // import PouchDB from 'pouchdb';
 
 // import { PouchDbAdapter } from '../pouchdb/pouchdb.adapter';
 
 import { AppSettings } from '../../app/common/api.path';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 //import { ProductModel } from '../../app/models/product.model';
 
 @Injectable()
@@ -42,15 +43,24 @@ export class ConfigsService
 
     getConfigs( params: any ): Observable <any> {
         var _urlJson = '../../'+ this.appSettings._urlConfigs + this.folder_file + '/catalogs.json';
-console.log( _urlJson )
         // For all config
         return this.httpClient.get( _urlJson );
         //this._pouchDbAdapter.getAllDocsObservable( {} );
     }
 
     post( _config: any ): Observable <any> {
+        var _urlJson = '../../'+ this.appSettings._urlConfigs + this.folder_file + '/catalogs.txt';
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/text'
+            })
+          };
 
-        return //this._pouchDbAdapter.postObservable( _config );
+        return this.httpClient.put( _urlJson, _config, httpOptions )
+        /* .pipe(
+          catchError( this.handleError( _config ))
+        ) */;
+        //this._pouchDbAdapter.postObservable( _config );
     }
 
     put( _config: any ): Observable <any> {
@@ -72,5 +82,21 @@ console.log( _urlJson )
         return //this._pouchDbAdapter.getDocsByStringObservable( text )
         //.pipe( delay( 2000 ));
     }
+
+    private handleError( error: HttpErrorResponse ) {
+        if (error.error instanceof ErrorEvent) {
+          // A client-side or network error occurred. Handle it accordingly.
+          console.error('An error occurred:', error.error.message);
+        } else {
+          // The backend returned an unsuccessful response code.
+          // The response body may contain clues as to what went wrong,
+          console.error(
+            `Backend returned code ${error.status}, ` +
+            `body was: ${error.error}`);
+        }
+        // return an ErrorObservable with a user-facing error message
+        return new ErrorObservable(
+          'Something bad happened; please try again later.');
+      };
 
 }

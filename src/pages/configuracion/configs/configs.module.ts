@@ -26,7 +26,7 @@ import { AddConfigPage } from './add/add-config';
     ConfigsService
   ],
   exports: [
-    //CatalogsPageModule,
+    CatalogsPageModule,
     AddConfigPage
   ]
 })

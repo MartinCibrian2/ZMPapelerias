@@ -13,7 +13,7 @@ import { ConfigsPageModule } from './configs/configs.module';
         ConfigsPageModule
     ],
     exports: [
-        
+        ConfigsPageModule
     ]
 })
 export class ConfiguracionPageModule {}

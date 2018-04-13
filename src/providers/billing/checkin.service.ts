@@ -273,15 +273,35 @@ export class CheckinService {
 
         
         var params = {
-            user: "contacto@colegiocuauhtli.com.mx",
-            password: "T3mp0r4l$",
+            //user: "contacto@colegiocuauhtli.com.mx",
+            //password: "T3mp0r4l$",
+            user: "demo",
+            password: "123456789",
             //url: 'http://services.test.sw.com.mx',
             url: 'services.test.sw.com.mx',
             //mode: 'no-cors'
             //token: "T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbXB3YVZxTHdOdHAwVXY2NTdJb1hkREtXTzE3dk9pMmdMdkFDR2xFWFVPUXpTUm9mTG1ySXdZbFNja3FRa0RlYURqbzdzdlI2UUx1WGJiKzViUWY2dnZGbFloUDJ6RjhFTGF4M1BySnJ4cHF0YjUvbmRyWWpjTkVLN3ppd3RxL0dJPQ.T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbFlVcU92YUJTZWlHU3pER1kySnlXRTF4alNUS0ZWcUlVS0NhelhqaXdnWTRncklVSWVvZlFZMWNyUjVxYUFxMWFxcStUL1IzdGpHRTJqdS9Zakw2UGRiMTFPRlV3a2kyOWI5WUZHWk85ODJtU0M2UlJEUkFTVXhYTDNKZVdhOXIySE1tUVlFdm1jN3kvRStBQlpLRi9NeWJrd0R3clhpYWJrVUMwV0Mwd3FhUXdpUFF5NW5PN3J5cklMb0FETHlxVFRtRW16UW5ZVjAwUjdCa2g0Yk1iTExCeXJkVDRhMGMxOUZ1YWlIUWRRVC8yalFTNUczZXdvWlF0cSt2UW0waFZKY2gyaW5jeElydXN3clNPUDNvU1J2dm9weHBTSlZYNU9aaGsvalpQMUxqU1Fka3p5QWREb3RteWlLOW52RVpqa2E0NzIxUXVtZmlHSGlrVk4wWHZaODlja0VlZGxUK1czVVZmbUE3K1BCTWcrUStxOUZyL1lodUpCVEl5NFFWekdEWkdoMTNnSnpES3RlZmpWaHpaQ24rTE5oMnA4RzNISmJXMjhScCtBKzJQeGNrcEhjNVhmME9WeG91QVVTSjg9.U_VF2jaOm-FMTCmlYeE0RlN9kAgi8DV0EcmPKYSHitw"
             //token: "dlI2UUx1WGJiKzViUWY2dnZGbFloUDJ6RjhFTGF4M1BySnJ4cHF0YjUvbmRyWWpjTkVLN3ppd3RxL0dJPQ.T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbFlVcU92YUJTZWlHU3pER1kySnlXRTF4alNUS0ZWcUlVS0NhelhqaXdnWTRncklVSWVvZlFZMWNyUjVxYUFxMWFxcStUL1IzdGpHRTJqdS9Zakw2UGRkZEFZcDFhY3lhUC95OUZOaU1xZGtnZEdlMUhwZUp3U2c3RllwZyt5TzNQMjVpWTNkOXlDTllpR2laNWdKNHBKNGhqL3VmVkwxWmtEQU9ibHpOSzI0YnA0d3l1TklyL2RUMU41alh5MEJqNnIyb2lCajI3a3RVRHFxdTZjTHFacXl5dnlBVzhjdnBraTVjelRNdEZteDlucUJ2QWFLSlJOWlo5N3dsRTUwcUt5QmlsUldjN1VRQTVRamJUR3ZNdEJ0VDBETVBrVThpTTE3dmtzNjhwRU1DbWlyQ2pGbyt0OWtMd0Z6V2l1bnlKbjB2cXdhc1RRbWsxcU5MUXNTWUFkdjI2S0x0MWUwbjM5U3RGNXQ3aDZrQlA5ajFhS2RCeDB3RDY2WHduSG1oRUVUNmNBcTZDdlF0ZnFDY2RBTlA3OTZjMEtqUXIrZEZMS3dzcUdjODRraVZuYXhUQWNCeWlGa1drdDBWUXBmSzNBRmlyRXRieXJQd1pZUnJxY1lESTNHelNlWnVTUHU1VlFJd2QwTWVhQmh3PT0.0ZcWDXbHF11LxtxY43O0WQuolqfdlvpc2ySOYkY-L8Q"
         };
-        let auth   = Authentication.auth( params );
+        var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    console.log(this.responseText);
+                } else {
+                    console.log( this.responseText )
+                }
+            });
+
+            xhr.open("POST", "http://services.test.sw.com.mx/security/authenticate");
+            xhr.setRequestHeader("user", "demo");
+            xhr.setRequestHeader("password", "123456789");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.setRequestHeader("Postman-Token", "18410574-d027-4957-8808-101a5ae97fda");
+
+            xhr.send( xmlString );
+        /*let auth   = Authentication.auth( params );
 		var callback = ( error, data ) => {
 			if( error ){
 				console.log(error);
@@ -289,8 +309,8 @@ export class CheckinService {
                 console.log(data);
             }
         };
-        let _token = auth.Token( callback );
-console.log( xmlString, _token )
+        let _token = auth.Token( callback );*/
+console.log( xmlString )
     	//let stamp    = StampService.Set( params );
     	//stamp.StampV3( xmlString, callback );
             //File.createFile( _url, 'myFile.xml', xmlBlob );

@@ -24,7 +24,7 @@ export class PouchDbAdapter {
         this._remoteCouchDBAddress = remoteCouchDBAddress;
         // string function to extract the database name from the URL
         this._pouchDbName = remoteCouchDBAddress
-            .substr(remoteCouchDBAddress.lastIndexOf('/') + 1 );
+            .substr( remoteCouchDBAddress.lastIndexOf('/') + 1 );
 
         // init local PouchDB
         // new PouchDB(this._pouchDbName).destroy().then(function () {
@@ -33,6 +33,7 @@ export class PouchDbAdapter {
         // }).catch(function (err) {
         //     // error occurred
         // });
+        console.log( this._pouchDbName )
         this._pouchDB = new PouchDB( this._pouchDbName );
         // init PouchDB adapter for remote CouchDB
         this._couchDB = new PouchDB( remoteCouchDBAddress );

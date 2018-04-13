@@ -24,7 +24,7 @@ export class ConfiguracionPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ConfiguracionPage');
+    // console.log('ionViewDidLoad ConfiguracionPage');
   }
 
 }

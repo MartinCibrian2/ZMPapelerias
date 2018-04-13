@@ -6,6 +6,8 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ConfigsService } from '../../../providers/configs/configs.service';
 
 import { AddConfigPage } from './add/add-config';
+import { CatalogsPage } from './catalogs/catalogs';
+import { EditConfigPage } from './edit/edit-config';
 //import { EditConfigPage } from './edit/edit-config';
 
 @IonicPage()
@@ -22,13 +24,14 @@ export class ConfigsPage {
     public searching;
     public optionsResult: any;
 
+    public addConfigPage     = AddConfigPage;
+    public editConfigPage    = EditConfigPage;
+    public catalogsPage      = CatalogsPage;
+    public paramsConfig      = { page: ConfigsPage };
     // For sync
     remoteCouchDbAddress: string;
     syncStatus: boolean;
     couchDbUp: boolean;
-
-    public addConfigPage = AddConfigPage;
-    public paramsConfig  = { page: ConfigsPage };
 
     constructor(
         public navCtrl: NavController,
@@ -121,8 +124,8 @@ export class ConfigsPage {
         confirm.present(); */
     }
 
-    openNavDetailsConfig( item ){
-        //this.navCtrl.push( EditConfigPage, { item: item });
+    openNavPage( page, param ){
+        this.navCtrl.push( page, { catalog: param });
     }
 
     presentToast( _options: any ): void {

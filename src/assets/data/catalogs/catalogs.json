@@ -5,19 +5,21 @@
             "c_Moneda": "MXN",
             "Descripción": "Peso Mexicano",
             "Decimales": 2,
-            "Porcentaje variación": "35%"
+            "Porcentaje variación": "35%",
+            "active": true
         }, {
             "c_Moneda": "USD",
             "Descripción": "Dolar Americano",
             "Decimales": 2,
-            "Porcentaje variación": "35%"
+            "Porcentaje variación": "35%",
+            "active": true
         }
     ],
     "c_ClaveProdServ": [
-        { "c_ClaveProdServ": "60121130", "Descripción": "Cuadernos de papel imitación lienzo" },
-        { "c_ClaveProdServ": "60121221", "Descripción": "Pintura de acuarela de platillo" },
-        { "c_ClaveProdServ": "60121226", "Descripción": "Pinceles para acuarela" },
-        { "c_ClaveProdServ": "44121707", "Descripción": "Lápices de colores" }
+        { "c_ClaveProdServ": "60121130", "Descripción": "Cuadernos de papel imitación lienzo", "active": true },
+        { "c_ClaveProdServ": "60121221", "Descripción": "Pintura de acuarela de platillo", "active": true },
+        { "c_ClaveProdServ": "60121226", "Descripción": "Pinceles para acuarela", "active": true },
+        { "c_ClaveProdServ": "44121707", "Descripción": "Lápices de colores", "active": true }
     ],
     "c_FormaPago": [
         { "cFormaPago": "01", "Descripción": "Efectivo", "active": true },

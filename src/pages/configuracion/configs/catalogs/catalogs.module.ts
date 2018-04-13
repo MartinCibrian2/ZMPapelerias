@@ -12,7 +12,7 @@ import { CatalogsPage } from './catalogs';
      CatalogsPage,
   ],
   imports: [
-    IonicPageModule.forChild( CatalogsPage),
+    IonicPageModule.forChild( CatalogsPage )
     //AddCatalogPageModule
   ],
   entryComponents: [
@@ -23,6 +23,7 @@ import { CatalogsPage } from './catalogs';
     //CatalogsService
   ],
   exports: [
+    CatalogsPage
     //AddCatalogPage
   ]
 })
