@@ -21,16 +21,20 @@ import { DatosVentasProvider } from '../providers/datos-ventas/datos-ventas';
 import { BillingPage } from '../pages/billing/billing';
 import { ClientsPage } from '../pages/configuracion/clients/clients';
 
+import { AuthGuard } from './common/auth.guard';
+import { AuthenticationService } from '../providers/authentication.service';
 import { AppSettings } from './common/api.path';
 import { LoadSettings } from './common/load.settings';
 import { CheckinService }  from '../providers/billing/checkin.service';
 import { ClientService }  from '../providers/clients/client.service';
 
 import { SearchPipe } from './pipes/search.pipe';
+import { LoginPage } from '../pages/login/login';
 
 @NgModule({
   declarations: [
     MyApp,
+    LoginPage,
     BillingPage,
     ClientsPage,
 
@@ -53,6 +57,7 @@ import { SearchPipe } from './pipes/search.pipe';
   bootstrap: [ IonicApp ],
   entryComponents: [
     MyApp,
+    LoginPage,
     BillingPage,
     ClientsPage
   ],
@@ -69,7 +74,8 @@ import { SearchPipe } from './pipes/search.pipe';
     DatosVentasProvider,
     CheckinService,
     ClientService,
-    AppSettings
+    AppSettings,
+    AuthenticationService
   ],
   exports: [
     SearchPipe

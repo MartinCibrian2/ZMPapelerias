@@ -1,0 +1,32 @@
+page-login {
+    ion-content{
+        /*img.logo {
+            width: 80%;
+            margin: 40% auto 5px;
+            display: block;
+        }*/
+        .item{
+            background-color: rgba( 255, 255, 255, .3 );
+            border-radius: 5px;
+            margin-bottom: 10px;
+            &::last-child{
+                margin-bottom: 0px;
+            }
+            .text-input{
+                color: green;
+            }
+        }
+        input.text-input{
+            @include placeholder(gray);
+        }
+    }
+    ion-footer{
+        .toolbar-background{
+            background-color: rgba( 255, 255, 255, .3 );
+        }
+        .toolbar-title{
+            color: white;
+            font-weight: lighter;
+        }
+    }
+}

@@ -1,0 +1,59 @@
+<ion-content class="gradient" padding>
+    <h1 color="primary">Acceso</h1>
+    <!-- <form novalidate [formGroup]="loginForm" (ngSubmit)="doLogin( $event )">
+        <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+            <ion-item>
+                <ion-input placeholder="Teléfono" type="text" formControlName="phonenumber"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="loginForm.controls.phonenumber.errors && loginForm.controls.phonenumber.dirty">
+                <p color="danger" *ngIf="loginForm.controls.phonenumber.hasError('required')">
+                    Este campo es requerido
+                </p>
+                <p color="danger" *ngIf="loginForm.controls.phonenumber.hasError('pattern')">
+                    N° es valido
+                </p>
+            </ion-item>
+        </ion-row>
+
+        <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+            <ion-item>
+                <ion-input placeholder="Contraseña" type="password" formControlName="password"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="loginForm.controls.password.errors && loginForm.controls.password.dirty">
+                <p color="danger" *ngIf="loginForm.controls.password.hasError('required')">
+                    Este campo es requerido
+                </p>
+                <p color="danger" *ngIf="loginForm.controls.password.hasError('maxlength')">
+                    Máximo N° de caracteres 20
+                </p>
+            </ion-item>
+        </ion-row>
+
+        <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+            <ion-item>
+                <ion-input placeholder="Código" type="number" formControlName="code"></ion-input>
+            </ion-item>
+        </ion-row>
+
+        <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+            <ion-item *ngIf="loginForm.controls.code.errors && loginForm.controls.code.dirty">
+                <p color="danger" *ngIf="loginForm.controls.code.hasError('required')">
+                    Este campo es requerido
+                </p>
+                <p color="danger" 
+                    *ngIf="loginForm.controls.code.hasError('maxlength') || loginForm.controls.code.hasError('minlength')">
+                    Debe tener 6 dígitos
+                </p>
+            </ion-item>
+        </ion-row>
+
+        <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+            <button ion-button color="primary" outline block type="submit" 
+                    [disabled]="(_return.opportunity >= _return.opportunities) || loginForm.invalid">
+                Ingresar
+                <ion-label *ngIf="timer.s > 0"> durante {{timer.m}}m : {{timer.s}}s</ion-label>
+            </button>
+
+        </ion-row>
+    </form> -->
+</ion-content>
