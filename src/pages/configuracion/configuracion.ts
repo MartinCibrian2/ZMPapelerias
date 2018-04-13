@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { BillingPage } from '../billing/billing';
 import { ClientsPage } from './clients/clients';
+import { BuysPage } from './buys/buys';
+import { ConfigsPage } from './configs/configs';
 
 @IonicPage()
 @Component({
@@ -12,6 +14,8 @@ import { ClientsPage } from './clients/clients';
 export class ConfiguracionPage {
   public billingPage = BillingPage;
   public clientsPage = ClientsPage;
+  public buysPage    = BuysPage;
+  public configsPage = ConfigsPage;
 
   constructor(
     public navCtrl: NavController,
@@ -20,7 +24,7 @@ export class ConfiguracionPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ConfiguracionPage');
+    // console.log('ionViewDidLoad ConfiguracionPage');
   }
 
 }

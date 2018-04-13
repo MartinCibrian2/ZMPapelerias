@@ -20,7 +20,7 @@ export class SearchPipe implements PipeTransform
                 Object
                 .keys( item )
                 .forEach(( _field, _pos ) => {
-                    if( _field.indexOf("_") > -1 && _field.indexOf("_") == 0 ){
+                    if(( _field.indexOf("_") > -1 && _field.indexOf("_") == 0 ) || typeof( item[ _field ]) === "boolean" ){
                         // This field it is not necessary.
                     } else {
                         _exists    = this.existsWord( term, item[ _field ] );

@@ -3,12 +3,22 @@ import { Http } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
+import { delay } from 'rxjs/operators';
+
 import PouchDB from 'pouchdb';
 /* import moment from 'moment'; */
 
 import { PouchDbAdapter } from '../pouchdb/pouchdb.adapter';
 
 import { AppSettings } from '../../app/common/api.path';
+import { ClientModel } from '../../app/models/client.model';
+import { log } from 'util';
+
+export class Port {
+    public id: number;
+    public name: string;
+    public country: string;
+}
 
 @Injectable()
 
@@ -36,15 +46,42 @@ export class ClientService
         this.couchdbUp          = this._pouchDbAdapter.couchDbUp.asObservable();
     }
 
-    getClients(): Promise <any> {
-        return Promise.resolve( this._pouchDbAdapter.getDocs() );
+    getClients( params: any ): Promise <any> {
+        // For all clients
+        //return Promise.resolve( this._pouchDbAdapter.getAllDocs( params ) );
+        // For active clients, the condition is active field iqual to true.
+        return new Promise( resolve => {
+            this._pouchDbAdapter._pouchDB
+            .query( function( doc, emit ){
+                    if( doc.active ){
+                        if( doc.active === true ){
+                            emit( doc.active );
+                        }
+                    }
+                }, {
+                    include_docs: true
+                }
+            )
+            .then( function( result ){
+                resolve( result );
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
     post( _client ): Promise <any> {
+        _client    = new ClientModel( '', _client.nombre, _client.rfc, _client.tel, true );
+
         return Promise.resolve( this._pouchDbAdapter.post( _client ));
     }
 
     put( _client ): Promise <any> {
+        let _rev    = _client._rev;
+        _client     = new ClientModel( _client._id, _client.nombre, _client.rfc, _client.tel, _client.active );
+        _client._rev    = _rev;
+
         return Promise.resolve( this._pouchDbAdapter.put( _client ));
     }
 
@@ -58,34 +95,13 @@ export class ClientService
         return this.httpClient.get( _urlJson );
     }
 
-    /*getClients1() {
-        if ( this.clients ) {
-            return Promise.resolve( this.clients );
-        }
-
-        return new Promise( resolve => {
-            this.pouchdbClients
-            .query( function( doc, emit ){
-                emit( doc );
-            }, { include_docs: true, is_checkin: false })
-            .then( function( result ){
-                ( result ) => {
-                    this.clients  = [];
-                    let docs = result.rows
-                    .map(( row ) => {
-                        this.clients.push( row.doc );
-                    });
-                    resolve( this.clients );
-                    this.pouchdbClients
-                    .changes({live: true, since: 'now', include_docs: true})
-                    .on('change', ( change ) => {
-                        this.handleChange( change );
-                    });
-                }
-            }); 
-        }).catch(( error ) => {
-            console.log( error );
-        });
-    }*/
+    searchClientByString( texto ){
+        return Promise.resolve( this._pouchDbAdapter.getDocsByString( texto ) );
+    }
+    // Pending, I have developing this method
+    getClientsAsync( text ): Observable <any> {
+        return this._pouchDbAdapter.getDocsByStringObservable( text )
+        .pipe( delay( 2000 ));
+    }
 
 }

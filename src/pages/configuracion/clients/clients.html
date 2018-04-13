@@ -9,12 +9,13 @@
     <ion-grid>
         <ion-row>
             <ion-col col-10>
-                <!-- <ion-searchbar (ionInput)="searchItems( $event )"> -->
-                <ion-searchbar [(ngModel)]="searching">
+                <ion-searchbar (ionInput)="searchClientByString( $event )">
+                <!-- <ion-searchbar [(ngModel)]="searching"> -->
                 </ion-searchbar>
             </ion-col>
             <ion-col col-2>
-                <button ion-button  [navPush]="addClientPage">
+                <button ion-button  [navPush]="addClientPage"
+                        [navParams]="paramsClient">
                     <ion-icon name="add"></ion-icon>
                 </button>
             </ion-col>
@@ -35,7 +36,7 @@
                     Actualizar
                 </button>
                 <button ion-button color="danger" 
-                        (click)="deleteClient( item )"icon-start>
+                        (click)="deleteClient( item )" icon-start>
                     <ion-icon name="trash"></ion-icon>
                     Borrar
                 </button>
@@ -50,11 +51,4 @@
         {{ item.nombre }} <small>{{ item.rfc }}</small>
         </button>
     </ion-list> -->
-    <!-- <ion-icon [name]="'logo-' + item.icon" [ngStyle]="{'color': item.color}" item-start></ion-icon> -->
-
-    <!-- <div class="form-group">
-        <textarea class="form-control" rows="8" style="font-family: Courier New; font-size: 10px; min-width: 100%">
-            {{ dataPouchdbString }}
-        </textarea>
-    </div> -->
 </ion-content>

@@ -1,14 +1,19 @@
 declare function require( name: string );
 
-import PouchDB from 'pouchdb';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/from';
 
-PouchDB.plugin( require('pouchdb-upsert'));
+import PouchDB from 'pouchdb';
+PouchDB
+.plugin( require('pouchdb-quick-search'))
+.plugin( require('pouchdb-find'))
+.plugin( require('pouchdb-upsert'));
 
 export class PouchDbAdapter {
 
-    private _pouchDB: any;
-    private _couchDB: any;
+    public _pouchDB: any;
+    public _couchDB: any;
     private _remoteCouchDBAddress: string;
     private _pouchDbName: string;
     // rxjs behaviour subjects to expose stats flags
@@ -19,7 +24,7 @@ export class PouchDbAdapter {
         this._remoteCouchDBAddress = remoteCouchDBAddress;
         // string function to extract the database name from the URL
         this._pouchDbName = remoteCouchDBAddress
-            .substr(remoteCouchDBAddress.lastIndexOf('/') + 1 );
+            .substr( remoteCouchDBAddress.lastIndexOf('/') + 1 );
 
         // init local PouchDB
         // new PouchDB(this._pouchDbName).destroy().then(function () {
@@ -28,6 +33,7 @@ export class PouchDbAdapter {
         // }).catch(function (err) {
         //     // error occurred
         // });
+        console.log( this._pouchDbName )
         this._pouchDB = new PouchDB( this._pouchDbName );
         // init PouchDB adapter for remote CouchDB
         this._couchDB = new PouchDB( remoteCouchDBAddress );
@@ -35,47 +41,138 @@ export class PouchDbAdapter {
         this._pouchDB.sync( this._couchDB, {
             live: true,
             retry: true,
+            continuous: true
         })
         .on('paused', err => { this.syncStatusUpdate(); })
         .on('change', info => { this.syncStatusUpdate(); });
     }
     // pretty basic and crude function
     // return a Promise with the first 20 docs from allDocs as is
-    getDocs(): Promise<any> {
-        return new Promise(resolve => {
-            this._pouchDB.allDocs({
-                include_docs: true,
-                //limit: 20
-            })
-            .then((result) => {
+    getAllDocs( params: any ): Promise<any> {
+        let _params = Object.assign( { include_docs: true }, params );
+
+        return new Promise( resolve => {
+            this._pouchDB.allDocs( _params )
+            .then(( result ) => {
                 resolve(result);
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(( error ) => {
+                console.log( error );
             });
         });
     }
 
-    post( doc ): Promise<any> {
-        return new Promise(resolve => {
+    getAllDocsObservable( params: any ): Observable<any> {
+        let _params = Object.assign( { include_docs: true }, params );
+
+        return Observable.from(
+            this._pouchDB
+            .query(( doc, emit ) => {
+                if( doc.nombre ){
+                    if( doc.active === true ){
+                        emit( doc.nombre );
+                    }
+                }
+                }, {
+                    include_docs: true
+                }
+            )
+        );
+    }
+
+    getDocsByStringObservable( text ): Observable <any> {
+        var regex;
+
+        return Observable.from( 
+            this._pouchDB
+            .query( function( doc, emit ){
+                    var regex = new RegExp( text.toLowerCase(), "i");
+                    if( doc.nombre ){
+                        if( doc.nombre.toLowerCase().match( regex ) && doc.active === true ){
+                            emit( doc.nombre );
+                        }
+                    }
+                }, {
+                    include_docs: true
+                }
+            )
+        );
+    }
+
+    postObservable( doc: any ): Observable<any> {
+        return Observable.from(
+            this._pouchDB.post( doc )
+        );
+    }
+
+    putObservable( doc: any ): Observable<any> {
+        console.log( doc )
+        return Observable.from(
+            this._pouchDB.put( doc )
+        );
+    }
+
+    /* Promises */
+    getDocsByString( texto ){
+        var regex, _list;
+
+        return new Promise( resolve => {
+            this._pouchDB
+            .query( function( doc, emit ){
+                    var regex = new RegExp( texto.toLowerCase(), "i");
+                    if( doc.nombre ){
+                        if( doc.nombre.toLowerCase().match( regex ) && doc.active === true ){
+                            emit( doc.nombre );
+                        }
+                    }
+                }, {
+                    include_docs: true
+                }
+            )
+            .then( function( result ){
+                _list  = [];
+                result.rows
+                .map(( row ) => {
+                    _list.push( row.doc );
+                });
+                resolve( _list );
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    // It is lack to try.
+    findById( _id ){
+        return new Observable( observer => {
+            this._pouchDB
+            .get( _id )
+            .then(( doc ) => {
+                observer.next( doc.data );
+            });
+        });
+    }
+
+    post( doc: any ): Promise<any> {
+        return new Promise( resolve => {
             this._pouchDB.post( doc )
                 .then(( response => {
                     resolve( response );
                 }))
                 .catch(( error ) => {
-                    console.log(error);
+                    console.log( error );
                 });
         });
     }
 
     put( doc ): Promise<any> {
-        return new Promise(resolve => {
+        return new Promise( resolve => {
             this._pouchDB.put( doc )
                 .then(( response => {
                     resolve( response );
                 }))
                 .catch(( error ) => {
-                    console.log(error);
+                    console.log( error );
                 });
         });
     }
@@ -93,6 +190,9 @@ export class PouchDbAdapter {
             });
         });
     }
+
+
+    
     // function to call the below functions
     // then update the rxjs BehaviourSubjects with the 
     // results

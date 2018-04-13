@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 // the pouchdb-adapter file/class in the same folder
 import { PouchDbAdapter } from './pouchdb.adapter';
 
-import { AppSettings } from '../../app/common/api.path';
+// import { AppSettings } from '../../app/common/api.path';
 
 const REMOTE_COUCH_DB_ADDRESS = 'http://localhost:5984/inventario' + '/_design/productos_x_nombre/_view/productsxname';
 
@@ -27,7 +27,7 @@ export class PouchdbService
     }
     // wrapper for the get 20docs method in the adpater class
     get20Docs(): Promise<any> {
-        return Promise.resolve(this._pouchDbAdapter.getDocs());
+        return Promise.resolve(this._pouchDbAdapter.getAllDocs( {} ));
     }
 
     post(doc): Promise<any> {

@@ -1,7 +1,13 @@
+declare function require( name: string );
+
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, ResponseContentType } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
+import { Platform } from 'ionic-angular';
+
+// import { File } from '@ionic-native/file';
+import { saveAs } from 'file-saver';
 
 import PouchDB from 'pouchdb';
 import xml2js from 'xml2js';
@@ -10,6 +16,10 @@ import xmlbuilder from 'xmlbuilder';
 import moment from 'moment';
 
 import { AppSettings } from '../../app/common/api.path';
+
+const StampService = require('sw-sdk-nodejs').StampService;
+
+const Authentication = require('sw-sdk-nodejs').Authentication;
 
 @Injectable()
 
@@ -27,7 +37,8 @@ export class CheckinService {
     constructor(
         private httpClient: HttpClient,
         private http: Http,
-        public appSettings: AppSettings
+        public appSettings: AppSettings,
+        public platform: Platform
     ){
         this.apiPaths      = appSettings.getPaths();
         this.billingUrl    = this.apiPaths["billing"];
@@ -47,7 +58,7 @@ export class CheckinService {
 
     checking( bill: any ){
         var xml = this.getXml( bill );
-console.log( bill, xml );
+
         this.sendFile( xml );
 
         return xml;
@@ -55,15 +66,21 @@ console.log( bill, xml );
 
     getXml( obj: any ){
         //var builder1 = new xml2js.Builder();
-        //var xml2 = builder1.buildObject( xml );
+        
         var xml = this.appSettings.xmlBilling,
-
+        // xml2 = builder1.buildObject( xml ),
         feed = this.builder.create(
             xml,
-            { version: '1.0', encoding: 'UTF-8', standalone: true }
+            { version: '1.0', encoding: 'UTF-8' },
+            { 
+              skipNullAttributes: false, 
+              headless: false, ignoreDecorators: false,
+              separateArrayItems: false, noDoubleEncoding: false,
+              stringify: {}
+            }
         );
 
-        return feed.end({ pretty: true });
+        return feed.end({ pretty: true, allowEmpty: true });
     }
 
     getCatalogClaveProdServs(): Observable<any> {
@@ -130,7 +147,8 @@ console.log( bill, xml );
         _ivaDefault    = 0.160000;
 
         jsonxmlBase["cfdi:Comprobante"]['@Fecha']    = _dateAtMoment;
-        jsonxmlBase["cfdi:Comprobante"]["cfdi:Complemento"]["tfd:TimbreFiscalDigital"]['@FechaTimbrado'] = _dateAtMoment;
+        /* For the complemento */
+        // jsonxmlBase["cfdi:Comprobante"]["cfdi:Complemento"]["tfd:TimbreFiscalDigital"]['@FechaTimbrado'] = _dateAtMoment;
 
         var _Concept     = jsonxmlBase["cfdi:Comprobante"]["cfdi:Conceptos"],
             _taxes       = _Concept["cfdi:Concepto"][ 0 ]["cfdi:Impuestos"];
@@ -160,7 +178,7 @@ console.log( bill, xml );
                         .forEach(( concept, i ) => {
                             let _concept      = Object.create( _Concept );
                             let _transfers    = Object.create( transfers );
-                            let _amount       = concept.precioart * _ivaDefault;
+                            let _amount       = concept.importeart * _ivaDefault;
 
                             _concept["@ValorUnitario"]    = concept.precioart;
                             _concept["@Cantidad"]         = concept.cantidadart;
@@ -171,7 +189,7 @@ console.log( bill, xml );
                             _concept["@Importe"]          = concept.importeart;
                             _concept["@NoIdentificacion"] = concepts["NoIdentificacion"];
 
-                            _transfers["@Base"]          = concept.precioart;
+                            _transfers["@Base"]          = concept.importeart;
                             _transfers["@Impuesto"]      = "002";
                             _transfers["@TipoFactor"]    = "Tasa";
                             _transfers["@TasaOCuota"]    = String( _ivaDefault ) + "0000";
@@ -226,13 +244,115 @@ console.log( bill, xml );
             }
         });
 
+        /* // Complemento: Creo eso se regresa despues del timbrado ( SELLADO )
+        ,
+        "cfdi:Complemento": {
+            "tfd:TimbreFiscalDigital": {
+                "@xmlns:tfd": "http://www.sat.gob.mx/TimbreFiscalDigital",
+                "@xsi:schemaLocation": "http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd",
+                "@Version": "1.1",
+                "@UUID": "10865254-4E6C-4B0C-913B-3CE2BB639160",
+                "@FechaTimbrado": "",
+                "@RfcProvCertificado": "SAT970701NN3",
+                "@SelloCFDI": "KKuJWKeoAgGjmJNfotaEDtQdDGDSeIib3KkEvz86qPAhB8V/SyBGDlZKhUe+HcymrYt0RDlzNt2/7AU3WmICHmS1HfbBo4W9+CJdr/R0DTjJz+6Jduy9mLA3aTnz0KWzPnB14PPzIzIvLgiiWyc97Og5m6y3QUMaRlG/HYfcvZo/g6jySOuY5nPtUp8P/ADlBpRnDC/ClMZuBz5KDCC527dBwLfWqXDJMNB2M7fmAUTmhviEhp920JcY33OOZpo/qqACFSxseaZis7yd+aGBb9qifGS9vP1LpeXV2uHX40QybrOfdQp1s6ZqAxdupbGyjVm/kL1zr1pGHk2+r4DZvA==",
+                "@NoCertificadoSAT": "00001000000403258748",
+                "@SelloSAT": "Tntbmbod4u5fAXv/o47eqebUQEF99Fnl2O8zoqdzgixAGVlFq1VnyODuz65nyCVmp8sh+5um4gcg7LPKwVhO+/xhYJOTqzipwl794lFk3EhjkyFdWUA8rJNDIW+YyU9Rb+8s91bEG3R690gz+gurjHrFEL9WpU4fBjzYlIZmdvt4kZR+IEOKo3jM82ptOZ2wG9Xcrm6OJ1/ewODliC5X1KMT7Tn+vXpu50NCEhfdH8c93DkX46JQfpOmVW7ue74FRo1hJ0sUkvmjabbCxJsWk2FpnboANTh9kZfu0BB/pywnDbzubmojT21Zt/O2tLq8cFdWsc4HGpuCqnuM/Vsm5g=="
+            }
+        }
+         */
+
         return jsonxmlBase;
     }
 
     sendFile( xmlString: string ){
+        var _url = '../../'+ this.appSettings._urlConfigs +'data/',
+            file_xml = "file_xml.xml";
+
         var xmlBlob = new Blob([ xmlString ], {"type": "text/xml"}),
             pdfBlob = new Blob([ xmlString ], {"type": "text/pdf"});
 
+        
+        var params = {
+            //user: "contacto@colegiocuauhtli.com.mx",
+            //password: "T3mp0r4l$",
+            user: "demo",
+            password: "123456789",
+            //url: 'http://services.test.sw.com.mx',
+            url: 'https://cors.io/?services.test.sw.com.mx',
+            //mode: 'no-cors'
+            //token: "T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbXB3YVZxTHdOdHAwVXY2NTdJb1hkREtXTzE3dk9pMmdMdkFDR2xFWFVPUXpTUm9mTG1ySXdZbFNja3FRa0RlYURqbzdzdlI2UUx1WGJiKzViUWY2dnZGbFloUDJ6RjhFTGF4M1BySnJ4cHF0YjUvbmRyWWpjTkVLN3ppd3RxL0dJPQ.T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbFlVcU92YUJTZWlHU3pER1kySnlXRTF4alNUS0ZWcUlVS0NhelhqaXdnWTRncklVSWVvZlFZMWNyUjVxYUFxMWFxcStUL1IzdGpHRTJqdS9Zakw2UGRiMTFPRlV3a2kyOWI5WUZHWk85ODJtU0M2UlJEUkFTVXhYTDNKZVdhOXIySE1tUVlFdm1jN3kvRStBQlpLRi9NeWJrd0R3clhpYWJrVUMwV0Mwd3FhUXdpUFF5NW5PN3J5cklMb0FETHlxVFRtRW16UW5ZVjAwUjdCa2g0Yk1iTExCeXJkVDRhMGMxOUZ1YWlIUWRRVC8yalFTNUczZXdvWlF0cSt2UW0waFZKY2gyaW5jeElydXN3clNPUDNvU1J2dm9weHBTSlZYNU9aaGsvalpQMUxqU1Fka3p5QWREb3RteWlLOW52RVpqa2E0NzIxUXVtZmlHSGlrVk4wWHZaODlja0VlZGxUK1czVVZmbUE3K1BCTWcrUStxOUZyL1lodUpCVEl5NFFWekdEWkdoMTNnSnpES3RlZmpWaHpaQ24rTE5oMnA4RzNISmJXMjhScCtBKzJQeGNrcEhjNVhmME9WeG91QVVTSjg9.U_VF2jaOm-FMTCmlYeE0RlN9kAgi8DV0EcmPKYSHitw"
+            //token: "dlI2UUx1WGJiKzViUWY2dnZGbFloUDJ6RjhFTGF4M1BySnJ4cHF0YjUvbmRyWWpjTkVLN3ppd3RxL0dJPQ.T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbFlVcU92YUJTZWlHU3pER1kySnlXRTF4alNUS0ZWcUlVS0NhelhqaXdnWTRncklVSWVvZlFZMWNyUjVxYUFxMWFxcStUL1IzdGpHRTJqdS9Zakw2UGRkZEFZcDFhY3lhUC95OUZOaU1xZGtnZEdlMUhwZUp3U2c3RllwZyt5TzNQMjVpWTNkOXlDTllpR2laNWdKNHBKNGhqL3VmVkwxWmtEQU9ibHpOSzI0YnA0d3l1TklyL2RUMU41alh5MEJqNnIyb2lCajI3a3RVRHFxdTZjTHFacXl5dnlBVzhjdnBraTVjelRNdEZteDlucUJ2QWFLSlJOWlo5N3dsRTUwcUt5QmlsUldjN1VRQTVRamJUR3ZNdEJ0VDBETVBrVThpTTE3dmtzNjhwRU1DbWlyQ2pGbyt0OWtMd0Z6V2l1bnlKbjB2cXdhc1RRbWsxcU5MUXNTWUFkdjI2S0x0MWUwbjM5U3RGNXQ3aDZrQlA5ajFhS2RCeDB3RDY2WHduSG1oRUVUNmNBcTZDdlF0ZnFDY2RBTlA3OTZjMEtqUXIrZEZMS3dzcUdjODRraVZuYXhUQWNCeWlGa1drdDBWUXBmSzNBRmlyRXRieXJQd1pZUnJxY1lESTNHelNlWnVTUHU1VlFJd2QwTWVhQmh3PT0.0ZcWDXbHF11LxtxY43O0WQuolqfdlvpc2ySOYkY-L8Q"
+        };
+        var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://services.test.sw.com.mx/security/authenticate", true );
+            xhr.withCredentials = true;
+            //xhr.setRequestHeader('Accept', 'Application/json');
+            //xhr.setRequestHeader('Content-Type', 'q=0.8;application/json;q=0.9');
+            //xhr.setRequestHeader('X-Requested-By', 'Angular 5');
+            xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+            xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            let formData: FormData = new FormData();
+
+            //formData.append('xml', xmlString );
+            //formData.append('user', "demo" );
+            //formData.append('password', "12345678" );
+            //formData.append('url', "http://services.test.sw.com.mx/security/authenticate" );
+
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    console.log(this.responseText);
+                } else {
+                    console.log( this.responseText )
+                }
+            });
+
+            xhr.setRequestHeader("user", "demo");
+            xhr.setRequestHeader("password", "123456789");
+            xhr.setRequestHeader("Cache-Control", "no-cache");
+            xhr.setRequestHeader("Postman-Token", "18410574-d027-4957-8808-101a5ae97fda");
+
+            xhr.send( xmlString );
+        /*let auth   = Authentication.auth( params );
+		var callback = ( error, data ) => {
+			if( error ){
+				console.log(error);
+            } else {
+                console.log(data);
+            }
+        };
+        let _token = auth.Token( callback );*/
+console.log( xmlString )
+    	//let stamp    = StampService.Set( params );
+    	//stamp.StampV3( xmlString, callback );
+            //File.createFile( _url, 'myFile.xml', xmlBlob );
+
+            /* fs.writeFile( _url + '/myFile.xml', xmlString, (err) => {  
+                // throws an error, you could also catch it here
+                if (err) throw err;
+                // success case, the file was saved
+                console.log('Xml saved!');
+            } ); */
+
+            //if( !this.platform.is('android')){
+            //    saveAs( xmlBlob, _url+file_xml ); 
+            //} else {
+                /* File.writeFile( _url, file_xml, xmlBlob, true).then(()=> {
+                    alert("file created at: " + _url);
+                }).catch(()=>{
+                   alert("error creating file at :" + _url);
+                }) */
+           // }
+           /* this.http.get( _url, {responseType: ResponseContentType.Blob})
+            .map(( res ) => {
+                return new Blob([ res.blob() ], {type: 'application/xml'});
+            })
+            .subscribe(( xmlBlob: Blob ) => {
+                    saveAs( xmlBlob, 'testFile.pdf' );
+                }
+            ); */
+console.log( _url );
         let _billing    = {
             "_id": "One",
             "_attachments": {

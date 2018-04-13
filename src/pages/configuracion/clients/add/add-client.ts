@@ -40,15 +40,17 @@ export class AddClientPage implements OnInit
 
     saveClient( ): void {
         if( this.clientForm.valid ){
-            var _doc   = this.clientForm.value;
+            var _doc       = this.clientForm.value;
+            _doc.active    = true;
 
             this.clientService
             .post( _doc )
             .then(( response ) => {
-                console.log( JSON.stringify( response ))
-                this.navCtlr.setRoot( ClientsPage );
+                let _page = this.navParams.data.page;
+                this.navCtlr.setRoot( _page );
+                // this.navCtlr.popToRoot( );
             })
-            .then(( error ) => {
+            .catch(( error ) => {
                 console.log( error );
             });
         } else {

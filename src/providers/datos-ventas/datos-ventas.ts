@@ -7,7 +7,7 @@ import { of }         from 'rxjs/observable/of';
 import {  debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import PouchDB from 'pouchdb';
 import { Searchbar } from 'ionic-angular';
-import { lineaticket } from '../../app/datos';
+import { lineaticket } from '../../app/models/venta.model';
 
  /*
   Generated class for the DatosVentasProvider provider.
@@ -41,8 +41,8 @@ export class DatosVentasProvider
   constructor(public http: HttpClient) 
   {  
     console.log('Hello DatosVentasProvider Provider'); 
-    this.CouchDBRemoto =  'http://192.168.1.180:5984/inventario';
-    this.PouchDBLocal = new PouchDB ('inventariolocal');
+    this.CouchDBRemoto =  'http://192.168.1.180:5984/ZMPapelerias';
+    this.PouchDBLocal = new PouchDB ('ZMPapelerias');
   }
 
 

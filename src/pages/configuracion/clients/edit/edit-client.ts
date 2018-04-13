@@ -42,10 +42,10 @@ export class EditClientPage implements OnInit
         if( this.clientForm.valid ){
             var _doc   = this.clientForm.value;
 
+            _doc.active    = true;
             this.clientService
             .put( _doc )
             .then(( response ) => {
-                console.log( JSON.stringify( response ))
                 this.navCtlr.setRoot( ClientsPage );
             })
             .then(( error ) => {

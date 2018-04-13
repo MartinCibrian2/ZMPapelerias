@@ -23,6 +23,16 @@
 				<ion-label stacked>Descripcion</ion-label>
 				<ion-input [(ngModel)]="descripcion" name="descripcion" placeholder="Descripcion detallada"></ion-input>
 				<hr class="horizontal">	
+
+				<ion-item>
+						<ion-label staket>Descripción Sat </ion-label>
+						<ion-select [(ngModel)]="claveProdServ">
+								<ion-option *ngFor="let _claveProdServ of claveProdServs" value="{{_claveProdServ.c_ClaveProdServ}}">
+										{{ _claveProdServ['Descripción'] }}
+								</ion-option>
+						</ion-select>
+				</ion-item>
+				
 				<ion-label stacked>Unidad de Venta</ion-label>
         <ion-input [(ngModel)]="unidad" name="unidad" placeholder="Unidad de venta"></ion-input>
 				<hr class="horizontal">
