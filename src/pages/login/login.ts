@@ -45,7 +45,7 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit( ){
-      //this.authenticationService.logout();
+      this.authenticationService.logout();
   }
 
   doLogin( event: Event ){
@@ -65,7 +65,7 @@ export class LoginPage implements OnInit {
         .subscribe(( _response ) => {
 
             //let token    = _response && _response['token'];
-
+console.log( _response, localStorage.getItem('currentUser') )
             if( Object.keys( _response ).length ){ // token
                 load.dismiss();
                 this.navCtrl.setRoot( TabsPage );

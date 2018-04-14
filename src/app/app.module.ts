@@ -32,6 +32,9 @@ import { ClientService }  from '../providers/clients/client.service';
 import { SearchPipe } from './pipes/search.pipe';
 import { LoginPage } from '../pages/login/login';
 import { TabsPage } from '../pages/tabs/tabs';
+import { VentasPageModule } from '../pages/ventas/ventas.module';
+import { ComprasPageModule } from '../pages/compras/compras.module';
+import { ReportesPageModule } from '../pages/reportes/reportes.module';
 
 @NgModule({
   declarations: [
@@ -52,6 +55,9 @@ import { TabsPage } from '../pages/tabs/tabs';
     SelectSearchableModule,
     // Import modules custom
     TabsPageModule,
+    VentasPageModule,
+    ComprasPageModule,
+    ReportesPageModule,
     ConfiguracionPageModule,
     AddClientPageModule,
     EditClientPageModule,
@@ -62,6 +68,7 @@ import { TabsPage } from '../pages/tabs/tabs';
     MyApp,
     LoginPage,
     TabsPage,
+
     BillingPage,
     ClientsPage
   ],

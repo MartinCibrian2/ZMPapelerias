@@ -16,7 +16,6 @@ export class AuthenticationService {
     couchdbUp: Observable<boolean>;
     public token: string;
     private loginUrl: string;
-    private apiPaths;
 
     constructor(
         public http: Http,
@@ -38,8 +37,9 @@ export class AuthenticationService {
         let _user$    = this.getUserByUsername( credentials )
         .map(( response: Response ) => {
             response["rows"].map(( row ) => {
-                body       = row.key;
-                body.id    = row.id;
+                body         = row.key;
+                body.id      = row.id;
+                body._rev    = body._rev;
                 localStorage.setItem(
                     'currentUser', JSON.stringify( body )
                 );
@@ -70,7 +70,8 @@ export class AuthenticationService {
                     if( doc.active === true 
                     && doc.username == _params.username 
                     && _params.password == doc.password ){
-                        emit({'username': doc.username, 'password': doc.password, 'email': doc.email, 'active': doc.active });
+                        emit( doc );
+                        // {'username': doc.username, 'password': doc.password, 'email': doc.email, 'role': doc.role, 'active': doc.active, "_rev": doc["_rev"] }
                     }
                 }
                 }, {
