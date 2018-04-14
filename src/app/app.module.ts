@@ -9,6 +9,7 @@ import { HttpModule } from '@angular/http';
 import { SelectSearchableModule } from 'ionic-select-searchable';
 
 // Import modules custom
+import { TabsPageModule } from '../pages/tabs/tabs.module';
 import { ConfiguracionPageModule } from '../pages/configuracion/configuracion.module';
 import { AddClientPageModule } from '../pages/configuracion/clients/add/add-client.module';
 import { EditClientPageModule } from '../pages/configuracion/clients/edit/edit-client.module';
@@ -30,6 +31,7 @@ import { ClientService }  from '../providers/clients/client.service';
 
 import { SearchPipe } from './pipes/search.pipe';
 import { LoginPage } from '../pages/login/login';
+import { TabsPage } from '../pages/tabs/tabs';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { LoginPage } from '../pages/login/login';
     // Import Select searchable
     SelectSearchableModule,
     // Import modules custom
+    TabsPageModule,
     ConfiguracionPageModule,
     AddClientPageModule,
     EditClientPageModule,
@@ -58,6 +61,7 @@ import { LoginPage } from '../pages/login/login';
   entryComponents: [
     MyApp,
     LoginPage,
+    TabsPage,
     BillingPage,
     ClientsPage
   ],
@@ -75,6 +79,7 @@ import { LoginPage } from '../pages/login/login';
     CheckinService,
     ClientService,
     AppSettings,
+    AuthGuard,
     AuthenticationService
   ],
   exports: [

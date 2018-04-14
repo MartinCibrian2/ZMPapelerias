@@ -1,6 +1,7 @@
 export interface LoginInterface {
-    phonenumber: string;
+    username: string;
     password: string;
-    code: string;
-    opportunity: number;
+    email: string;
+    role: string;
+    active: boolean;
 }

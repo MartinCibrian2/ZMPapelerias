@@ -25,6 +25,9 @@
         },
         "buys": {
             "database": "compras"
+        },
+        "login": {
+            "database": "login"
         }
     }
 }

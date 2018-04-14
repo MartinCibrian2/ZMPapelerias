@@ -5,9 +5,15 @@ import 'rxjs/add/operator/map';
 
 import { LoginInterface } from '../app/interfaces/login';
 import { AppSettings } from '../app/common/api.path';
+import { PouchDbAdapter } from './pouchdb/pouchdb.adapter';
 
 @Injectable()
 export class AuthenticationService {
+    // handler for the adapter class
+    private _pouchDbAdapter: PouchDbAdapter;
+    // rxjs observables to broadcast sync status
+    syncStatus: Observable<boolean>;
+    couchdbUp: Observable<boolean>;
     public token: string;
     private loginUrl: string;
     private apiPaths;
@@ -17,48 +23,61 @@ export class AuthenticationService {
         public appSettings: AppSettings
     ){
         var currentUser    = JSON.parse( localStorage.getItem('currentUser'));
-        this.token         = currentUser && currentUser.token;
+        //this.token         = currentUser && currentUser.token;
+        let databases      = this.appSettings.getDatabases();
+        this.loginUrl      = databases.login.database;
 
-        this.apiPaths    = appSettings.getPaths();
-        this.loginUrl    = this.apiPaths.login;
+        this._pouchDbAdapter    = new PouchDbAdapter( this.loginUrl );
+        this.syncStatus         = this._pouchDbAdapter.syncStatus.asObservable();
+        this.couchdbUp          = this._pouchDbAdapter.couchDbUp.asObservable();
     }
 
     login( credentials: LoginInterface ): Observable< Object > {
-        let body      = JSON.stringify( credentials );
-console.log( credentials,this.loginUrl )
-        /* let _user$    = this
-            .http
-            .post(
-                this.loginUrl,
-                body
-            )
-            .map(( response: Response ) => {
-                var _response    = response.json();
-                let token        = _response && _response.token;
-                if( token ){
-                    this.apiPaths    = this.appSettings.mergePaths( _response.apiPath );
-                    this.token       = token;
-                    localStorage.setItem(
-                        'currentUser', JSON.stringify( _response )
-                    );
-                } else {
-                    // Return the object
-                    console.log( _response );
-                }
+        let body: any    = {};
 
-                return _response;
-            })
-            .catch(( error ) => {
-                console.log( error );
-                return error;
-            }); */
+        let _user$    = this.getUserByUsername( credentials )
+        .map(( response: Response ) => {
+            response["rows"].map(( row ) => {
+                body       = row.key;
+                body.id    = row.id;
+                localStorage.setItem(
+                    'currentUser', JSON.stringify( body )
+                );
+            });
 
-        return //_user$;
+            return body;
+        })
+        .catch(( error ) => {
+            console.log( error );
+            return error;
+        });
+
+        return _user$;
     }
 
     logout(): void {
         this.token    = null;
         localStorage.removeItem('currentUser');
+    }
+
+    getUserByUsername( params: any ): Observable<any> {
+        let _params = Object.assign( { include_docs: false }, params );
+
+        return Observable.from(
+            this._pouchDbAdapter._pouchDB
+            .query(( doc, emit ) => {
+                if( doc.username ){
+                    if( doc.active === true 
+                    && doc.username == _params.username 
+                    && _params.password == doc.password ){
+                        emit({'username': doc.username, 'password': doc.password, 'email': doc.email, 'active': doc.active });
+                    }
+                }
+                }, {
+                    include_docs: false
+                }
+            )
+        );
     }
 
 }
