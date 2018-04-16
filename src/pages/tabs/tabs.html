@@ -1,3 +1,13 @@
+<ion-fab top right>
+  <button ion-fab color="dark" mini><ion-icon name="arrow-dropdown"></ion-icon></button>
+  <ion-fab-list side="bottom">
+      <button ion-fab (click)="goBack()">
+          <!-- Salir -->
+          <ion-icon name="exit"></ion-icon>
+      </button>
+  </ion-fab-list>
+</ion-fab>
+
 <ion-tabs>
   <ion-tab [root]="tab1Root" tabTitle="Ventas" tabIcon="cash"></ion-tab>
   <ion-tab [root]="tab2Root" tabTitle="Compras" tabIcon="cart"></ion-tab>

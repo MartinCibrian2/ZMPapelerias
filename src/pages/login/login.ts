@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-//import { contentHeaders } from '../../app/common/headers';
+import { contentHeaders } from '../../app/common/headers';
 import { AuthenticationService } from '../../providers/authentication.service';
 import { AuthGuard } from '../../app/common/auth.guard';
 import { LoginInterface } from '../../app/interfaces/login';
@@ -18,7 +18,7 @@ import { TabsPage } from '../tabs/tabs';
   templateUrl: 'login.html'
 })
 export class LoginPage implements OnInit {
-    //private header  = contentHeaders;
+    private header  = contentHeaders;
     private _return = {
         result: true,
         opportunity: 0,
@@ -41,7 +41,7 @@ export class LoginPage implements OnInit {
     public authGuard: AuthGuard,
     private authenticationService: AuthenticationService
   ){
-    //this.loginForm     = this.makeLoginForm();
+    this.loginForm     = this.makeLoginForm();
   }
 
   ngOnInit( ){
@@ -50,80 +50,83 @@ export class LoginPage implements OnInit {
 
   doLogin( event: Event ){
     event.preventDefault();
-    //let load    = this.loadingCtrl.create();
-    //load.present( load );
+    let load    = this.loadingCtrl.create();
+    load.present( load );
 
     //this.header.append('withCredentials', 'true');
     //this.header.append('token', `${this.token}` );
 
     this.data    = Object.assign( this.loginForm.value, {
-        opportunity: this._return.opportunity
+        //opportunity: this._return.opportunity
     });
 
-    /* this.authenticationService
+    this.authenticationService
         .login( this.data )
         .subscribe(( _response ) => {
-            let token    = _response && _response['token'];
-            if( token ){
+
+            //let token    = _response && _response['token'];
+console.log( _response, localStorage.getItem('currentUser') )
+            if( Object.keys( _response ).length ){ // token
                 load.dismiss();
                 this.navCtrl.setRoot( TabsPage );
             } else {
-               this._return.result            = false;
-                this._return.opportunity      = _response['opportunity'];
-                this._return.opportunities    = _response['opportunities'];
+              this._return.result            = false;
+              //this._return.opportunity      = _response['opportunity'];
+              //this._return.opportunities    = _response['opportunities'];
 
-                load.dismiss();
-                if( _response['showAlertCode'].value ){
-                    if( _response['opportunity'] >= _response['opportunities'] ){
-                        _response['showAlertCode'].message.callback    = () => {
-                            this.timer.m    = _response['timewait'];
+              load.dismiss();
+              //if( _response['showAlertCode'].value ){
+                  //if( _response['opportunity'] >= _response['opportunities'] ){
+                      /* _response['showAlertCode'].message.callback    = () => {
+                          this.timer.m    = _response['timewait'];
 
-                            let IntIdS    = setInterval(( ) => {
-                                    if( this.timer.m > 0 && this.timer.s < 1 ){
-                                        this.timer.s    = 60;
-                                        this.timer.m --;
-                                    } else {
-                                    // Continues with the counting.
-                                    }
-                                    this.timer.s --; console.log( this.timer.m+' : '+this.timer.s );
-                                }, 1000 
-                            );
-                            setTimeout(( ) => {
-                                console.log(' Se activo el botón ingresar');
-                                this._return.opportunity = 0;
-                                clearInterval( IntIdS );
-                            }, (( _response['timewait'] * 60 * 1000 )) + 10 );
-                        };
-                    }
-                    this.showAlertCode( _response['showAlertCode'].message );
-              } else {
-                  // Does not show a message.
-              }
+                          let IntIdS    = setInterval(( ) => {
+                                  if( this.timer.m > 0 && this.timer.s < 1 ){
+                                      this.timer.s    = 60;
+                                      this.timer.m --;
+                                  } else {
+                                  // Continues with the counting.
+                                  }
+                                  this.timer.s --; console.log( this.timer.m+' : '+this.timer.s );
+                              }, 1000 
+                          );
+                          setTimeout(( ) => {
+                              console.log(' Se activo el botón ingresar');
+                              //this._return.opportunity = 0;
+                              clearInterval( IntIdS );
+                          }, (( _response['timewait'] * 60 * 1000 )) + 10 );
+                      }; */
+                  //}
+                  //this.showAlertCode( _response['showAlertCode'].message );
+              //} else {
+              //    // Does not show a message.
+              //}
           }
         },
         ( error ) => {
             load.dismiss();
-            let _body$    = JSON.parse( error._body );
+            //let _body$    = JSON.parse( error._body );
 
             this.showAlertCode({
               'title': 'Acceso incorrecto',
-              'subTitle': _body$.msg,
+              'subTitle': 'Intente de nuevo', // _body$.msg
               'text': 'Ok'
             });
-        }); */
+        });
   }
 
   logout(): void {
-    this.token = null;
+    //this.token = null;
     localStorage.removeItem('currentUser');
   }
 
   private makeLoginForm(){
     return this.frmBuilder.group({
-      'phonenumber': ['3322692351', [Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]],
-      'password': ['s1st3m4s#', [ Validators.maxLength( 20 )]],
-      'code': ['227859', [ Validators.minLength( 6 ), Validators.maxLength( 6 ), Validators.pattern( /^[0-9]{1,}$/ )]],
-      'opportunity': [ 0 ]
+      'username': ['', [Validators.required, Validators.pattern( /^[a-zA-Z0-9_]{1,}$/ )]],
+      'password': ['', [ Validators.maxLength( 20 )]],
+      'email': ['']
+      //'code': ['227859', [ Validators.minLength( 6 ), Validators.maxLength( 6 ), Validators.pattern( /^[0-9]{1,}$/ )]],
+      //'opportunity': [ 0 ]
     });
   }
 
