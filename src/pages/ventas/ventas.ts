@@ -211,7 +211,7 @@ export class VentasPage implements OnInit {
         this.ListaProductos.borraunproducto(productoporborrar,productoporborrarrev);
   }
 
-  buscaproducto(termino)
+  buscaproducto(termino:any)
   {
 
     this.resproductos = this.productos;
