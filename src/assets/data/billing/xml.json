@@ -10,15 +10,13 @@
         "@Sello": "",
         "@NoCertificado": "",
         "@Certificado": "",
-        "@Subtotal": "",
+        "@SubTotal": "",
         "@Moneda": "MXN",
         "@Total": "",
         "@TipoDeComprobante": "I",
         "@FormaPago": "01",
         "@MetodoPago": "PUE",
-        "@CondicionesDePago": "",
         "@Descuento": "0.00",
-        "@TipoCambio": "MXN",
         "@LugarExpedicion": "",
         
         "cfdi:Emisor": {

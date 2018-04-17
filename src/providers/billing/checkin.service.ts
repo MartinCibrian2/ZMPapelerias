@@ -14,6 +14,7 @@ import xml2js from 'xml2js';
 import xmlbuilder from 'xmlbuilder';
 
 import moment from 'moment';
+import sha256 from 'sha256';
 
 import { AppSettings } from '../../app/common/api.path';
 
@@ -141,11 +142,11 @@ export class CheckinService {
     prepareJsonForDocument( tickets: any ){
         var jsonxmlBase = this.appSettings.xmlBilling;
         let dataXmlJson = {},
-        _dateAtMoment   = moment().format('YYYY-MM-DDTh:mm:ss'),
+        _dateAtMoment   = moment().format('YYYY-MM-DDThh:mm:ss'),
         Total          = 0,
         Subtotal       = 0,
         _ivaDefault    = 0.160000;
-
+console.log( sha256( this.jsonBaseCompany["@NoCertificado"] ) );
         jsonxmlBase["cfdi:Comprobante"]['@Fecha']    = _dateAtMoment;
         /* For the complemento */
         // jsonxmlBase["cfdi:Comprobante"]["cfdi:Complemento"]["tfd:TimbreFiscalDigital"]['@FechaTimbrado'] = _dateAtMoment;
@@ -170,10 +171,11 @@ export class CheckinService {
             Subtotal = 0;
             Object.keys( concepts )
             .forEach(( index ) => {
+                console.log( index, concepts );
                 if( index.indexOf("_") > -1 && index.indexOf("_") == 0 ){
                     // This field it is not necessary.
                 } else {
-                    if( index == 'Conceptos' && concepts[ index ].length ){
+                    if( index == 'concepts' && concepts[ index ].length ){
                         concepts[ index ]
                         .forEach(( concept, i ) => {
                             let _concept      = Object.create( _Concept );
@@ -226,7 +228,7 @@ export class CheckinService {
         delete addTransfers["@Base"];
 
         jsonxmlBase["cfdi:Comprobante"]["cfdi:Conceptos"]    = _Concepts;
-        jsonxmlBase["cfdi:Comprobante"]["@Subtotal"]    = Subtotal;
+        jsonxmlBase["cfdi:Comprobante"]["@SubTotal"]    = Subtotal;
         jsonxmlBase["cfdi:Comprobante"]["cfdi:Impuestos"]["cfdi:Traslados"]["cfdi:Traslado"][ 0 ]    = addTransfers;
         jsonxmlBase["cfdi:Comprobante"]["cfdi:Impuestos"]["@TotalImpuestosTrasladados"] = 
             new Intl.NumberFormat('es-MX', { maximumFractionDigits: 2 })

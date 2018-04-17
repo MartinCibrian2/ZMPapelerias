@@ -148,7 +148,7 @@ export class BillingPage implements OnInit {
                     // It is ignored.
                 }
             }); */
-
+//console.log( _Tickets )
             if( _Tickets.length ){
                 let _xml    = this.checkingService
                 .prepareJsonForDocument( _Tickets );
