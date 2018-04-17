@@ -213,20 +213,6 @@ export class VentasPage implements OnInit {
 
   buscaproducto(termino:any)
   {
-<<<<<<< HEAD
-    this.ListaProductos.ListalosProductos().then((datos) => 
-    {
-      this.resproductos = datos;
-      console.log(datos);
-      let val = termino.target.value;
-      // if the value is an empty string don't filter the items
-    if (val && val.trim() != '') {
-      this.resproductos  = this.resproductos.filter((articulo) => {
-        return (articulo.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1);
-      })
-    }
-    });
-=======
 
     this.resproductos = this.productos;
     let cadena=termino.target.value;
@@ -237,7 +223,6 @@ export class VentasPage implements OnInit {
         })
       }
     console.log(this.resproductos);
->>>>>>> 7c1d2b9429d044f78b759d51488cfa92b275a7b7
   }
 
   ionViewDidLoad() {
