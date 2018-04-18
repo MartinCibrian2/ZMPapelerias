@@ -157,6 +157,17 @@ export class BillingPage implements OnInit {
                 _xml["cfdi:Comprobante"]["cfdi:Receptor"]["@Rfc"]       = _form.client.rfc;
                 _xml["cfdi:Comprobante"]["@FormaPago"]                  = _form.waytopay;
 
+                this.checkingService.getOriginalString( _xml );
+
+                let sXml    = Object.assign( {}, _xml["cfdi:Comprobante"] );
+                delete sXml['@xmlns:cfdi'];
+                delete sXml['@xmlns:xsi'];
+                delete sXml['@xsi:schemaLocation'];
+                delete sXml['@Certificado'];
+                delete sXml['@Sello'];
+console.log( sXml )
+                sXml    = this.checkingService.getOriginalString( sXml );
+console.log( sXml )
                 _xml    = this.checkingService
                 .checking( _xml );
 

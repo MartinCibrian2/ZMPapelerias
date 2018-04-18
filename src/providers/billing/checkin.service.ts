@@ -17,10 +17,10 @@ import moment from 'moment';
 import sha256 from 'sha256';
 
 import { AppSettings } from '../../app/common/api.path';
+import { isObject } from 'util';
 
-const StampService = require('sw-sdk-nodejs').StampService;
-
-const Authentication = require('sw-sdk-nodejs').Authentication;
+//const StampService = require('sw-sdk-nodejs').StampService;
+//const Authentication = require('sw-sdk-nodejs').Authentication;
 
 @Injectable()
 
@@ -139,6 +139,20 @@ export class CheckinService {
         });
     }
 
+    getOriginalString( xmlJson: any, originalString: string = '|' ){
+        Object.keys( xmlJson )
+        .forEach(( index, i ) => {
+            if( typeof xmlJson[ index ] === "object"){
+                console.log( index, typeof xmlJson[ index ] );
+                originalString    = this.getOriginalString( xmlJson[ index ], originalString );
+            } else {
+                originalString    += "|"+ xmlJson[ index ];
+            }
+        });
+
+        return originalString;
+    }
+
     prepareJsonForDocument( tickets: any ){
         var jsonxmlBase = this.appSettings.xmlBilling;
         let dataXmlJson = {},
@@ -171,7 +185,6 @@ console.log( sha256( this.jsonBaseCompany["@NoCertificado"] ) );
             Subtotal = 0;
             Object.keys( concepts )
             .forEach(( index ) => {
-                console.log( index, concepts );
                 if( index.indexOf("_") > -1 && index.indexOf("_") == 0 ){
                     // This field it is not necessary.
                 } else {
