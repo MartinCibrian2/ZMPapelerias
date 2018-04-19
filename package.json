@@ -45,6 +45,7 @@
     "sha256": "^0.2.0",
     "sw-sdk-nodejs": "^1.1.4",
     "sw-toolbox": "3.6.0",
+    "ursa": "^0.9.4",
     "xml2js": "^0.4.19",
     "xmlbuilder": "^9.0.7",
     "zone.js": "0.8.18"

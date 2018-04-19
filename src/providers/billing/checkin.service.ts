@@ -143,7 +143,7 @@ export class CheckinService {
         Object.keys( xmlJson )
         .forEach(( index, i ) => {
             if( typeof xmlJson[ index ] === "object"){
-                console.log( index, typeof xmlJson[ index ] );
+                //console.log( index, typeof xmlJson[ index ] );
                 originalString    = this.getOriginalString( xmlJson[ index ], originalString );
             } else {
                 originalString    += "|"+ xmlJson[ index ];
@@ -160,7 +160,7 @@ export class CheckinService {
         Total          = 0,
         Subtotal       = 0,
         _ivaDefault    = 0.160000;
-console.log( sha256( this.jsonBaseCompany["@NoCertificado"] ) );
+//console.log( sha256( this.jsonBaseCompany["@NoCertificado"] ) );
         jsonxmlBase["cfdi:Comprobante"]['@Fecha']    = _dateAtMoment;
         /* For the complemento */
         // jsonxmlBase["cfdi:Comprobante"]["cfdi:Complemento"]["tfd:TimbreFiscalDigital"]['@FechaTimbrado'] = _dateAtMoment;

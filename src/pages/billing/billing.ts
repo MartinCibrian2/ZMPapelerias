@@ -12,6 +12,8 @@ import { WayToPayService } from '../../providers/waytopay/way-to-pay.service';
 import { AddClientPage } from '../configuracion/clients/add/add-client';
 import { ConfiguracionPage } from '../configuracion/configuracion';
 
+import sha256 from 'sha256';
+
 class Port {
     public id: number;
     public name: string;
@@ -167,7 +169,7 @@ export class BillingPage implements OnInit {
                 delete sXml['@Sello'];
 console.log( sXml )
                 sXml    = this.checkingService.getOriginalString( sXml );
-console.log( sXml )
+console.log( sXml, sha256( sXml ))
                 _xml    = this.checkingService
                 .checking( _xml );
 
