@@ -283,7 +283,7 @@ export class CheckinService {
         var _url = '../../'+ this.appSettings._urlConfigs +'data/',
             file_xml = "file_xml.xml";
 
-        var xmlBlob = new Blob([ xmlString ], {"type": "text/xml"}),
+        var xmlBlob = new Blob([ xmlString ], {"type": "text/xml;charset=utf-8", endings: 'native'}),
             pdfBlob = new Blob([ xmlString ], {"type": "text/pdf"});
 
         
@@ -299,36 +299,38 @@ export class CheckinService {
             //token: "dlI2UUx1WGJiKzViUWY2dnZGbFloUDJ6RjhFTGF4M1BySnJ4cHF0YjUvbmRyWWpjTkVLN3ppd3RxL0dJPQ.T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbFlVcU92YUJTZWlHU3pER1kySnlXRTF4alNUS0ZWcUlVS0NhelhqaXdnWTRncklVSWVvZlFZMWNyUjVxYUFxMWFxcStUL1IzdGpHRTJqdS9Zakw2UGRkZEFZcDFhY3lhUC95OUZOaU1xZGtnZEdlMUhwZUp3U2c3RllwZyt5TzNQMjVpWTNkOXlDTllpR2laNWdKNHBKNGhqL3VmVkwxWmtEQU9ibHpOSzI0YnA0d3l1TklyL2RUMU41alh5MEJqNnIyb2lCajI3a3RVRHFxdTZjTHFacXl5dnlBVzhjdnBraTVjelRNdEZteDlucUJ2QWFLSlJOWlo5N3dsRTUwcUt5QmlsUldjN1VRQTVRamJUR3ZNdEJ0VDBETVBrVThpTTE3dmtzNjhwRU1DbWlyQ2pGbyt0OWtMd0Z6V2l1bnlKbjB2cXdhc1RRbWsxcU5MUXNTWUFkdjI2S0x0MWUwbjM5U3RGNXQ3aDZrQlA5ajFhS2RCeDB3RDY2WHduSG1oRUVUNmNBcTZDdlF0ZnFDY2RBTlA3OTZjMEtqUXIrZEZMS3dzcUdjODRraVZuYXhUQWNCeWlGa1drdDBWUXBmSzNBRmlyRXRieXJQd1pZUnJxY1lESTNHelNlWnVTUHU1VlFJd2QwTWVhQmh3PT0.0ZcWDXbHF11LxtxY43O0WQuolqfdlvpc2ySOYkY-L8Q"
         };
         var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://services.test.sw.com.mx/security/authenticate", true );
-            xhr.withCredentials = true;
+            xhr.open("POST", "http://localhost:3000/api/cfdi-upload", true ); // services.test.sw.com.mx/security/authenticate
+            // xhr.withCredentials = true;
             //xhr.setRequestHeader('Accept', 'Application/json');
             //xhr.setRequestHeader('Content-Type', 'q=0.8;application/json;q=0.9');
             //xhr.setRequestHeader('X-Requested-By', 'Angular 5');
-            xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-            xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            
+            // xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+            // xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+            // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
             let formData: FormData = new FormData();
+console.log( xmlBlob );
 
-            //formData.append('xml', xmlString );
+            formData.append('xml', xmlBlob );
             //formData.append('user', "demo" );
             //formData.append('password', "12345678" );
             //formData.append('url', "http://services.test.sw.com.mx/security/authenticate" );
 
             xhr.addEventListener("readystatechange", function () {
                 if (this.readyState === 4) {
-                    console.log(this.responseText);
+                    console.log( JSON.parse( xhr.response ) );
                 } else {
                     console.log( this.responseText )
                 }
             });
 
-            xhr.setRequestHeader("user", "demo");
+            /* xhr.setRequestHeader("user", "demo");
             xhr.setRequestHeader("password", "123456789");
             xhr.setRequestHeader("Cache-Control", "no-cache");
-            xhr.setRequestHeader("Postman-Token", "18410574-d027-4957-8808-101a5ae97fda");
+            xhr.setRequestHeader("Postman-Token", "18410574-d027-4957-8808-101a5ae97fda"); */
 
-            xhr.send( xmlString );
+            xhr.send( formData );
         /*let auth   = Authentication.auth( params );
 		var callback = ( error, data ) => {
 			if( error ){
@@ -338,7 +340,7 @@ export class CheckinService {
             }
         };
         let _token = auth.Token( callback );*/
-console.log( xmlString )
+// console.log( xmlString )
     	//let stamp    = StampService.Set( params );
     	//stamp.StampV3( xmlString, callback );
             //File.createFile( _url, 'myFile.xml', xmlBlob );
