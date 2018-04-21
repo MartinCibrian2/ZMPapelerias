@@ -310,8 +310,7 @@ export class CheckinService {
             // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
             let formData: FormData = new FormData();
-console.log( xmlBlob );
-
+            // console.log( xmlBlob );
             formData.append('xml', xmlBlob );
             formData.append('client', objXmlProcessed['cfdi:Comprobante']['cfdi:Receptor']['@Nombre'] );
             formData.append('rfc', objXmlProcessed['cfdi:Comprobante']['cfdi:Receptor']['@Rfc'] );
@@ -343,7 +342,7 @@ console.log( xmlBlob );
             }
         };
         let _token = auth.Token( callback );*/
-// console.log( xmlString )
+
     	//let stamp    = StampService.Set( params );
     	//stamp.StampV3( xmlString, callback );
             //File.createFile( _url, 'myFile.xml', xmlBlob );
@@ -372,7 +371,7 @@ console.log( xmlBlob );
                     saveAs( xmlBlob, 'testFile.pdf' );
                 }
             ); */
-console.log( _url );
+
         let _billing    = {
             "_id": "One",
             "_attachments": {
@@ -383,7 +382,7 @@ console.log( _url );
             }
         };
 
-        return this.saveXmlFile( _billing );
+        return; // this.saveXmlFile( _billing );
     }
 
     saveXmlFile( _billing: any ){
