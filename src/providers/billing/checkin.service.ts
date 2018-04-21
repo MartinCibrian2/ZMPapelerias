@@ -160,7 +160,7 @@ export class CheckinService {
         Total          = 0,
         Subtotal       = 0,
         _ivaDefault    = 0.160000;
-//console.log( sha256( this.jsonBaseCompany["@NoCertificado"] ) );
+
         jsonxmlBase["cfdi:Comprobante"]['@Fecha']    = _dateAtMoment;
         /* For the complemento */
         // jsonxmlBase["cfdi:Comprobante"]["cfdi:Complemento"]["tfd:TimbreFiscalDigital"]['@FechaTimbrado'] = _dateAtMoment;
@@ -280,13 +280,13 @@ export class CheckinService {
     }
 
     sendFile( xmlString: string ){
-        var _url = '../../'+ this.appSettings._urlConfigs +'data/',
-            file_xml = "file_xml.xml";
+        var _url = '../../'+ this.appSettings._urlConfigs +'data/';
+        var objXmlProcessed = this.appSettings.xmlBilling;
 
         var xmlBlob = new Blob([ xmlString ], {"type": "text/xml;charset=utf-8", endings: 'native'}),
             pdfBlob = new Blob([ xmlString ], {"type": "text/pdf"});
 
-        
+
         var params = {
             //user: "contacto@colegiocuauhtli.com.mx",
             //password: "T3mp0r4l$",
@@ -313,6 +313,9 @@ export class CheckinService {
 console.log( xmlBlob );
 
             formData.append('xml', xmlBlob );
+            formData.append('client', objXmlProcessed['cfdi:Comprobante']['cfdi:Receptor']['@Nombre'] );
+            formData.append('rfc', objXmlProcessed['cfdi:Comprobante']['cfdi:Receptor']['@Rfc'] );
+            formData.append('date', objXmlProcessed['cfdi:Comprobante']['@Fecha'] );
             //formData.append('user', "demo" );
             //formData.append('password', "12345678" );
             //formData.append('url', "http://services.test.sw.com.mx/security/authenticate" );
