@@ -1,5 +1,6 @@
 {
     "host": "http://admin:1957@localhost:5984/",
+    "api": "http://localhost:3501/api/",
     "dir": "",
     "paths" : {}
 }

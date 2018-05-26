@@ -25,7 +25,7 @@ export class AuthenticationService {
         //this.token         = currentUser && currentUser.token;
         let databases      = this.appSettings.getDatabases();
         this.loginUrl      = databases.login.database;
-
+console.log( this.appSettings );
         this._pouchDbAdapter    = new PouchDbAdapter( this.loginUrl );
         this.syncStatus         = this._pouchDbAdapter.syncStatus.asObservable();
         this.couchdbUp          = this._pouchDbAdapter.couchDbUp.asObservable();
@@ -51,7 +51,7 @@ export class AuthenticationService {
             console.log( error );
             return error;
         });
-
+console.log( _user$ );
         return _user$;
     }
 

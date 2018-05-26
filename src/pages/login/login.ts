@@ -59,7 +59,7 @@ export class LoginPage implements OnInit {
     this.data    = Object.assign( this.loginForm.value, {
         //opportunity: this._return.opportunity
     });
-
+console.log( this.data )
     this.authenticationService
         .login( this.data )
         .subscribe(( _response ) => {

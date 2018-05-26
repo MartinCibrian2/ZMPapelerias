@@ -28,6 +28,7 @@ export class CheckinService {
     public claveProdServs: any;
     private apiPaths: AppSettings;
     private billingUrl: string;
+    privta apiUrl: string;
     builder;
 
     public tickets: any;
@@ -44,6 +45,7 @@ export class CheckinService {
         this.apiPaths      = appSettings.getPaths();
         this.billingUrl    = this.apiPaths["billing"];
 
+        this.apiUrl     = appSettings.getConfig('api');
         this.builder    = xmlbuilder;
 
         if( !this.pouchdbTickets ){
@@ -299,7 +301,7 @@ export class CheckinService {
             //token: "dlI2UUx1WGJiKzViUWY2dnZGbFloUDJ6RjhFTGF4M1BySnJ4cHF0YjUvbmRyWWpjTkVLN3ppd3RxL0dJPQ.T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbFlVcU92YUJTZWlHU3pER1kySnlXRTF4alNUS0ZWcUlVS0NhelhqaXdnWTRncklVSWVvZlFZMWNyUjVxYUFxMWFxcStUL1IzdGpHRTJqdS9Zakw2UGRkZEFZcDFhY3lhUC95OUZOaU1xZGtnZEdlMUhwZUp3U2c3RllwZyt5TzNQMjVpWTNkOXlDTllpR2laNWdKNHBKNGhqL3VmVkwxWmtEQU9ibHpOSzI0YnA0d3l1TklyL2RUMU41alh5MEJqNnIyb2lCajI3a3RVRHFxdTZjTHFacXl5dnlBVzhjdnBraTVjelRNdEZteDlucUJ2QWFLSlJOWlo5N3dsRTUwcUt5QmlsUldjN1VRQTVRamJUR3ZNdEJ0VDBETVBrVThpTTE3dmtzNjhwRU1DbWlyQ2pGbyt0OWtMd0Z6V2l1bnlKbjB2cXdhc1RRbWsxcU5MUXNTWUFkdjI2S0x0MWUwbjM5U3RGNXQ3aDZrQlA5ajFhS2RCeDB3RDY2WHduSG1oRUVUNmNBcTZDdlF0ZnFDY2RBTlA3OTZjMEtqUXIrZEZMS3dzcUdjODRraVZuYXhUQWNCeWlGa1drdDBWUXBmSzNBRmlyRXRieXJQd1pZUnJxY1lESTNHelNlWnVTUHU1VlFJd2QwTWVhQmh3PT0.0ZcWDXbHF11LxtxY43O0WQuolqfdlvpc2ySOYkY-L8Q"
         };
         var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:3000/api/cfdi-upload", true ); // services.test.sw.com.mx/security/authenticate
+            xhr.open("POST", this.apiUrl + "cfdi-upload", true ); // services.test.sw.com.mx/security/authenticate
             // xhr.withCredentials = true;
             //xhr.setRequestHeader('Accept', 'Application/json');
             //xhr.setRequestHeader('Content-Type', 'q=0.8;application/json;q=0.9');
