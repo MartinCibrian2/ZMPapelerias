@@ -32,9 +32,7 @@ console.log( this.loginUrl, this.appSettings );
     }
 
     login( credentials: LoginInterface ): Observable< Object > {
-        let body: any    = {};
-        credentials.gettoken    = true;
-console.log( this.loginUrl, credentials );
+        credentials['gettoken']    = true;
         let _user$    = this
             .http
             .post(
@@ -42,9 +40,8 @@ console.log( this.loginUrl, credentials );
                 credentials
         )
         .map(( response: Response ) => {
-console.log( JSON.parse( response._body ));
             if( response.hasOwnProperty('_body') ){
-                var _response    = JSON.parse( response._body );
+                var _response    = JSON.parse( response['_body'] );
                 let token        = _response && _response.token;
                 if( token ){
                     this.apiPaths    = this.appSettings.mergePaths( _response.apiPaths );
@@ -59,16 +56,8 @@ console.log( JSON.parse( response._body ));
 
                 return _response;
             }
-            /* response["rows"].map(( row ) => {
-                body         = row.key;
-                body.id      = row.id;
-                body._rev    = body._rev;
-                localStorage.setItem(
-                    'currentUser', JSON.stringify( body )
-                );
-            }); */
 
-            return body;
+            return credentials;
         })
         .catch(( error ) => {
             console.log( error );
