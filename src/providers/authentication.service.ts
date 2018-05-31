@@ -16,6 +16,7 @@ export class AuthenticationService {
     couchdbUp: Observable<boolean>;
     public token: string;
     private loginUrl: string;
+    private apiPaths;
 
     constructor(
         public http: Http,
@@ -23,15 +24,66 @@ export class AuthenticationService {
     ){
         var currentUser    = JSON.parse( localStorage.getItem('currentUser'));
         //this.token         = currentUser && currentUser.token;
-        let databases      = this.appSettings.getDatabases();
-        this.loginUrl      = databases.login.database;
-console.log( this.appSettings );
-        this._pouchDbAdapter    = new PouchDbAdapter( this.loginUrl );
-        this.syncStatus         = this._pouchDbAdapter.syncStatus.asObservable();
-        this.couchdbUp          = this._pouchDbAdapter.couchDbUp.asObservable();
+        // let databases      = this.appSettings.getDatabases();
+        // this.loginUrl      = databases.login.database;
+        this.apiPaths    = appSettings.getPaths();
+        this.loginUrl    = this.apiPaths.login;
+console.log( this.loginUrl, this.appSettings );
     }
 
     login( credentials: LoginInterface ): Observable< Object > {
+        let body: any    = {};
+        credentials.gettoken    = true;
+console.log( this.loginUrl, credentials );
+        let _user$    = this
+            .http
+            .post(
+                this.loginUrl,
+                credentials
+        )
+        .map(( response: Response ) => {
+console.log( JSON.parse( response._body ));
+            if( response.hasOwnProperty('_body') ){
+                var _response    = JSON.parse( response._body );
+                let token        = _response && _response.token;
+                if( token ){
+                    this.apiPaths    = this.appSettings.mergePaths( _response.apiPaths );
+                    this.token       = token;
+                    localStorage.setItem(
+                        'currentUser', JSON.stringify( _response )
+                    );
+                } else {
+                    // Return the object
+                    console.log( _response );
+                }
+
+                return _response;
+            }
+            /* response["rows"].map(( row ) => {
+                body         = row.key;
+                body.id      = row.id;
+                body._rev    = body._rev;
+                localStorage.setItem(
+                    'currentUser', JSON.stringify( body )
+                );
+            }); */
+
+            return body;
+        })
+        .catch(( error ) => {
+            console.log( error );
+            return error;
+        });
+
+        return _user$;
+    }
+
+    logout(): void {
+        this.token    = null;
+        localStorage.removeItem('currentUser');
+    }
+
+    login1( credentials: LoginInterface ): Observable< Object > {
         let body: any    = {};
 
         let _user$    = this.getUserByUsername( credentials )
@@ -51,13 +103,8 @@ console.log( this.appSettings );
             console.log( error );
             return error;
         });
-console.log( _user$ );
-        return _user$;
-    }
 
-    logout(): void {
-        this.token    = null;
-        localStorage.removeItem('currentUser');
+        return _user$;
     }
 
     getUserByUsername( params: any ): Observable<any> {

@@ -10,9 +10,6 @@ export class AppSettings {
     private env:    Object = null;
 
     private path_config: string   = 'assets/';
-    private api_server: string    = "";
-    private dir: string           = "";
-    public path_api: string       = this.api_server + "" + this.dir;
     public apiPath: any;
     public xmlBilling: any;
     public _urlConfigs: string;
@@ -137,7 +134,7 @@ export class AppSettings {
         let _paths: any = this.config['paths'];
         for( let _path in _paths ){
             if( _paths.hasOwnProperty( _path )){
-                this.config['paths'][ _path ]    = this.config['host'] +"/"+ _paths[ _path ];
+                this.config['paths'][ _path ]    = this.config['api'] + _paths[ _path ];
             }
         }
 
@@ -172,8 +169,8 @@ export class AppSettings {
         let _paths: any = this.config['paths'];
         for( let _path in new_paths ){
             if( new_paths.hasOwnProperty( _path )){
-                _paths[ _path ]    = this.config['host'];
-                _paths[ _path ]   += "/";
+                _paths[ _path ]    = this.config['api'];
+                // _paths[ _path ]   += "/";
                 _paths[ _path ]   += new_paths[ _path ];
             }
         }

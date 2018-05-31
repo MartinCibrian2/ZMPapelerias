@@ -28,7 +28,7 @@ export class CheckinService {
     public claveProdServs: any;
     private apiPaths: AppSettings;
     private billingUrl: string;
-    privta apiUrl: string;
+    private apiUrl: string;
     builder;
 
     public tickets: any;

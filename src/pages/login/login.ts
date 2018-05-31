@@ -59,57 +59,26 @@ export class LoginPage implements OnInit {
     this.data    = Object.assign( this.loginForm.value, {
         //opportunity: this._return.opportunity
     });
-console.log( this.data )
+
     this.authenticationService
         .login( this.data )
         .subscribe(( _response ) => {
+            let token    = _response && _response['token'];
 
-            //let token    = _response && _response['token'];
-console.log( _response, localStorage.getItem('currentUser') )
-            if( Object.keys( _response ).length ){ // token
+            if( token ){
                 load.dismiss();
                 this.navCtrl.setRoot( TabsPage );
             } else {
-              this._return.result            = false;
-              //this._return.opportunity      = _response['opportunity'];
-              //this._return.opportunities    = _response['opportunities'];
-
+              this._return.result    = false;
               load.dismiss();
-              //if( _response['showAlertCode'].value ){
-                  //if( _response['opportunity'] >= _response['opportunities'] ){
-                      /* _response['showAlertCode'].message.callback    = () => {
-                          this.timer.m    = _response['timewait'];
-
-                          let IntIdS    = setInterval(( ) => {
-                                  if( this.timer.m > 0 && this.timer.s < 1 ){
-                                      this.timer.s    = 60;
-                                      this.timer.m --;
-                                  } else {
-                                  // Continues with the counting.
-                                  }
-                                  this.timer.s --; console.log( this.timer.m+' : '+this.timer.s );
-                              }, 1000 
-                          );
-                          setTimeout(( ) => {
-                              console.log(' Se activo el botón ingresar');
-                              //this._return.opportunity = 0;
-                              clearInterval( IntIdS );
-                          }, (( _response['timewait'] * 60 * 1000 )) + 10 );
-                      }; */
-                  //}
-                  //this.showAlertCode( _response['showAlertCode'].message );
-              //} else {
-              //    // Does not show a message.
-              //}
+              this.showAlertCode( _response );
           }
         },
         ( error ) => {
             load.dismiss();
-            //let _body$    = JSON.parse( error._body );
-
             this.showAlertCode({
               'title': 'Acceso incorrecto',
-              'subTitle': 'Intente de nuevo', // _body$.msg
+              'subTitle': 'Intente de nuevo',
               'text': 'Ok'
             });
         });
@@ -125,19 +94,16 @@ console.log( _response, localStorage.getItem('currentUser') )
       'username': ['', [Validators.required, Validators.pattern( /^[a-zA-Z0-9_]{1,}$/ )]],
       'password': ['', [ Validators.maxLength( 20 )]],
       'email': ['']
-      //'code': ['227859', [ Validators.minLength( 6 ), Validators.maxLength( 6 ), Validators.pattern( /^[0-9]{1,}$/ )]],
-      //'opportunity': [ 0 ]
     });
   }
 
   showAlertCode( _body: any ){
     let alert = this.alertCtrl.create({
       title: _body.title,
-      subTitle: _body.subTitle,
+      subTitle: _body.message,
       buttons: [{
         text: _body.text,
         handler: data => {
-          console.log('Código enviado ', data );
           if( _body.hasOwnProperty('callback')){
             _body.callback();
           }

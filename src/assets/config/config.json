@@ -1,11 +1,7 @@
 {
     "env": "developement",
-    "dir": "",
     "paths" : {
-        "ventas":     "inventario",
-        "compras":    "inventario",
-        "billing":    "billing",
-        "clients":    "client"
+        "login":      "login"
     },
     "databases": {
         "inventory": {
@@ -25,9 +21,6 @@
         },
         "buys": {
             "database": "compras"
-        },
-        "login": {
-            "database": "login"
         }
     }
 }
