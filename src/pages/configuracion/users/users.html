@@ -1,0 +1,47 @@
+
+<ion-header>
+    <ion-navbar>
+        <ion-title>{{ titlePage }} - {{ titleApp }}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-10>
+                <ion-searchbar (ionInput)="searchUserByString( $event )">
+                <!-- <ion-searchbar [(ngModel)]="searching"> -->
+                </ion-searchbar>
+            </ion-col>
+            <ion-col col-2>
+                <button ion-button  [navPush]="addUserPage"
+                        [navParams]="paramsUser">
+                    <ion-icon name="add"></ion-icon>
+                </button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+
+    <ion-list>
+        <ion-item-sliding *ngFor="let item of Users | search: searching">
+            <ion-item>
+                <h2>{{ item.nombre }}</h2>
+                <p>{{ item.rfc }}</p>
+            </ion-item>
+            <ion-item-options>
+                <button ion-button color="primary"
+                        (click)="openNavDetailsUser( item )" icon-start>
+                    <ion-icon name="create"></ion-icon>
+                    Actualizar
+                </button>
+                <button ion-button color="danger" 
+                        (click)="deleteUser( item )" icon-start>
+                    <ion-icon name="trash"></ion-icon>
+                    Borrar
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+
+</ion-content>

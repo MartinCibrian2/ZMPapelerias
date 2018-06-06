@@ -52,10 +52,6 @@ export class LoginPage implements OnInit {
     event.preventDefault();
     let load    = this.loadingCtrl.create();
     load.present( load );
-
-    //this.header.append('withCredentials', 'true');
-    //this.header.append('token', `${this.token}` );
-
     this.data    = Object.assign( this.loginForm.value, {
         //opportunity: this._return.opportunity
     });
@@ -72,15 +68,11 @@ export class LoginPage implements OnInit {
               this._return.result    = false;
               load.dismiss();
               this.showAlertCode( _response );
-          }
+            }
         },
         ( error ) => {
             load.dismiss();
-            this.showAlertCode({
-              'title': 'Acceso incorrecto',
-              'subTitle': 'Intente de nuevo',
-              'text': 'Ok'
-            });
+            this.showAlertCode( JSON.parse( error._body ));
         });
   }
 
@@ -91,9 +83,9 @@ export class LoginPage implements OnInit {
 
   private makeLoginForm(){
     return this.frmBuilder.group({
-      'username': ['', [Validators.required, Validators.pattern( /^[a-zA-Z0-9_]{1,}$/ )]],
+      // 'username': ['', [Validators.required, Validators.pattern( /^[a-zA-Z0-9_]{1,}$/ )]],
       'password': ['', [ Validators.maxLength( 20 )]],
-      'email': ['']
+      'email': ['', [ Validators.required ]]
     });
   }
 

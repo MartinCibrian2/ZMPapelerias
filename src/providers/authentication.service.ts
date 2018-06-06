@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 
@@ -9,11 +9,6 @@ import { PouchDbAdapter } from './pouchdb/pouchdb.adapter';
 
 @Injectable()
 export class AuthenticationService {
-    // handler for the adapter class
-    private _pouchDbAdapter: PouchDbAdapter;
-    // rxjs observables to broadcast sync status
-    syncStatus: Observable<boolean>;
-    couchdbUp: Observable<boolean>;
     public token: string;
     private loginUrl: string;
     private apiPaths;
@@ -23,28 +18,27 @@ export class AuthenticationService {
         public appSettings: AppSettings
     ){
         var currentUser    = JSON.parse( localStorage.getItem('currentUser'));
-        //this.token         = currentUser && currentUser.token;
-        // let databases      = this.appSettings.getDatabases();
-        // this.loginUrl      = databases.login.database;
-        this.apiPaths    = appSettings.getPaths();
-        this.loginUrl    = this.apiPaths.login;
-console.log( this.loginUrl, this.appSettings );
+        this.token         = currentUser && currentUser.token;
+        this.apiPaths      = appSettings.getPaths();
+        this.loginUrl      = this.apiPaths.login;
     }
 
-    login( credentials: LoginInterface ): Observable< Object > {
+    login( credentials: LoginInterface, gettoken = null ): Observable< Object > {
         credentials['gettoken']    = true;
+
         let _user$    = this
             .http
             .post(
                 this.loginUrl,
-                credentials
-        )
-        .map(( response: Response ) => {
+                JSON.stringify( credentials ),
+                this.getHeaders()
+            )
+         .map(( response: Response ) => {
             if( response.hasOwnProperty('_body') ){
                 var _response    = JSON.parse( response['_body'] );
                 let token        = _response && _response.token;
                 if( token ){
-                    this.apiPaths    = this.appSettings.mergePaths( _response.apiPaths );
+                    //this.apiPaths    = this.appSettings.mergePaths( _response.apiPaths );
                     this.token       = token;
                     localStorage.setItem(
                         'currentUser', JSON.stringify( _response )
@@ -58,10 +52,6 @@ console.log( this.loginUrl, this.appSettings );
             }
 
             return credentials;
-        })
-        .catch(( error ) => {
-            console.log( error );
-            return error;
         });
 
         return _user$;
@@ -72,6 +62,32 @@ console.log( this.loginUrl, this.appSettings );
         localStorage.removeItem('currentUser');
     }
 
+    getToken(){
+        let token    = localStorage.getItem('token');
+
+        if( typeof token === 'undefined'){
+            this.token = null;
+        } else {
+            this.token = token;
+        }
+
+        return this.token;
+    }
+
+    getHeaders(){
+        const headers = new Headers({'Content-Type': 'application/json'});
+
+        return { headers: headers };
+    }
+      
+
+}
+
+
+
+
+
+/*
     login1( credentials: LoginInterface ): Observable< Object > {
         let body: any    = {};
 
@@ -99,8 +115,6 @@ console.log( this.loginUrl, this.appSettings );
     getUserByUsername( params: any ): Observable<any> {
         let _params = Object.assign( { include_docs: false }, params );
 
-        return Observable.from(
-            this._pouchDbAdapter._pouchDB
             .query(( doc, emit ) => {
                 if( doc.username ){
                     if( doc.active === true 
@@ -116,5 +130,4 @@ console.log( this.loginUrl, this.appSettings );
             )
         );
     }
-
-}
+ */

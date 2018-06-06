@@ -9,13 +9,13 @@
             <form novalidate [formGroup]="loginForm" (ngSubmit)="doLogin( $event )">
                 <ion-row justify-content-center align-items-center>
                     <ion-item>
-                        <ion-input placeholder="Usuario" type="text" formControlName="username"></ion-input>
+                        <ion-input placeholder="Email" type="text" formControlName="email"></ion-input>
                     </ion-item>
-                    <ion-item *ngIf="loginForm.controls.username.errors && loginForm.controls.username.dirty">
-                        <p color="danger" *ngIf="loginForm.controls.username.hasError('required')">
+                    <ion-item *ngIf="loginForm.controls.email.errors && loginForm.controls.email.dirty">
+                        <p color="danger" *ngIf="loginForm.controls.email.hasError('required')">
                             Este campo es requerido
                         </p>
-                        <p color="danger" *ngIf="loginForm.controls.username.hasError('pattern')">
+                        <p color="danger" *ngIf="loginForm.controls.email.hasError('pattern')">
                             Nombre es valido
                         </p>
                     </ion-item>
