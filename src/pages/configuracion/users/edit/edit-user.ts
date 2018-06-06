@@ -2,32 +2,32 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
-import { ClientService } from '../../../../providers/clients/client.service';
-import { ClientsPage } from '../clients';
+import { UserService } from '../../../../providers/users/users.service';
+import { UsersPage } from '../users';
 
 @IonicPage()
 @Component({
-  selector: 'page-client',
-  templateUrl: '../add/add-client.html',
+  selector: 'page-user',
+  templateUrl: '../add/add-user.html',
   providers: [
-      ClientService
+      UserService
   ]
 })
-export class EditClientPage implements OnInit
+export class EditUserPage implements OnInit
 {
     public title: string;
     // Form
-    public clientForm: FormGroup;
+    public userForm: FormGroup;
     public item: any;
 
     constructor(
         public navParams: NavParams,
         public navCtlr: NavController,
         public frmBuilder: FormBuilder,
-        private clientService: ClientService
+        private userService: UserService
     ){
-        this.title         = "Actualizar";
-        this.clientForm    = this.makeForm();
+        this.title       = "Actualizar";
+        this.userForm    = this.makeForm();
     }
 
     ngOnInit(){
@@ -35,18 +35,18 @@ export class EditClientPage implements OnInit
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad EditClientPage');
+        console.log('ionViewDidLoad EdituserPage');
     }
 
-    saveClient( ): void {
-        if( this.clientForm.valid ){
-            var _doc   = this.clientForm.value;
+    saveUser( ): void {
+        if( this.userForm.valid ){
+            var _doc   = this.userForm.value;
 
             _doc.active    = true;
-            this.clientService
+            this.userService
             .put( _doc )
             .then(( response ) => {
-                this.navCtlr.setRoot( ClientsPage );
+                this.navCtlr.setRoot( UsersPage );
             })
             .then(( error ) => {
                 console.log( error );
@@ -60,9 +60,9 @@ export class EditClientPage implements OnInit
 
     makeForm( ){
         let _group    = {
-            'nombre':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'rfc':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'tel':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]]
+            'name':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'surname':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'email':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]]
         };
 
         if( Object.keys( this.navParams.data ).length ){

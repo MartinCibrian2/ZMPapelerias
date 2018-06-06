@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, Nav, NavController, NavParams } from 'ionic-angular';
 
 import { BillingPage } from '../billing/billing';
 import { ClientsPage } from './clients/clients';
 import { BuysPage } from './buys/buys';
 import { ConfigsPage } from './configs/configs';
+import { UsersPage } from './users/users';
 
 @IonicPage()
 @Component({
@@ -12,10 +13,23 @@ import { ConfigsPage } from './configs/configs';
   templateUrl: 'configuracion.html',
 })
 export class ConfiguracionPage {
-  public billingPage = BillingPage;
-  public clientsPage = ClientsPage;
-  public buysPage    = BuysPage;
-  public configsPage = ConfigsPage;
+  @ViewChild( Nav ) nav: Nav;
+  rootPage = ConfigsPage;
+  pagesConfig: any[] = [
+    {
+      title: 'Facturar',
+      component: BillingPage
+    }, {
+      title: 'Clientes',
+      component: ClientsPage
+    }, {
+      title: 'Compras',
+      component: BuysPage
+    }, {
+      title: 'Usuarios',
+      component: UsersPage
+    }
+  ];
 
   constructor(
     public navCtrl: NavController,
@@ -25,6 +39,10 @@ export class ConfiguracionPage {
 
   ionViewDidLoad() {
     // console.log('ionViewDidLoad ConfiguracionPage');
+  }
+
+  openPage( page ){
+    this.rootPage = page.component;
   }
 
 }

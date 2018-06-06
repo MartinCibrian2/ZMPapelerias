@@ -1,7 +1,7 @@
 
 <ion-header>
   <ion-navbar>
-    <ion-title>Configuración - ZMPapelrias</ion-title>
+    <ion-title>Configuración - ZMPapelerias</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -10,17 +10,10 @@
         <ion-list-header>
             Facturación
         </ion-list-header>
-        <button ion-item [navPush]="billingPage">
-            Facturar
+        <button *ngFor="let page of pagesConfig" 
+            ion-item menuClose [navPush]="page.component">
+            <!-- (click)="openPage( page )" -->
+            {{ page.title }}
         </button>
-        <button ion-item [navPush]="clientsPage">
-            Clientes
-        </button>
-        <button ion-item [navPush]="buysPage">
-            Compras
-        </button>
-        <!-- <button ion-item [navPush]="configsPage">
-            Catalogos
-        </button> -->
     </ion-list>
 </ion-content>

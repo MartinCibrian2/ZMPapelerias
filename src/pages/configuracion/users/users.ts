@@ -7,8 +7,8 @@ import { AppSettings } from '../../../app/common/api.path';
 import { UserService } from '../../../providers/users/users.service';
 import { UploadService } from '../../../providers/upload.service';
 
-import { AddClientPage } from './add/add-client';
-import { EditClientPage } from './edit/edit-client';
+import { AddUserPage } from './add/add-user';
+import { EditUserPage } from './edit/edit-user';
 
 @IonicPage()
 @Component({
@@ -31,7 +31,7 @@ export class UsersPage {
     private apiPaths;
     private url: string;
 
-    public addClientPage = AddClientPage;
+    public addClientPage = AddUserPage;
     public paramsClient  = { page: UsersPage };
 
     constructor(
@@ -51,41 +51,6 @@ export class UsersPage {
         // this.getUsers( );
     }
 
-    onSubmit(){
-        this._userService.addUser( this.token, this.userForm ).subscribe(
-            response => {
-            console.log( response )
-              if( response.user ){
-                this.status = 'success';
-                this.user = response.user;
-                /* if( this.filesToUpload ){
-                  // Upload Image
-                  this._uploadService.makeFileRequest(
-                      this.url + 'upload-image-user/' + this.user._id,
-                      [],
-                      this.filesToUpload,
-                      this.token,
-                      'image'
-                  ).then(( result: any ) => {
-                      this.user.image = result.user.image;
-                    //   this._router.navigate(['/admin-panel/listado']);
-                  });
-                } else {
-                    // this._router.navigate(['/admin-panel/listado']);
-                } */
-              } else {
-                this.status = 'error';
-              }
-            },
-            error => {
-              var errorMessage = <any>error;
-              if( errorMessage != null ){
-                this.status = 'error';
-              }
-            }
-        );
-    }
-
     getUsers(){
         this._userService.getUsers( {} ).subscribe(
             response => {
@@ -103,17 +68,6 @@ export class UsersPage {
     public filesToUpload: Array< File >;
     fileChangeEvent( fileInput: any ){
         this.filesToUpload = <Array< File >> fileInput.target.files;
-    }
-
-    makeForm( ){
-        let _group    = {
-            'name':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'surname':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'email':  ['', [ Validators.required ]],
-            //'tel':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]]
-        };
-
-        return this.frmBuilder.group( _group );
     }
 
 }
