@@ -56,7 +56,7 @@ export class CatalogsPage
             if( _params.hasOwnProperty('catalog')){
                 this.nameField    = _params.catalog;
                 this.getCatalog( _params.catalog );
-                this,this.postCatalog()
+                this.postCatalog()
             }
         }
     }

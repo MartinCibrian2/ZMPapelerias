@@ -14,6 +14,7 @@ export class AppSettings {
     public xmlBilling: any;
     public _urlConfigs: string;
     public _databases: any;
+    public path_api: string;
 
     constructor(
         private http: Http,
@@ -31,7 +32,7 @@ export class AppSettings {
             // Does not an platform android.
         }
 
-        this.xmlBilling = this.getXmlBilling();
+        this.xmlBilling    = this.getXmlBilling();
     }
     /**
      * Use to get the data found in the second file (config file)
@@ -99,7 +100,8 @@ export class AppSettings {
                         return Observable.throw( error.json().error || 'Server error');
                     })
                     .subscribe(( responseData ) => {
-                        this.config    = Object.assign( responseData, envResponse );
+                        this.config      = Object.assign( responseData, envResponse );
+                        this.path_api    = this.config["api"];
                         resolve( true );
                     });
                 } else {

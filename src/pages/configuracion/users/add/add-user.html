@@ -1,48 +1,69 @@
 
 <ion-header>
   <ion-navbar>
-    <ion-title>{{ title}} Cliente - ZMPapelerias</ion-title>
+    <ion-title>{{ titlePage }} - {{ titleApp }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-<!--     <ion-list>
-        <ion-list-header>
-            {{ title }} Cliente
-        </ion-list-header>
-    </ion-list> -->
-    <form novalidate [formGroup]="clientForm" (submit)="saveClient()">
+    <form novalidate [formGroup]="userForm" (submit)="saveUser()">
         <ion-grid>
             <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
                 <ion-item>
                     <ion-label stacked>
-                        Cliente
+                        Nombre
                     </ion-label>
-                    <ion-input  formControlName="nombre" placeholder="Nombre de persona física o moral"></ion-input>
+                    <ion-input  formControlName="name" placeholder="Nombre del usuario"></ion-input>
                 </ion-item>
             </ion-row>
 
             <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
                 <ion-item>
                     <ion-label stacked>
-                        RFC
+                        Apellidos
                     </ion-label>
-                    <ion-input  formControlName="rfc" placeholder="Registro Federal de Contriyentes"></ion-input>
+                    <ion-input  formControlName="surname" placeholder="Apellidos"></ion-input>
                 </ion-item>
             </ion-row>
 
             <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
                 <ion-item>
-                    <!-- <ion-label stacked>Teléfono</ion-label> -->
-                    <ion-label stacked>Teléfono</ion-label>
-                    <ion-input type="text" formControlName="tel" placeholder="Número teléfono" clearInput></ion-input>
+                    <ion-label stacked>Email</ion-label>
+                    <ion-input type="text" formControlName="email" placeholder="Correo electrónico" clearInput></ion-input>
+                </ion-item>
+            </ion-row>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Usuario
+                    </ion-label>
+                    <ion-input formControlName="username" placeholder="Nombre usuario"></ion-input>
+                </ion-item>
+            </ion-row>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Contraseña
+                    </ion-label>
+                    <ion-input type="password" formControlName="password" placeholder="Contraseña"></ion-input>
+                </ion-item>
+            </ion-row>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Puesto
+                    </ion-label>
+                    <ion-input formControlName="job" placeholder="Puesto laboral"></ion-input>
                 </ion-item>
             </ion-row>
 
             <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
                 <button ion-button block 
                         type="submit"
-                        [disabled]="clientForm.invalid">
+                        [disabled]="userForm.invalid">
                     Guardar
                 </button>
             </ion-row>

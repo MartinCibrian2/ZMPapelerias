@@ -3,6 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { ConfiguracionPage } from './configuracion';
 
 import { ConfigsPageModule } from './configs/configs.module';
+import { UsersPageModule } from './users/users.module';
 
 @NgModule({
     declarations: [
@@ -10,10 +11,12 @@ import { ConfigsPageModule } from './configs/configs.module';
     ],
     imports: [
         IonicPageModule.forChild( ConfiguracionPage ),
-        ConfigsPageModule
+        ConfigsPageModule,
+        UsersPageModule
     ],
     exports: [
-        ConfigsPageModule
+        ConfigsPageModule,
+        UsersPageModule
     ]
 })
 export class ConfiguracionPageModule {}

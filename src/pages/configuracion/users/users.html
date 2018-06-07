@@ -24,14 +24,23 @@
 
 
     <ion-list>
-        <ion-item-sliding *ngFor="let item of Users | search: searching">
+        <ion-item-sliding *ngFor="let item of users">
             <ion-item>
-                <h2>{{ item.nombre }}</h2>
-                <p>{{ item.rfc }}</p>
+                <h2>
+                    {{ item.name }} {{ item.surname }}
+                    <small>({{ item.role | lowercase }})</small>
+                </h2>
+                <p>{{ item.username }}: {{ item.email }}</p>
+                <p> <small>{{ item.job }}</small></p>
             </ion-item>
             <ion-item-options>
+                <button ion-button color="light"
+                        (click)="activeUser( item )" icon-start>
+                    <ion-icon name="checkbox"></ion-icon>
+                    Activo
+                </button>
                 <button ion-button color="primary"
-                        (click)="openNavDetailsUser( item )" icon-start>
+                        (click)="openNavDetails( item )" icon-start>
                     <ion-icon name="create"></ion-icon>
                     Actualizar
                 </button>

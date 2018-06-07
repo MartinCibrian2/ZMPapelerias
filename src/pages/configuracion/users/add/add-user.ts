@@ -5,6 +5,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UserService } from '../../../../providers/users/users.service';
 import { UsersPage } from '../users';
 import { UploadService } from '../../../../providers/upload.service';
+import { AclService } from '../../../../providers/users/acl.service';
 
 @IonicPage()
 @Component({
@@ -12,33 +13,37 @@ import { UploadService } from '../../../../providers/upload.service';
   templateUrl: 'add-user.html',
   providers: [
       UserService,
-      UploadService
+      UploadService,
+      AclService
   ]
 })
 export class AddUserPage implements OnInit
 {
-    public title: string;
+    public titlePage: string;
+    public titleApp: string;
     public token: String;
     // Form
     public userForm: FormGroup;
     public item: any;
-    private url: string;
     public user     = {};
+    public roles    = [];
+    public status: boolean = true;
 
     constructor(
         public navParams: NavParams,
         public navCtlr: NavController,
         public frmBuilder: FormBuilder,
         private userService: UserService,
-        private _uploadService: UploadService
+        private _uploadService: UploadService,
+        private _aclService: AclService
     ){
-        this.title       = "Registrar";
-        this.userForm    = this.makeForm();
-        this.url         = "user";
+        this.titleApp     = "ZMPapelerias";
+        this.titlePage    = "Registrar Usuario";
+        this.userForm     = this.makeForm();
     }
 
     ngOnInit(){
-
+        this.getRoles();
     }
 
     ionViewDidLoad() {
@@ -92,11 +97,31 @@ export class AddUserPage implements OnInit
         return;
     }
 
+    getRoles(){
+        this._aclService.getRoles( null )
+        .subscribe(
+            response    => {
+                console.log( response )
+                this.roles    = response.data;
+            }
+        );
+    }
+
+    public filesToUpload: Array< File >;
+    fileChangeEvent( fileInput: any ){
+        this.filesToUpload = <Array< File >> fileInput.target.files;
+    }
+
     makeForm( ){
         let _group    = {
             'name':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             'surname':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'email':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]]
+            'username':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'password':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'email':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'job':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            //'role':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'active':  ['']
         };
 
         return this.frmBuilder.group( _group );

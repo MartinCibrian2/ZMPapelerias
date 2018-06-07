@@ -15,7 +15,8 @@ import { UsersPage } from '../users';
 })
 export class EditUserPage implements OnInit
 {
-    public title: string;
+    public titlePage: string;
+    public titleApp: string;
     // Form
     public userForm: FormGroup;
     public item: any;
@@ -26,7 +27,8 @@ export class EditUserPage implements OnInit
         public frmBuilder: FormBuilder,
         private userService: UserService
     ){
-        this.title       = "Actualizar";
+        this.titleApp     = "ZMPapelerias";
+        this.titlePage    = "Registrar Usuario";
         this.userForm    = this.makeForm();
     }
 
@@ -43,14 +45,14 @@ export class EditUserPage implements OnInit
             var _doc   = this.userForm.value;
 
             _doc.active    = true;
-            this.userService
-            .put( _doc )
-            .then(( response ) => {
+            // this.userService
+            // .put( _doc )
+            // .then(( response ) => {
                 this.navCtlr.setRoot( UsersPage );
-            })
-            .then(( error ) => {
-                console.log( error );
-            });
+            // })
+            // .then(( error ) => {
+            //     console.log( error );
+            // });
         } else {
             // The form is does not valid.
         }
