@@ -114,7 +114,7 @@ export class LoginPage implements OnInit {
     );
   }
 
-  doLogin2( event: Event ){
+  /* doLogin2( event: Event ){
     event.preventDefault();
     let load    = this.loadingCtrl.create();
     load.present( load );
@@ -131,7 +131,7 @@ export class LoginPage implements OnInit {
                 load.dismiss();
                 this.navCtrl.setRoot( TabsPage );
             } else {
-              this._return.result    = false;
+              // this._return.result    = false;
               load.dismiss();
               this.showAlertCode( _response );
             }
@@ -140,6 +140,6 @@ export class LoginPage implements OnInit {
             load.dismiss();
             this.showAlertCode( JSON.parse( error._body ));
         });
-  }
+  } */
 
 }
