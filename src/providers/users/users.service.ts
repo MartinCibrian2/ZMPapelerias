@@ -53,8 +53,9 @@ export class UserService
         let headers = this.getHeaders();
 
         headers.headers.append('Authorization', token );
-
-        return this.http.post( this.apiUrl, params, headers )
+console.log( this.apiUrl + 'register-user', params )
+        return this.http
+        .post( this.apiUrl + 'register-user', params, headers )
         .map( res => res.json() );
     }
 

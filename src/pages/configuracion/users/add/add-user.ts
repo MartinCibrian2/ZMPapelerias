@@ -6,6 +6,7 @@ import { UserService } from '../../../../providers/users/users.service';
 import { UsersPage } from '../users';
 import { UploadService } from '../../../../providers/upload.service';
 import { AclService } from '../../../../providers/users/acl.service';
+import { AuthenticationService } from '../../../../providers/authentication.service';
 
 @IonicPage()
 @Component({
@@ -27,7 +28,7 @@ export class AddUserPage implements OnInit
     public item: any;
     public user     = {};
     public roles    = [];
-    public status: boolean = true;
+    public status: string = "true";
 
     constructor(
         public navParams: NavParams,
@@ -35,10 +36,12 @@ export class AddUserPage implements OnInit
         public frmBuilder: FormBuilder,
         private userService: UserService,
         private _uploadService: UploadService,
-        private _aclService: AclService
+        private _aclService: AclService,
+        private _authService: AuthenticationService
     ){
         this.titleApp     = "ZMPapelerias";
         this.titlePage    = "Registrar Usuario";
+        this.token        = this._authService.getToken();
         this.userForm     = this.makeForm();
     }
 
@@ -53,11 +56,11 @@ export class AddUserPage implements OnInit
     saveUser( ): void {
         if( this.userForm.valid ){
             var _doc       = this.userForm.value;
-            _doc.active    = true;
+            _doc.active    = "true";
 
             this
             .userService
-            .addUser( this.token, this.userForm )
+            .addUser( this.token, _doc )
             .subscribe(
                 response => {
                     console.log( response )
@@ -84,17 +87,15 @@ export class AddUserPage implements OnInit
                     }
                 },
                 error => {
-                var errorMessage = <any>error;
-                if( errorMessage != null ){
-                    this.status = 'error';
-                }
+                    var errorMessage = <any>error;
+                    if( errorMessage != null ){
+                        this.status = 'error';
+                    }
                 }
             );
         } else {
             // The form is does not valid.
         }
-
-        return;
     }
 
     getRoles(){
@@ -118,10 +119,11 @@ export class AddUserPage implements OnInit
             'surname':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             'username':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             'password':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'email':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'email':  ['', [ Validators.required, Validators.email ]],
             'job':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             //'role':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'active':  ['']
+            'active':  ['true'],
+            'alive':  ['true']
         };
 
         return this.frmBuilder.group( _group );

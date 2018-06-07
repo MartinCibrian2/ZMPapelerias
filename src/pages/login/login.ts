@@ -19,18 +19,9 @@ import { TabsPage } from '../tabs/tabs';
 })
 export class LoginPage implements OnInit {
     private header  = contentHeaders;
-    private _return = {
-        result: true,
-        opportunity: 0,
-        opportunities: 5
-    };
-    public token: string;
-    loginForm: FormGroup;
+    public identity: any;
+    public loginForm: FormGroup;
     data: LoginInterface;
-    timer: any = {
-        'm': 0,
-        's': 0
-    };
 
   constructor(
     public navCtrl: NavController,
@@ -58,27 +49,40 @@ export class LoginPage implements OnInit {
 
     this.authenticationService
         .login( this.data )
-        .subscribe(( _response ) => {
-            let token    = _response && _response['token'];
-
-            if( token ){
-                load.dismiss();
-                this.navCtrl.setRoot( TabsPage );
+        .subscribe(( response ) => {
+            // console.log( response, this.authGuard.canActivate() )
+            if( response.hasOwnProperty('user') && Object.keys( response.user )){
+                this.identity    = response.user;
+                this.identity.password    = '';
+                this.authenticationService
+                .login( this.data, 'true' )
+                .subscribe(
+                    _response => {
+                        let token    = _response && _response['token'];
+                        if( token ){
+                            localStorage.setItem('token', token );
+                            load.dismiss();
+                            this.navCtrl.setRoot( TabsPage );
+                        } else {
+                            load.dismiss();
+                            this.showAlertCode( _response );
+                        }
+                    }
+                );
             } else {
-              this._return.result    = false;
-              load.dismiss();
-              this.showAlertCode( _response );
+                load.dismiss();
+                this.showAlertCode( response );
             }
         },
         ( error ) => {
+            console.log( error )
             load.dismiss();
             this.showAlertCode( JSON.parse( error._body ));
         });
   }
 
   logout(): void {
-    //this.token = null;
-    localStorage.removeItem('currentUser');
+    this.authenticationService.logout();
   }
 
   private makeLoginForm(){
@@ -108,6 +112,34 @@ export class LoginPage implements OnInit {
         console.log('Closed');
       }
     );
+  }
+
+  doLogin2( event: Event ){
+    event.preventDefault();
+    let load    = this.loadingCtrl.create();
+    load.present( load );
+    this.data    = Object.assign( this.loginForm.value, {
+        //opportunity: this._return.opportunity
+    });
+
+    this.authenticationService
+        .login( this.data )
+        .subscribe(( _response ) => {
+            let token    = _response && _response['token'];
+
+            if( token ){
+                load.dismiss();
+                this.navCtrl.setRoot( TabsPage );
+            } else {
+              this._return.result    = false;
+              load.dismiss();
+              this.showAlertCode( _response );
+            }
+        },
+        ( error ) => {
+            load.dismiss();
+            this.showAlertCode( JSON.parse( error._body ));
+        });
   }
 
 }

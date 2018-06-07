@@ -23,8 +23,65 @@ export class AuthenticationService {
         this.loginUrl      = this.apiPaths.login;
     }
 
-    login( credentials: LoginInterface, gettoken = null ): Observable< Object > {
-        credentials['gettoken']    = true;
+    login( credentials, gettoken = null ) {
+        if( gettoken != null ) {
+            credentials.gettoken = gettoken;
+        } else {
+            // It has a gettoken.
+        }
+
+        let params = JSON.stringify( credentials );
+
+        return this
+        .http
+        .post( this.loginUrl, params, this.getHeaders() )
+        .map( res => res.json() );
+    }
+
+    logout(): void {
+        this.token    = null;
+        localStorage.removeItem('currentUser');
+    }
+
+    getIdentity(){
+        let identity = JSON.parse( localStorage.getItem('identity'));
+
+        if( typeof identity === 'undefined'){
+            identity = null;
+        } else {
+            identity = identity;
+        }
+
+        return identity;
+    }
+
+    getToken(){
+        let token    = localStorage.getItem('token');
+
+        if( typeof token === 'undefined'){
+            this.token = null;
+        } else {
+            this.token = token;
+        }
+
+        return this.token;
+    }
+
+    getHeaders(){
+        const headers = new Headers({'Content-Type': 'application/json'});
+
+        return { headers: headers };
+    }
+
+
+
+    login2( credentials: LoginInterface, gettoken = null ): Observable< Object > {
+        // credentials['gettoken']    = true;
+        if( gettoken != null ) {
+            credentials['gettoken']    = gettoken;
+        } else {
+            // It has a gettoken.
+        }
 
         let _user$    = this
             .http
@@ -56,30 +113,6 @@ export class AuthenticationService {
 
         return _user$;
     }
-
-    logout(): void {
-        this.token    = null;
-        localStorage.removeItem('currentUser');
-    }
-
-    getToken(){
-        let token    = localStorage.getItem('token');
-
-        if( typeof token === 'undefined'){
-            this.token = null;
-        } else {
-            this.token = token;
-        }
-
-        return this.token;
-    }
-
-    getHeaders(){
-        const headers = new Headers({'Content-Type': 'application/json'});
-
-        return { headers: headers };
-    }
-      
 
 }
 
