@@ -60,6 +60,39 @@
                 </ion-item>
             </ion-row>
 
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-6 col-xl-6>
+                <ion-col col-10>
+                    <ion-item-group margin-bottom>
+                        <ion-item>
+                            <!-- [(ngModel)]="role" -->
+                            <select-searchable
+                                title="Perfil"
+                                formControlName="role"
+                                [items]="roles"
+                                itemValueField="name"
+                                itemTextField="alias"
+                                [canSearch]="true"
+                                searchPlaceholder="Ingresa 3 o más caracteres"
+                                (onSearch)="searchRoles( $event )"
+                                >
+                            </select-searchable>
+                            <ng-template selectSearchableLabelTemplate>
+                                Perfil
+                            </ng-template>
+                        </ion-item>
+                    </ion-item-group>
+                </ion-col>
+            </ion-row>
+
+            <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
+                <ion-item>
+                    <ion-label stacked>
+                        Foto usuario
+                    </ion-label>
+                    <ion-input type="file" formControlName="image" placeholder="Imagen del usuario"></ion-input>
+                </ion-item>
+            </ion-row>
+
             <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
                 <button ion-button block 
                         type="submit"

@@ -3,15 +3,18 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
+import { AppSettings } from '../app/common/api.path';
+
 @Injectable()
 export class UploadService
 {
-    public url: String;
+    public apiUrl: String;
 
     constructor(
-        private _http: Http
+        private _http: Http,
+        public appSettings: AppSettings
     ){
-
+        this.apiUrl    = appSettings.path_api;
     }
 
     makeFileRequest( url: string, params: Array< string >, files: Array< File >, token: string, name: string ){
@@ -33,7 +36,7 @@ export class UploadService
                 }
             }
 
-            xhr.open('POST', url, true );
+            xhr.open('POST', this.apiUrl + url, true );
             xhr.setRequestHeader('Authorization', token );
             xhr.send( formData );
         });

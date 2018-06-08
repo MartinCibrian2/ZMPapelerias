@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { contentHeaders } from '../../app/common/headers';
 import { AuthenticationService } from '../../providers/authentication.service';
 import { AuthGuard } from '../../app/common/auth.guard';
 import { LoginInterface } from '../../app/interfaces/login';
@@ -18,7 +17,6 @@ import { TabsPage } from '../tabs/tabs';
   templateUrl: 'login.html'
 })
 export class LoginPage implements OnInit {
-    private header  = contentHeaders;
     public identity: any;
     public loginForm: FormGroup;
     data: LoginInterface;
@@ -50,9 +48,9 @@ export class LoginPage implements OnInit {
     this.authenticationService
         .login( this.data )
         .subscribe(( response ) => {
-            // console.log( response, this.authGuard.canActivate() )
-            if( response.hasOwnProperty('user') && Object.keys( response.user )){
-                this.identity    = response.user;
+            console.log( response, this.authGuard.canActivate() )
+            if( response.hasOwnProperty('user') && Object.keys( response["user"] )){
+                this.identity    = response["user"];
                 this.identity.password    = '';
                 this.authenticationService
                 .login( this.data, 'true' )
@@ -61,6 +59,7 @@ export class LoginPage implements OnInit {
                         let token    = _response && _response['token'];
                         if( token ){
                             localStorage.setItem('token', token );
+                            localStorage.setItem('currentUser', this.identity );
                             load.dismiss();
                             this.navCtrl.setRoot( TabsPage );
                         } else {

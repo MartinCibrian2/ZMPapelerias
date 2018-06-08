@@ -2,11 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
+import { SelectSearchable } from 'ionic-select-searchable';
+
 import { UserService } from '../../../../providers/users/users.service';
 import { UsersPage } from '../users';
 import { UploadService } from '../../../../providers/upload.service';
 import { AclService } from '../../../../providers/users/acl.service';
 import { AuthenticationService } from '../../../../providers/authentication.service';
+
+class Role {
+    public id: number;
+    public name: string;
+}
 
 @IonicPage()
 @Component({
@@ -22,13 +29,14 @@ export class AddUserPage implements OnInit
 {
     public titlePage: string;
     public titleApp: string;
-    public token: String;
+    public token: string;
     // Form
     public userForm: FormGroup;
-    public item: any;
     public user     = {};
-    public roles    = [];
-    public status: string = "true";
+    // public roles: any[] = new Array;
+    public roles: Role[];
+    public role: Role;
+    public status: String = "true";
 
     constructor(
         public navParams: NavParams,
@@ -67,21 +75,23 @@ export class AddUserPage implements OnInit
                     if( response.user ){
                         this.status = 'success';
                         this.user = response.user;
-                        /* if( this.filesToUpload ){
+                        if( this.filesToUpload ){
                         // Upload Image
-                        this._uploadService.makeFileRequest(
-                            this.url + 'upload-image-user/' + this.user._id,
-                            [],
-                            this.filesToUpload,
-                            this.token,
-                            'image'
-                        ).then(( result: any ) => {
-                            this.user.image = result.user.image;
-                            //   this._router.navigate(['/admin-panel/listado']);
-                        });
+                            this._uploadService
+                            .makeFileRequest(
+                                'upload-image-user/' + this.user["_id"],
+                                [],
+                                this.filesToUpload,
+                                this.token,
+                                'image'
+                            ).then(( result: any ) => {
+                                console.log( result )
+                                //this.user.image = result.user.image;
+                                //   this._router.navigate(['/admin-panel/listado']);
+                            });
                         } else {
                             // this._router.navigate(['/admin-panel/listado']);
-                        } */
+                        }
                     } else {
                         this.status = 'error';
                     }
@@ -102,7 +112,6 @@ export class AddUserPage implements OnInit
         this._aclService.getRoles( null )
         .subscribe(
             response    => {
-                console.log( response )
                 this.roles    = response.data;
             }
         );
@@ -113,6 +122,33 @@ export class AddUserPage implements OnInit
         this.filesToUpload = <Array< File >> fileInput.target.files;
     }
 
+    searchRoles( event: { component: SelectSearchable, text: string }) {
+        let text = ( event.text || '').trim().toLowerCase();
+
+        if( !text ){
+            event.component.items = this.roles;
+            return;
+        } else if ( event.text.length < 3 ){
+            return;
+        }
+
+        event.component.isSearching = true;
+
+        /* this.clientService
+        .getClientsAsync( text )
+        .subscribe( _clients => {
+            event.component.items    = _clients.rows.map( row => {
+                return row.doc;
+            });
+            event.component.isSearching = false;
+        }); */
+    }
+
+    roleChange( event: { component: SelectSearchable, value: any }){
+        // Asigns the client selected.
+        console.log('role:', event, this.userForm.value );
+    }
+
     makeForm( ){
         let _group    = {
             'name':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
@@ -121,7 +157,8 @@ export class AddUserPage implements OnInit
             'password':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             'email':  ['', [ Validators.required, Validators.email ]],
             'job':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            //'role':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'role':  ['', [ Validators.required ]],
+            'image':  [''],
             'active':  ['true'],
             'alive':  ['true']
         };

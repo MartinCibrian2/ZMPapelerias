@@ -66,7 +66,7 @@ export class BillingPage implements OnInit {
 
     clientChange( event: { component: SelectSearchable, value: any }){
         // Asigns the client selected.
-        //console.log('port:', event.value, this.checkinForm.value );
+        console.log('port:', event.value, this.checkinForm.value );
     }
 
     searchClients( event: { component: SelectSearchable, text: string }) {

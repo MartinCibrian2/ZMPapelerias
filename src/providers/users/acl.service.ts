@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { delay } from 'rxjs/operators';
 
 import { AppSettings } from '../../app/common/api.path';
+import { AuthenticationService } from '../authentication.service';
 
 @Injectable()
 
@@ -16,10 +16,11 @@ export class AclService
     constructor(
         private httpClient: HttpClient,
         private http: Http,
-        public appSettings: AppSettings
+        public appSettings: AppSettings,
+        private _authService: AuthenticationService
     ){
-        var currentUser    = JSON.parse( localStorage.getItem('currentUser'));
-        this.token         = currentUser && currentUser.token;
+        var currentUser    = this._authService.getToken();
+        this.token         = currentUser && currentUser["token"];
         this.apiUrl        = appSettings.path_api;
     }
 

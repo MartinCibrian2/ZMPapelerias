@@ -12,7 +12,7 @@ import { EditUserPage } from './edit/edit-user';
   ],
   imports: [
     IonicPageModule.forChild( UsersPage ),
-    AddUserPageModule
+    AddUserPageModule,
   ],
   entryComponents: [
     AddUserPage,

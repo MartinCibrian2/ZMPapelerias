@@ -5,7 +5,6 @@ import 'rxjs/add/operator/map';
 
 import { LoginInterface } from '../app/interfaces/login';
 import { AppSettings } from '../app/common/api.path';
-import { PouchDbAdapter } from './pouchdb/pouchdb.adapter';
 
 @Injectable()
 export class AuthenticationService {
@@ -17,25 +16,24 @@ export class AuthenticationService {
         public http: Http,
         public appSettings: AppSettings
     ){
-        var currentUser    = JSON.parse( localStorage.getItem('currentUser'));
-        this.token         = currentUser && currentUser.token;
-        this.apiPaths      = appSettings.getPaths();
-        this.loginUrl      = this.apiPaths.login;
+        this.apiPaths    = appSettings.getPaths();
+        this.loginUrl    = this.apiPaths.login;
     }
 
-    login( credentials, gettoken = null ) {
+    login( credentials: LoginInterface, gettoken = null ): Observable< Object > {
         if( gettoken != null ) {
-            credentials.gettoken = gettoken;
+            credentials["gettoken"] = gettoken;
         } else {
             // It has a gettoken.
         }
 
         let params = JSON.stringify( credentials );
+        // let params = credentials;
 
         return this
         .http
         .post( this.loginUrl, params, this.getHeaders() )
-        .map( res => res.json() );
+        .map(( res: Response ) => res.json() );
     }
 
     logout(): void {
@@ -44,7 +42,8 @@ export class AuthenticationService {
     }
 
     getIdentity(){
-        let identity = JSON.parse( localStorage.getItem('identity'));
+        let identity = JSON.parse( localStorage.getItem('currentUser'));
+        //let identity = localStorage.getItem('currentUser');
 
         if( typeof identity === 'undefined'){
             identity = null;
@@ -74,7 +73,7 @@ export class AuthenticationService {
     }
 
 
-
+/*
     login2( credentials: LoginInterface, gettoken = null ): Observable< Object > {
         // credentials['gettoken']    = true;
         if( gettoken != null ) {
@@ -112,7 +111,7 @@ export class AuthenticationService {
         });
 
         return _user$;
-    }
+    }*/
 
 }
 

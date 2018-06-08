@@ -5,28 +5,25 @@ import { Observable } from 'rxjs/Observable';
 
 import { delay } from 'rxjs/operators';
 
-import PouchDB from 'pouchdb';
-
-import { PouchDbAdapter } from '../pouchdb/pouchdb.adapter';
-
 import { AppSettings } from '../../app/common/api.path';
-// import { ProductModel } from '../../app/models/product.model';
+import { AuthenticationService } from '../authentication.service';
 
 @Injectable()
 
 export class UserService
 {
-    public token: string;
-    public apiUrl: string;
+    public token: String;
+    public apiUrl: String;
     private apiPaths;
 
     constructor(
         private httpClient: HttpClient,
         private http: Http,
-        public appSettings: AppSettings
+        public appSettings: AppSettings,
+        private _authService: AuthenticationService
     ){
-        var currentUser    = JSON.parse( localStorage.getItem('currentUser'));
-        this.token         = currentUser && currentUser.token;
+        var currentUser    = this._authService.getToken();
+        this.token         = currentUser && currentUser["token"];
         this.apiUrl        = appSettings.path_api;
     }
 
@@ -66,3 +63,21 @@ console.log( this.apiUrl + 'register-user', params )
     }
 
 }
+
+
+// Format date
+/* 
+var objToday = new Date(),
+	weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'),
+	dayOfWeek = weekday[objToday.getDay()],
+	domEnder = function() { var a = objToday; if (/1/.test(parseInt((a + "").charAt(0)))) return "th"; a = parseInt((a + "").charAt(1)); return 1 == a ? "st" : 2 == a ? "nd" : 3 == a ? "rd" : "th" }(),
+	dayOfMonth = today + ( objToday.getDate() < 10) ? '0' + objToday.getDate() + domEnder : objToday.getDate() + domEnder,
+	months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+	curMonth = months[objToday.getMonth()],
+	curYear = objToday.getFullYear(),
+	curHour = objToday.getHours() > 12 ? objToday.getHours() - 12 : (objToday.getHours() < 10 ? "0" + objToday.getHours() : objToday.getHours()),
+	curMinute = objToday.getMinutes() < 10 ? "0" + objToday.getMinutes() : objToday.getMinutes(),
+	curSeconds = objToday.getSeconds() < 10 ? "0" + objToday.getSeconds() : objToday.getSeconds(),
+	curMeridiem = objToday.getHours() > 12 ? "PM" : "AM";
+var today = curHour + ":" + curMinute + "." + curSeconds + curMeridiem + " " + dayOfWeek + " " + dayOfMonth + " of " + curMonth + ", " + curYear;
+ */
