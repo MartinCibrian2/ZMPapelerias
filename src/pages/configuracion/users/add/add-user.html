@@ -66,19 +66,19 @@
                         <ion-item>
                             <!-- [(ngModel)]="role" -->
                             <select-searchable
-                                title="Perfil"
                                 formControlName="role"
                                 [items]="roles"
-                                itemValueField="name"
+                                itemValueField="id"
                                 itemTextField="alias"
                                 [canSearch]="true"
                                 searchPlaceholder="Ingresa 3 o más caracteres"
                                 (onSearch)="searchRoles( $event )"
-                                >
+                                (onChange)="roleChange( $event )"
+                            >
+                                <ng-template selectSearchableLabelTemplate>
+                                    Perfil
+                                </ng-template>
                             </select-searchable>
-                            <ng-template selectSearchableLabelTemplate>
-                                Perfil
-                            </ng-template>
                         </ion-item>
                     </ion-item-group>
                 </ion-col>
@@ -89,7 +89,11 @@
                     <ion-label stacked>
                         Foto usuario
                     </ion-label>
-                    <ion-input type="file" formControlName="image" placeholder="Imagen del usuario"></ion-input>
+                    <ion-input type="file" name="image"
+                               placeholder="Imagen del usuario"
+                               (change)="fileChangeEvent( $event )"
+                    >
+                    </ion-input>
                 </ion-item>
             </ion-row>
 

@@ -76,7 +76,8 @@ export class LoginPage implements OnInit {
         ( error ) => {
             console.log( error )
             load.dismiss();
-            this.showAlertCode( JSON.parse( error._body ));
+
+            this.showAlertCode( error ); // JSON.parse( error._body )
         });
   }
 

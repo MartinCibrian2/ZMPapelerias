@@ -5,12 +5,11 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="outer-content">
     <ion-grid>
         <ion-row>
             <ion-col col-10>
                 <ion-searchbar (ionInput)="searchUserByString( $event )">
-                <!-- <ion-searchbar [(ngModel)]="searching"> -->
                 </ion-searchbar>
             </ion-col>
             <ion-col col-2>
@@ -22,16 +21,18 @@
         </ion-row>
     </ion-grid>
 
-
     <ion-list>
         <ion-item-sliding *ngFor="let item of users">
             <ion-item>
+                <ion-avatar *ngIf="item.image" item-start>
+                    <img src="{{ url + 'get-image-user/' + item.id + '/' + item.image }}" alt="">
+                </ion-avatar>
                 <h2>
                     {{ item.name }} {{ item.surname }}
-                    <small>({{ item.role | lowercase }})</small>
+                    <small>[ {{ item.username }} » {{ item.role | lowercase }} ]</small>
                 </h2>
-                <p>{{ item.username }}: {{ item.email }}</p>
-                <p> <small>{{ item.job }}</small></p>
+                <h3>{{ item.email }}</h3>
+                <p><small>{{ item.job }}</small></p>
             </ion-item>
             <ion-item-options>
                 <button ion-button color="light"

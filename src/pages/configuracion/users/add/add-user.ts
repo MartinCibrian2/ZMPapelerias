@@ -1,19 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { NavController, NavParams, IonicPage, AlertController, LoadingController } from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
-import { SelectSearchable } from 'ionic-select-searchable';
+import { SelectSearchableComponent } from 'ionic-select-searchable';
 
 import { UserService } from '../../../../providers/users/users.service';
 import { UsersPage } from '../users';
 import { UploadService } from '../../../../providers/upload.service';
 import { AclService } from '../../../../providers/users/acl.service';
 import { AuthenticationService } from '../../../../providers/authentication.service';
-
-class Role {
-    public id: number;
-    public name: string;
-}
 
 @IonicPage()
 @Component({
@@ -33,14 +28,14 @@ export class AddUserPage implements OnInit
     // Form
     public userForm: FormGroup;
     public user     = {};
-    // public roles: any[] = new Array;
-    public roles: Role[];
-    public role: Role;
+    public roles: any[] = new Array;
     public status: String = "true";
 
     constructor(
         public navParams: NavParams,
-        public navCtlr: NavController,
+        public navCtrl: NavController,
+        public loadingCtrl: LoadingController,
+        public alertCtrl: AlertController,
         public frmBuilder: FormBuilder,
         private userService: UserService,
         private _uploadService: UploadService,
@@ -66,6 +61,15 @@ export class AddUserPage implements OnInit
             var _doc       = this.userForm.value;
             _doc.active    = "true";
 
+            if( typeof _doc.role === 'string' ){
+                // The role content is a string.
+            } else {
+                _doc.role    = _doc.role.name;
+            }
+
+            let load    = this.loadingCtrl.create();
+            load.present( load );
+
             this
             .userService
             .addUser( this.token, _doc )
@@ -73,8 +77,8 @@ export class AddUserPage implements OnInit
                 response => {
                     console.log( response )
                     if( response.user ){
-                        this.status = 'success';
-                        this.user = response.user;
+                        this.status    = 'success';
+                        this.user      = response.user;
                         if( this.filesToUpload ){
                         // Upload Image
                             this._uploadService
@@ -85,21 +89,30 @@ export class AddUserPage implements OnInit
                                 this.token,
                                 'image'
                             ).then(( result: any ) => {
-                                console.log( result )
-                                //this.user.image = result.user.image;
-                                //   this._router.navigate(['/admin-panel/listado']);
+                                console.log( result );
+                                load.dismiss();
+                                this.showAlertCode( response );
+                                this.navCtrl.setRoot( UsersPage );
+                            })
+                            .catch(( error ) => {
+                                load.dismiss();
+                                this.showAlertCode( error );
                             });
                         } else {
-                            // this._router.navigate(['/admin-panel/listado']);
+                            load.dismiss();
+                            this.showAlertCode( response );
+                            this.navCtrl.setRoot( UsersPage );
                         }
                     } else {
-                        this.status = 'error';
+                        load.dismiss();
+                        this.showAlertCode( response );
                     }
                 },
                 error => {
                     var errorMessage = <any>error;
                     if( errorMessage != null ){
-                        this.status = 'error';
+                        load.dismiss();
+                        this.showAlertCode( error );
                     }
                 }
             );
@@ -112,17 +125,21 @@ export class AddUserPage implements OnInit
         this._aclService.getRoles( null )
         .subscribe(
             response    => {
-                this.roles    = response.data;
+                this.roles    = [];
+                response.data.map(( row ) => {
+                    this.roles.push( row );
+                });
             }
         );
     }
 
     public filesToUpload: Array< File >;
     fileChangeEvent( fileInput: any ){
+        console.log( fileInput )
         this.filesToUpload = <Array< File >> fileInput.target.files;
     }
 
-    searchRoles( event: { component: SelectSearchable, text: string }) {
+    searchRoles( event: { component: SelectSearchableComponent, text: string }) {
         let text = ( event.text || '').trim().toLowerCase();
 
         if( !text ){
@@ -144,9 +161,10 @@ export class AddUserPage implements OnInit
         }); */
     }
 
-    roleChange( event: { component: SelectSearchable, value: any }){
+    roleChange( event: { component: SelectSearchableComponent, value: any }){
         // Asigns the client selected.
-        console.log('role:', event, this.userForm.value );
+        // console.log('role:', event.value, this.userForm.value );
+        this.userForm.value.role    = event.value.name;
     }
 
     makeForm( ){
@@ -165,5 +183,28 @@ export class AddUserPage implements OnInit
 
         return this.frmBuilder.group( _group );
     }
+
+    showAlertCode( _body: any ){
+    let alert = this.alertCtrl.create({ 
+        title: _body.title,
+        subTitle: _body.message,
+        buttons: [{
+          text: _body.text,
+          handler: data => {
+                    if( _body.hasOwnProperty('callback')){
+                        _body.callback();
+                    }
+                }
+            }]
+        });
+    
+        alert.present();
+        alert.onDidDismiss(
+            data => {
+                console.log('Closed');
+                }
+        )
+    }
+      
 
 }

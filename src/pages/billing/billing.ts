@@ -4,7 +4,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
 import { delay } from 'rxjs/operators';
-import { SelectSearchable } from 'ionic-select-searchable';
+import { SelectSearchableComponent } from 'ionic-select-searchable';
 
 import { CheckinService } from '../../providers/billing/checkin.service';
 import { ClientService } from '../../providers/clients/client.service';
@@ -64,12 +64,12 @@ export class BillingPage implements OnInit {
         this.navCtrl.setRoot( AddClientPage );
     }
 
-    clientChange( event: { component: SelectSearchable, value: any }){
+    clientChange( event: { component: SelectSearchableComponent, value: any }){
         // Asigns the client selected.
         console.log('port:', event.value, this.checkinForm.value );
     }
 
-    searchClients( event: { component: SelectSearchable, text: string }) {
+    searchClients( event: { component: SelectSearchableComponent, text: string }) {
         let text = (event.text || '').trim().toLowerCase();
 
         if( !text ){

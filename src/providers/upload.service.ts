@@ -18,6 +18,7 @@ export class UploadService
     }
 
     makeFileRequest( url: string, params: Array< string >, files: Array< File >, token: string, name: string ){
+        url    = this.apiUrl + url;
         return new Promise( function( resolve, reject ){
             var formData: any = new FormData();
             var xhr = new XMLHttpRequest();
@@ -36,7 +37,7 @@ export class UploadService
                 }
             }
 
-            xhr.open('POST', this.apiUrl + url, true );
+            xhr.open('POST', url, true );
             xhr.setRequestHeader('Authorization', token );
             xhr.send( formData );
         });

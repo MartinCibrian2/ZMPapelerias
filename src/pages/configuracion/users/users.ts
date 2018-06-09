@@ -31,7 +31,7 @@ export class UsersPage {
     public userForm: FormGroup;
     public status;
     private apiPaths;
-    private url: string;
+    public url: string;
 
     public addUserPage    = AddUserPage;
     public paramsUser     = { page: UsersPage };
@@ -45,8 +45,7 @@ export class UsersPage {
         private _uploadService: UploadService,
         public appSettings: AppSettings
     ){
-        this.apiPaths    = appSettings.getPaths();
-        this.url         = this.apiPaths.user;
+        this.url    = appSettings.path_api;
 
         this.titleApp     = "ZMPapelerias";
         this.titlePage    = "Usuarios";
