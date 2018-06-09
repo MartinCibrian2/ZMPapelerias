@@ -42,7 +42,6 @@ export class UsersPage {
         public alertCtrl: AlertController,
         public toastCtrl: ToastController,
         private _userService: UserService,
-        private _uploadService: UploadService,
         public appSettings: AppSettings
     ){
         this.url    = appSettings.path_api;

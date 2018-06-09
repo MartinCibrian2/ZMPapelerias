@@ -50,9 +50,20 @@ export class UserService
         let headers = this.getHeaders();
 
         headers.headers.append('Authorization', token );
-console.log( this.apiUrl + 'register-user', params )
+
         return this.http
         .post( this.apiUrl + 'register-user', params, headers )
+        .map( res => res.json() );
+    }
+
+    editUser( token, user, id ){
+        let params = JSON.stringify( user );
+        let headers = this.getHeaders();
+
+        headers.headers.append('Authorization', token );
+
+        return this.http
+        .post( this.apiUrl + 'edit-user/' + id, params, headers )
         .map( res => res.json() );
     }
 
