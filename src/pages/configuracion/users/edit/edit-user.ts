@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, IonicPage, AlertController, LoadingController } from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
+import { tap } from 'rxjs/operators';
+
 import { UserService } from '../../../../providers/users/users.service';
 import { UsersPage } from '../users';
 import { AuthenticationService } from '../../../../providers/authentication.service';
 import { AclService } from '../../../../providers/users/acl.service';
 import { UploadService } from '../../../../providers/upload.service';
 import { SelectSearchableComponent } from 'ionic-select-searchable';
+import { Observable } from 'rxjs';
 
 @IonicPage()
 @Component({
@@ -26,8 +29,10 @@ export class EditUserPage implements OnInit
     public token: string;
     // Form
     public userForm: FormGroup;
-    public roles: any[] = new Array;
+    // public roles: any[] = new Array;
+    public roles: Observable< any >;
     private item: any;
+    public user     = {};
 
     constructor(
         public navParams: NavParams,
@@ -43,11 +48,18 @@ export class EditUserPage implements OnInit
         this.titleApp     = "ZMPapelerias";
         this.titlePage    = "Registrar Usuario";
         this.token        = this._authService.getToken();
-        this.userForm     = this.makeForm();
     }
-
+    
     ngOnInit(){
+        //this.getRoles();
+        this.userForm     = this.makeForm();
 
+        this._aclService.getRoles( null ).pipe(
+          tap( role => {
+              console.log( role )
+            //   this.userForm.patchValue( role)
+            })
+        );
     }
 
     ionViewDidLoad() {
@@ -65,17 +77,16 @@ export class EditUserPage implements OnInit
                 _doc.role    = _doc.role.name;
             }
 
-            let load    = this.loadingCtrl.create();
-            load.present( load );
+            // let load    = this.loadingCtrl.create();
+            // load.present( load );
 
-            this
+            /* this
             .userService
             .addUser( this.token, _doc )
             .subscribe(
                 response => {
                     console.log( response )
                     if( response.user ){
-                        this.status    = 'success';
                         this.user      = response.user;
                         if( this.filesToUpload ){
                         // Upload Image
@@ -113,7 +124,7 @@ export class EditUserPage implements OnInit
                         this.showAlertCode( error );
                     }
                 }
-            );
+            ); */
         } else {
             // The form is does not valid.
         }
@@ -121,17 +132,18 @@ export class EditUserPage implements OnInit
         return;
     }
 
-    getRoles(){
+    /* getRoles(){
         this._aclService.getRoles( null )
         .subscribe(
             response    => {
                 this.roles    = [];
                 response.data.map(( row ) => {
                     this.roles.push( row );
+                    console.log( 'GETROLES')
                 });
             }
         );
-    }
+    } */
 
     public filesToUpload: Array< File >;
     fileChangeEvent( fileInput: any ){
@@ -159,6 +171,13 @@ export class EditUserPage implements OnInit
     }
 
     makeForm( ){
+        let data     = this.navParams.data;
+        console.log( 'MAKEFORM')
+//         let _role    = this.roles.map(( row ) => {
+//             console.log( row, data )
+//             return row.name == data.role;
+//         });
+// console.log( _role, this.roles )
         let _group    = {
             'name':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             'surname':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
@@ -170,15 +189,20 @@ export class EditUserPage implements OnInit
             'image':  ['']
         };
 
-        if( Object.keys( this.navParams.data ).length ){
-            if( this.navParams.data.hasOwnProperty('item') ){
-                this.item    = this.navParams.data.item;
+        if( Object.keys( data ).length ){
+            if( data.hasOwnProperty('item') ){
+                this.item    = data.item;
                 Object
                 .keys( this.item )
                 .forEach(( _field ) => {
                     let _val    = this.item[ _field ];
-console.log( _field, _val )
-                    _group[ _field ]   = _val;
+                    if( _group.hasOwnProperty( _field )){
+                        console.log( _field, _val )
+                        _val    = ( _field == "password" ) ? "" : _val;
+                        _group[ _field ]   = _val;
+                    } else {
+                        // It is does not exist field in object.
+                    }
                 });
             } else {
                 // Do not sent data.
@@ -191,7 +215,7 @@ console.log( _field, _val )
     }
 
     showAlertCode( _body: any ){
-    let alert = this.alertCtrl.create({ 
+    let alert = this.alertCtrl.create({
         title: _body.title,
         subTitle: _body.message,
         buttons: [{

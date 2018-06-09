@@ -29,7 +29,6 @@ export class AddUserPage implements OnInit
     public userForm: FormGroup;
     public user     = {};
     public roles: any[] = new Array;
-    public status: String = "true";
 
     constructor(
         public navParams: NavParams,
@@ -77,7 +76,6 @@ export class AddUserPage implements OnInit
                 response => {
                     console.log( response )
                     if( response.user ){
-                        this.status    = 'success';
                         this.user      = response.user;
                         if( this.filesToUpload ){
                         // Upload Image

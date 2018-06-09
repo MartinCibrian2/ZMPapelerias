@@ -31,15 +31,15 @@ export class AclService
             params    = 'params=' + JSON.stringify( params );
         }
 
-        let _roles$    = this
-            .http
+        // let _roles$    = this
+        return this.http
             .post(
                 this.apiUrl + 'get-roles/0',
                 params,
                 this.getHeaders()
             ).map(( res: Response ) => { return res.json() });
 
-        return _roles$;
+        // return _roles$;
     }
 
     getHeaders(){
