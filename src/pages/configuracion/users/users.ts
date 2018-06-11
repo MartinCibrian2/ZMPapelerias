@@ -1,7 +1,6 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ToastController } 
     from 'ionic-angular';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { AppSettings } from '../../../app/common/api.path';
 import { UserService } from '../../../providers/users/users.service';
@@ -19,7 +18,8 @@ import { EditUserPage } from './edit/edit-user';
         UploadService
     ]
 })
-export class UsersPage {
+export class UsersPage implements OnInit
+{
     public titlePage: string;
     public titleApp: string;
     public users    = [];
@@ -27,10 +27,7 @@ export class UsersPage {
     public token: String;
     public searching;
     public optionsResult: any;
-    // Form
-    public userForm: FormGroup;
     public status;
-    private apiPaths;
     public url: string;
 
     public addUserPage    = AddUserPage;

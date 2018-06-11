@@ -25,7 +25,7 @@
         <ion-item-sliding *ngFor="let item of users">
             <ion-item>
                 <ion-avatar *ngIf="item.image" item-start>
-                    <img src="{{ url + 'get-image-user/' + item.id + '/' + item.image }}" alt="">
+                    <img src="{{ url + 'get-image-user/' + item.id + '/' + item.image }}" alt="Image">
                 </ion-avatar>
                 <h2>
                     {{ item.name }} {{ item.surname }}

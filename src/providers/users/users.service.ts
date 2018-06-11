@@ -3,8 +3,6 @@ import { Http, Response, Headers } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { delay } from 'rxjs/operators';
-
 import { AppSettings } from '../../app/common/api.path';
 import { AuthenticationService } from '../authentication.service';
 
@@ -56,14 +54,14 @@ export class UserService
         .map( res => res.json() );
     }
 
-    editUser( token, user, id ){
-        let params = JSON.stringify( user );
-        let headers = this.getHeaders();
+    editUser( token, user ){
+        let params       = JSON.stringify( user ),
+            headers      = this.getHeaders();
 
         headers.headers.append('Authorization', token );
 
         return this.http
-        .post( this.apiUrl + 'edit-user/' + id, params, headers )
+        .post( this.apiUrl + 'update-user/' + user.id, params, headers )
         .map( res => res.json() );
     }
 

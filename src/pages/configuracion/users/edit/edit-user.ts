@@ -3,6 +3,7 @@ import { NavController, NavParams, IonicPage, AlertController, LoadingController
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { UserService } from '../../../../providers/users/users.service';
 import { UsersPage } from '../users';
@@ -10,7 +11,7 @@ import { AuthenticationService } from '../../../../providers/authentication.serv
 import { AclService } from '../../../../providers/users/acl.service';
 import { UploadService } from '../../../../providers/upload.service';
 import { SelectSearchableComponent } from 'ionic-select-searchable';
-import { Observable } from 'rxjs';
+import { AppSettings } from '../../../../app/common/api.path';
 
 @IonicPage()
 @Component({
@@ -29,10 +30,11 @@ export class EditUserPage implements OnInit
     public token: string;
     // Form
     public userForm: FormGroup;
-    // public roles: any[] = new Array;
-    public roles: Observable< any >;
-    private item: any;
-    public user     = {};
+    public roles: any[] = new Array;
+    public role: Observable< any >;
+    private item: any = {};
+    public user       = {};
+    public urlImage: string;
 
     constructor(
         public navParams: NavParams,
@@ -43,21 +45,31 @@ export class EditUserPage implements OnInit
         private userService: UserService,
         private _uploadService: UploadService,
         private _aclService: AclService,
-        private _authService: AuthenticationService
+        private _authService: AuthenticationService,
+        public appSettings: AppSettings
     ){
+        this.urlImage    = appSettings.path_api;
+
         this.titleApp     = "ZMPapelerias";
         this.titlePage    = "Registrar Usuario";
         this.token        = this._authService.getToken();
     }
     
     ngOnInit(){
-        //this.getRoles();
-        this.userForm     = this.makeForm();
-
-        this._aclService.getRoles( null ).pipe(
-          tap( role => {
-              console.log( role )
-            //   this.userForm.patchValue( role)
+        this.role    = this._aclService.getRoles( null ).pipe(
+            tap( role => {
+                this.roles    = [];
+                role.data.map(( row ) => {
+                    this.roles.push( row );
+                });
+                let _role    = this.navParams.data['item'].role;
+                _role     = this.roles.filter(( row ) => {
+                    return row.name == _role;
+                });
+                _role    = _role[ 0 ];
+                this.item["role"]    = _role
+                this.userForm     = this.makeForm();
+                // this.userForm.patchValue({ role: _role.name });
             })
         );
     }
@@ -77,12 +89,12 @@ export class EditUserPage implements OnInit
                 _doc.role    = _doc.role.name;
             }
 
-            // let load    = this.loadingCtrl.create();
-            // load.present( load );
+            let load    = this.loadingCtrl.create();
+            load.present( load );
 
-            /* this
+            this
             .userService
-            .addUser( this.token, _doc )
+            .editUser( this.token, _doc )
             .subscribe(
                 response => {
                     console.log( response )
@@ -124,26 +136,13 @@ export class EditUserPage implements OnInit
                         this.showAlertCode( error );
                     }
                 }
-            ); */
+            );
         } else {
             // The form is does not valid.
         }
 
         return;
     }
-
-    /* getRoles(){
-        this._aclService.getRoles( null )
-        .subscribe(
-            response    => {
-                this.roles    = [];
-                response.data.map(( row ) => {
-                    this.roles.push( row );
-                    console.log( 'GETROLES')
-                });
-            }
-        );
-    } */
 
     public filesToUpload: Array< File >;
     fileChangeEvent( fileInput: any ){
@@ -154,14 +153,14 @@ export class EditUserPage implements OnInit
     searchRoles( event: { component: SelectSearchableComponent, text: string }) {
         let text = ( event.text || '').trim().toLowerCase();
 
-        if( !text ){
+        /* if( !text ){
             event.component.items = this.roles;
             return;
         } else if ( event.text.length < 3 ){
             return;
-        }
+        } */
 
-        event.component.isSearching = true;
+        // event.component.isSearching = true;
 
     }
 
@@ -171,22 +170,17 @@ export class EditUserPage implements OnInit
     }
 
     makeForm( ){
-        let data     = this.navParams.data;
-        console.log( 'MAKEFORM')
-//         let _role    = this.roles.map(( row ) => {
-//             console.log( row, data )
-//             return row.name == data.role;
-//         });
-// console.log( _role, this.roles )
+        let data      = this.navParams.data;
         let _group    = {
-            'name':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'surname':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'username':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'password':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'email':  ['', [ Validators.required, Validators.email ]],
-            'job':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'role':  ['', [ Validators.required ]],
-            'image':  ['']
+            'id': ['', Validators.required ],
+            'name': ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'surname': ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'username': ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'password': ['', [ Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'email': ['', [ Validators.required, Validators.email ]],
+            'job': ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'role': this.frmBuilder.control( this.item.role, Validators.required ),
+            'image': ['']
         };
 
         if( Object.keys( data ).length ){
@@ -197,9 +191,12 @@ export class EditUserPage implements OnInit
                 .forEach(( _field ) => {
                     let _val    = this.item[ _field ];
                     if( _group.hasOwnProperty( _field )){
-                        console.log( _field, _val )
                         _val    = ( _field == "password" ) ? "" : _val;
-                        _group[ _field ]   = _val;
+                        if( _group[ _field ][ 0 ] ){
+                            // It contains any value.
+                        } else {
+                            _group[ _field ][ 0 ]   = _val;
+                        }
                     } else {
                         // It is does not exist field in object.
                     }

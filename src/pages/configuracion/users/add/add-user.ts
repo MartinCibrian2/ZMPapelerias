@@ -9,6 +9,8 @@ import { UsersPage } from '../users';
 import { UploadService } from '../../../../providers/upload.service';
 import { AclService } from '../../../../providers/users/acl.service';
 import { AuthenticationService } from '../../../../providers/authentication.service';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @IonicPage()
 @Component({
@@ -29,6 +31,7 @@ export class AddUserPage implements OnInit
     public userForm: FormGroup;
     public user     = {};
     public roles: any[] = new Array;
+    public role: Observable< any >;
 
     constructor(
         public navParams: NavParams,
@@ -49,6 +52,10 @@ export class AddUserPage implements OnInit
 
     ngOnInit(){
         this.getRoles();
+        
+        this.role    = this._aclService.getRoles( null ).pipe(
+            tap( role => role )
+        );
     }
 
     ionViewDidLoad() {

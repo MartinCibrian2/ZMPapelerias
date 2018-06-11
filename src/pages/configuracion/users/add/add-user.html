@@ -6,7 +6,7 @@
 </ion-header>
 
 <ion-content padding>
-    <form novalidate [formGroup]="userForm" (submit)="saveUser()">
+    <form *ngIf="role | async; else loading" [formGroup]="userForm" (submit)="saveUser()">
         <ion-grid>
             <ion-row col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>
                 <ion-item>
@@ -14,6 +14,7 @@
                         Nombre
                     </ion-label>
                     <ion-input  formControlName="name" placeholder="Nombre del usuario"></ion-input>
+                    <input type="hidden" *ngIf="userForm.controls.id" formControlName="id" />
                 </ion-item>
             </ion-row>
 
@@ -64,7 +65,6 @@
                 <ion-col col-10>
                     <ion-item-group margin-bottom>
                         <ion-item>
-                            <!-- [(ngModel)]="role" -->
                             <select-searchable
                                 formControlName="role"
                                 [items]="roles"
@@ -88,7 +88,11 @@
                 <ion-item>
                     <ion-label stacked>
                         Foto usuario
+                        <ion-card *ngIf="item.image">
+                            <img src="{{ urlImage + 'get-image-user/' + item.id + '/' + item.image }}" alt="Image">
+                        </ion-card>
                     </ion-label>
+
                     <ion-input type="file" name="image"
                                placeholder="Imagen del usuario"
                                (change)="fileChangeEvent( $event )"
@@ -106,4 +110,7 @@
             </ion-row>
         </ion-grid>
     </form>
+    <ng-template #loading>
+      Loading Role...
+    </ng-template>
 </ion-content>

@@ -5,20 +5,13 @@ import { Observable } from 'rxjs/Observable';
 
 import { delay } from 'rxjs/operators';
 
-import PouchDB from 'pouchdb';
 /* import moment from 'moment'; */
 
 import { PouchDbAdapter } from '../pouchdb/pouchdb.adapter';
 
 import { AppSettings } from '../../app/common/api.path';
 import { ClientModel } from '../../app/models/client.model';
-import { log } from 'util';
 
-export class Port {
-    public id: number;
-    public name: string;
-    public country: string;
-}
 
 @Injectable()
 
