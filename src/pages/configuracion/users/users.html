@@ -9,6 +9,7 @@
     <ion-grid>
         <ion-row>
             <ion-col col-10>
+                <ion-label *ngIf="notice">{{ notice }}</ion-label>
                 <ion-searchbar (ionInput)="searchUserByString( $event )">
                 </ion-searchbar>
             </ion-col>
@@ -25,7 +26,7 @@
         <ion-item-sliding *ngFor="let item of users">
             <ion-item>
                 <ion-avatar *ngIf="item.image" item-start>
-                    <img src="{{ url + 'get-image-user/' + item.id + '/' + item.image }}" alt="Image">
+                    <img src="{{ url + 'get-image-user/' +( item.id || item._id )+ '/' + item.image }}" alt="Image">
                 </ion-avatar>
                 <h2>
                     {{ item.name }} {{ item.surname }}
@@ -37,8 +38,9 @@
             <ion-item-options>
                 <button ion-button color="light"
                         (click)="activeUser( item )" icon-start>
-                    <ion-icon name="checkbox"></ion-icon>
-                    Activo
+                    <ion-icon *ngIf="item.active" name="checkbox"></ion-icon>
+                    <ion-icon *ngIf="!item.active" name="checkbox-outline"></ion-icon>
+                    {{ item.active ? 'Activo' : 'Inactivo' }}
                 </button>
                 <button ion-button color="primary"
                         (click)="openNavDetails( item )" icon-start>

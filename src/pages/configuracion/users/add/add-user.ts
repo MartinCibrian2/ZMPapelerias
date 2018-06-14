@@ -30,6 +30,7 @@ export class AddUserPage implements OnInit
     // Form
     public userForm: FormGroup;
     public user     = {};
+    private item: any = {};
     public roles: any[] = new Array;
     public role: Observable< any >;
 

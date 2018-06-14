@@ -43,6 +43,23 @@ export class UserService
         return _users$;
     }
 
+    searchUsers( params: any, token: string ): Observable <any> {
+        let headers = this.getHeaders();
+            headers.headers.append('Authorization', token );
+
+        params    = ( params == null ) ? {} : params;
+        // For users
+        let _users$    = this
+            .http
+            .post(
+                this.apiUrl + 'searching-user',
+                params,
+                headers
+            ).map(( res: Response ) => { return res.json() });
+
+        return _users$;
+    }
+
     addUser( token, user ){
         let params = JSON.stringify( user );
         let headers = this.getHeaders();

@@ -101,19 +101,41 @@ export class EditUserPage implements OnInit
                     if( response.user ){
                         this.user      = response.user;
                         if( this.filesToUpload ){
-                        // Upload Image
+                            let imageToRemove    = _doc.image;
+                            console.log( _doc, this.user )
+                            // Upload Image
                             this._uploadService
                             .makeFileRequest(
-                                'upload-image-user/' + this.user["_id"],
+                                'upload-image-user/' + this.user['_id'],
                                 [],
                                 this.filesToUpload,
                                 this.token,
                                 'image'
                             ).then(( result: any ) => {
                                 console.log( result );
-                                load.dismiss();
-                                this.showAlertCode( response );
-                                this.navCtrl.setRoot( UsersPage );
+                                if( _doc['image'].length && result ){
+                                    this._uploadService
+                                    .removeFileAtt(
+                                        'remove-image-user/' + this.user['_id'] +'/'+ _doc['image'],
+                                        this.token
+                                    ).subscribe(
+                                        ( _result: any ) => {
+                                            console.log( _result )
+                                            load.dismiss();
+                                            this.showAlertCode( response );
+                                            this.navCtrl.setRoot( UsersPage );
+                                        }, error => {
+                                            load.dismiss();
+                                            this.showAlertCode( error );
+                                        }
+                                    );
+                                } else {
+                                    // It is new.
+                                    load.dismiss();
+                                    this.showAlertCode( response );
+                                    this.navCtrl.setRoot( UsersPage );
+                                }
+
                             })
                             .catch(( error ) => {
                                 load.dismiss();

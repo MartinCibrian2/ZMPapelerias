@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
 
 import { AppSettings } from '../app/common/api.path';
 
@@ -41,5 +40,23 @@ export class UploadService
             xhr.setRequestHeader('Authorization', token );
             xhr.send( formData );
         });
+    }
+
+    removeFileAtt( url: string, token: string ){
+        let headers = this.getHeaders();
+        url    = this.apiUrl + url;
+
+        headers.headers.append('Authorization', token );
+
+        let options    = new RequestOptions( headers );
+
+        return this._http.delete( url, options )
+        .map( res => res.json() );
+    }
+
+    getHeaders(){
+        const headers = new Headers({'Content-Type': 'application/json'});
+
+        return { headers: headers };
     }
 }

@@ -89,7 +89,7 @@ export class LoginPage implements OnInit {
     return this.frmBuilder.group({
       // 'username': ['', [Validators.required, Validators.pattern( /^[a-zA-Z0-9_]{1,}$/ )]],
       'password': ['', [ Validators.maxLength( 20 )]],
-      'email': ['', [ Validators.required ]]
+      'email': ['', [ Validators.required, Validators.email ]]
     });
   }
 
