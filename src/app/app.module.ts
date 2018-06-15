@@ -28,8 +28,10 @@ import { AppSettings } from './common/api.path';
 import { LoadSettings } from './common/load.settings';
 import { CheckinService }  from '../providers/billing/checkin.service';
 import { ClientService }  from '../providers/clients/client.service';
-
+// Pipes
+import { PipeModule } from './pipes/pipe.module';
 import { SearchPipe } from './pipes/search.pipe';
+
 import { LoginPage } from '../pages/login/login';
 import { TabsPage } from '../pages/tabs/tabs';
 import { VentasPageModule } from '../pages/ventas/ventas.module';
@@ -51,6 +53,8 @@ import { ReportesPageModule } from '../pages/reportes/reportes.module';
     IonicModule.forRoot( MyApp ),
     CommonModule,
     HttpModule,
+    // Import Pipes ( * )
+    PipeModule,
     // Import Select searchable
     SelectSearchableModule,
     // Import modules custom
@@ -90,7 +94,8 @@ import { ReportesPageModule } from '../pages/reportes/reportes.module';
     AuthenticationService
   ],
   exports: [
-    SearchPipe
+    SearchPipe,
+    PipeModule
   ]
 })
 export class AppModule {}

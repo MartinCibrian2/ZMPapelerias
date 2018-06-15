@@ -5,6 +5,7 @@ import { AddUserPage } from './add/add-user';
 import { UserService } from '../../../providers/users/users.service';
 import { AddUserPageModule } from './add/add-user.module';
 import { EditUserPage } from './edit/edit-user';
+import { PipeModule } from '../../../app/pipes/pipe.module';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { EditUserPage } from './edit/edit-user';
   imports: [
     IonicPageModule.forChild( UsersPage ),
     AddUserPageModule,
+    PipeModule
   ],
   entryComponents: [
     AddUserPage,

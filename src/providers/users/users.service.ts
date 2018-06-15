@@ -29,8 +29,9 @@ export class UserService
         if( params == null ){
             params   = '';
         } else {
-            params    = 'params=' + JSON.stringify( params );
+            //params    = 'params=' + JSON.stringify( params );
         }
+        console.log( params );
         // For users
         let _users$    = this
             .http

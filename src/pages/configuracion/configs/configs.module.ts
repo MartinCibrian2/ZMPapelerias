@@ -7,7 +7,6 @@ import { ConfigsService } from '../../../providers/configs/configs.service';
 import { ConfigsPage } from './configs';
 import { AddConfigPageModule } from './add/add-config.module';
 import { AddConfigPage } from './add/add-config';
-//import { EditConfigPage } from './edit/edit-Config';
 
 @NgModule({
   declarations: [

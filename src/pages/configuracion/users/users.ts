@@ -9,6 +9,8 @@ import { AuthenticationService } from '../../../providers/authentication.service
 import { AddUserPage } from './add/add-user';
 import { EditUserPage } from './edit/edit-user';
 
+// import { SortPipe } from '../../../app/pipes/sort.pipe';
+
 @IonicPage()
 @Component({
     selector: 'page-users',
@@ -30,6 +32,16 @@ export class UsersPage implements OnInit
     public status;
     public notice: string = '';
     public url: string;
+
+    // For sort list
+    public descending: boolean = false;
+    public order: number;
+    public column: string = 'name';
+    // For pagination by infiniteScroll
+    public page      = 1;
+    public perPage   = 0;
+    public totalData = 0;
+    public totalPage = 0;
 
     public addUserPage    = AddUserPage;
     public paramsUser     = { page: UsersPage };
@@ -59,7 +71,11 @@ export class UsersPage implements OnInit
         .subscribe(
             response => {
                 if( response.data ){
-                    this.users    = response.data;
+                    this.users        = response.data;
+                    this.perPage      = response.perPage;
+                    this.totalData    = response.totalData;
+                    this.totalPage    = response.totalPage;
+                    this.sort();
                 } else {
                     // It is empty.
                 }
@@ -191,6 +207,44 @@ export class UsersPage implements OnInit
 
         let toast = this.toastCtrl.create( _options );
         toast.present();
+    }
+
+    sort(){
+        this.descending = !this.descending;
+        this.order = this.descending ? 1 : -1;
+    }
+
+    doInfinite( infiniteScroll ){
+        this.page    += 1;
+        setTimeout(( ) => {
+            this._userService
+            .getUsers({"skip": this.users.length })
+            .subscribe(
+                response => {
+                    if( response.data ){
+                        this.users        = response.data;
+                        this.perPage      = response.perPage;
+                        this.totalData    = response.totalData;
+                        this.totalPage    = response.totalPage;
+                        for( let i=0; i < response.data.length; i++ ){
+                            this.users.push( response.data[ i ]);
+                        }
+                    } else {
+                        // It stayes equal.
+                    }
+                    console.log('True has ended');
+                    infiniteScroll.complete();
+                },
+                error => {
+                    console.log( <any> error )
+                    console.log('Error has ended');
+                    infiniteScroll.complete();
+                }
+            );
+
+            console.log('Async operation has ended');
+            infiniteScroll.complete();
+        }, 1000 );
     }
 
 }

@@ -12,6 +12,7 @@
                 <ion-label *ngIf="notice">{{ notice }}</ion-label>
                 <ion-searchbar (ionInput)="searchUserByString( $event )">
                 </ion-searchbar>
+                <button ion-button type="button" (click)="sort()">Sort</button>
             </ion-col>
             <ion-col col-2>
                 <button ion-button  [navPush]="addUserPage"
@@ -23,7 +24,7 @@
     </ion-grid>
 
     <ion-list>
-        <ion-item-sliding *ngFor="let item of users">
+        <ion-item-sliding *ngFor="let item of users | sort: { 'property': 'name', 'order': order }">
             <ion-item>
                 <ion-avatar *ngIf="item.image" item-start>
                     <img src="{{ url + 'get-image-user/' +( item.id || item._id )+ '/' + item.image }}" alt="Image">
@@ -55,5 +56,11 @@
             </ion-item-options>
         </ion-item-sliding>
     </ion-list>
+
+    <ion-infinite-scroll (ionInfinite)="doInfinite( $event )" *ngIf="page < totalPage">
+        <ion-infinite-scroll-content 
+            loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
 </ion-content>

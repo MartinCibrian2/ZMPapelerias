@@ -1,7 +1,6 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ToastController } 
     from 'ionic-angular';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { ClientService } from '../../../providers/clients/client.service';
 
@@ -16,7 +15,8 @@ import { EditClientPage } from './edit/edit-client';
         ClientService
     ]
 })
-export class ClientsPage {
+export class ClientsPage implements OnInit
+{
     public clients = [];
     public _clients = [];
     public searching;
@@ -34,7 +34,6 @@ export class ClientsPage {
         public navCtrl: NavController,
         public navParams: NavParams,
         private clientService: ClientService,
-        private ngZone: NgZone,
         public alertCtrl: AlertController,
         public toastCtrl: ToastController
     ){
