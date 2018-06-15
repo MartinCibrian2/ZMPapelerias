@@ -12,7 +12,6 @@ export class UserService
 {
     public token: String;
     public apiUrl: String;
-    private apiPaths;
 
     constructor(
         private httpClient: HttpClient,
@@ -25,13 +24,12 @@ export class UserService
         this.apiUrl        = appSettings.path_api;
     }
 
-    getUsers( params: any ): Observable <any> {
+    getUsers( params?: any ): Observable <any> {
         if( params == null ){
             params   = '';
         } else {
-            //params    = 'params=' + JSON.stringify( params );
+            // The params has to be sending by object and not like string. // = 'params=' + JSON.stringify( params );
         }
-        console.log( params );
         // For users
         let _users$    = this
             .http

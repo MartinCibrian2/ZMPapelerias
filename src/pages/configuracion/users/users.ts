@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ToastController } 
     from 'ionic-angular';
 
+import * as _ from "lodash";
+
 import { AppSettings } from '../../../app/common/api.path';
 import { UserService } from '../../../providers/users/users.service';
 import { AuthenticationService } from '../../../providers/authentication.service';
@@ -27,9 +29,7 @@ export class UsersPage implements OnInit
     public users    = [];
     public user     = {};
     public token: string;
-    public searching;
     public optionsResult: any;
-    public status;
     public notice: string = '';
     public url: string;
 
@@ -42,6 +42,12 @@ export class UsersPage implements OnInit
     public perPage   = 0;
     public totalData = 0;
     public totalPage = 0;
+    // For pagination by button
+    // public offset = 2;
+    // public preKeys: any;
+    // public preKey: any;
+    // public nextKey: any;
+    // public subcription: any;
 
     public addUserPage    = AddUserPage;
     public paramsUser     = { page: UsersPage };
@@ -66,15 +72,19 @@ export class UsersPage implements OnInit
         this.getUsers( );
     }
 
-    getUsers(){
-        this._userService.getUsers( null )
+    getUsers( params?: any ){
+        this._userService.getUsers( params )
         .subscribe(
             response => {
-                if( response.data ){
-                    this.users        = response.data;
+                if( response.data.length ){
+                    // this.users        = response.data;
                     this.perPage      = response.perPage;
                     this.totalData    = response.totalData;
                     this.totalPage    = response.totalPage;
+
+                    response.data.map(( row ) => {
+                        this.users.push( row );
+                    });
                     this.sort();
                 } else {
                     // It is empty.
@@ -88,7 +98,7 @@ export class UsersPage implements OnInit
     searchUserByString( event ){
         var _searching    = event.target.value;
 
-        if(  typeof _searching !== "undefined" ){
+        if(( _searching && _searching.trim() != '' ) || typeof _searching !== "undefined" ){
             if( _searching.length > 2 ){
                 this.notice    = '';
                 let fields    = {
@@ -106,6 +116,7 @@ export class UsersPage implements OnInit
                             response.data.forEach(( row )=> {
                                 this.users.push( row );
                             });
+                            this.sort();
                         } else {
                             // There are not data.
                             this.notice = 'No existe información!';
@@ -214,37 +225,22 @@ export class UsersPage implements OnInit
         this.order = this.descending ? 1 : -1;
     }
 
-    doInfinite( infiniteScroll ){
+    doInfinite( infiniteScroll? ){
         this.page    += 1;
         setTimeout(( ) => {
-            this._userService
-            .getUsers({"skip": this.users.length })
-            .subscribe(
-                response => {
-                    if( response.data ){
-                        this.users        = response.data;
-                        this.perPage      = response.perPage;
-                        this.totalData    = response.totalData;
-                        this.totalPage    = response.totalPage;
-                        for( let i=0; i < response.data.length; i++ ){
-                            this.users.push( response.data[ i ]);
-                        }
-                    } else {
-                        // It stayes equal.
-                    }
-                    console.log('True has ended');
-                    infiniteScroll.complete();
-                },
-                error => {
-                    console.log( <any> error )
-                    console.log('Error has ended');
-                    infiniteScroll.complete();
-                }
-            );
+            this.getUsers({"skip": this.users.length });
 
-            console.log('Async operation has ended');
-            infiniteScroll.complete();
+            if( infiniteScroll )
+                infiniteScroll.complete();
         }, 1000 );
+    }
+
+    nextPage(){
+        this.preKeys.push( _.first( this.users )['id'] );
+    }
+
+    prevPage(){
+
     }
 
 }
