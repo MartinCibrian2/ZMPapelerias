@@ -24,22 +24,36 @@ export class AclService
         this.apiUrl        = appSettings.path_api;
     }
 
-    getRoles( params: any ): Observable <any> {
+    getRoles( params?: any ): Observable <any> {
         if( params == null ){
             params   = '';
         } else {
-            params    = 'params=' + JSON.stringify( params );
+            // The params has to be sending by object and not like string. // = 'params=' + JSON.stringify( params );
         }
 
-        // let _roles$    = this
         return this.http
             .post(
                 this.apiUrl + 'get-roles/0',
                 params,
                 this.getHeaders()
             ).map(( res: Response ) => { return res.json() });
+    }
 
-        // return _roles$;
+    search( params: any, token: string ): Observable <any> {
+        let headers = this.getHeaders();
+            headers.headers.append('Authorization', token );
+
+        params    = ( params == null ) ? {} : params;
+        // For acl item
+        let _acl$    = this
+            .http
+            .post(
+                this.apiUrl + 'searching-acl',
+                params,
+                headers
+            ).map(( res: Response ) => { return res.json() });
+
+        return _acl$;
     }
 
     getHeaders(){

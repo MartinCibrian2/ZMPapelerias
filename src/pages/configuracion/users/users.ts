@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ToastController } 
     from 'ionic-angular';
 
-import * as _ from "lodash";
+// import * as _ from "lodash";
 
 import { AppSettings } from '../../../app/common/api.path';
 import { UserService } from '../../../providers/users/users.service';
@@ -72,15 +72,21 @@ export class UsersPage implements OnInit
         this.getUsers( );
     }
 
-    getUsers( params?: any ){
+    getUsers( clean: boolean = true, params?: any ){
         this._userService.getUsers( params )
         .subscribe(
             response => {
                 if( response.data.length ){
-                    // this.users        = response.data;
                     this.perPage      = response.perPage;
                     this.totalData    = response.totalData;
                     this.totalPage    = response.totalPage;
+
+                    if( clean ){
+                        this.users    = [];
+                        this.page     = 1;
+                    } else {
+                        // It continues the load.
+                    }
 
                     response.data.map(( row ) => {
                         this.users.push( row );
@@ -134,7 +140,7 @@ export class UsersPage implements OnInit
         }
     }
 
-    deleteUser( item: any): void {
+    deleteUser( item: any ): void {
         this.optionsResult    = {
             "message": item.name + ' ' + item.surname + " se ha eliminado",
             "duration": 5000,
@@ -157,6 +163,7 @@ export class UsersPage implements OnInit
                     handler: () => {
                         // Action delete item.
                         item.alive    = !item.alive;
+                        item.alive    = item.alive.toString();
                         this
                         ._userService
                         .editUser( this.token, item )
@@ -183,6 +190,7 @@ export class UsersPage implements OnInit
     activeUser( item: any ): void {
         // Action active item.
         item.active    = !item.active;
+        item.active    = item.active.toString();
         this
         ._userService
         .editUser( this.token, item )
@@ -228,7 +236,7 @@ export class UsersPage implements OnInit
     doInfinite( infiniteScroll? ){
         this.page    += 1;
         setTimeout(( ) => {
-            this.getUsers({"skip": this.users.length });
+            this.getUsers( false, {"skip": this.users.length });
 
             if( infiniteScroll )
                 infiniteScroll.complete();
@@ -236,7 +244,7 @@ export class UsersPage implements OnInit
     }
 
     nextPage(){
-        this.preKeys.push( _.first( this.users )['id'] );
+        // this.preKeys.push( _.first( this.users )['id'] );
     }
 
     prevPage(){

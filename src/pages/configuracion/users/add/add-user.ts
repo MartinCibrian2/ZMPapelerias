@@ -127,8 +127,8 @@ export class AddUserPage implements OnInit
         }
     }
 
-    getRoles(){
-        this._aclService.getRoles( null )
+    getRoles( params? ){
+        this._aclService.getRoles( params )
         .subscribe(
             response    => {
                 this.roles    = [];
@@ -146,25 +146,28 @@ export class AddUserPage implements OnInit
     }
 
     searchRoles( event: { component: SelectSearchableComponent, text: string }) {
-        let text = ( event.text || '').trim().toLowerCase();
+        let text = ( event.text || '').trim();
 
         if( !text ){
-            event.component.items = this.roles;
+            event.component.items    = this.roles;
             return;
         } else if ( event.text.length < 3 ){
             return;
         }
 
-        event.component.isSearching = true;
+        event.component.isSearching    = true;
 
-        /* this.clientService
-        .getClientsAsync( text )
-        .subscribe( _clients => {
-            event.component.items    = _clients.rows.map( row => {
-                return row.doc;
-            });
-            event.component.isSearching = false;
-        }); */
+        this._aclService
+        .search({ doctype: 'role', alias: text }, this.token )
+        .subscribe(
+            ( response ) => {
+                event.component.items    = response.data;
+                event.component.isSearching    = false;
+            },
+            ( error ) => {
+
+            }
+        );
     }
 
     roleChange( event: { component: SelectSearchableComponent, value: any }){

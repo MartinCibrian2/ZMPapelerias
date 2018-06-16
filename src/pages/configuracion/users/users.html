@@ -14,7 +14,7 @@
                     (ionInput)="searchUserByString( $event )">
                 </ion-searchbar>
 
-                <ion-toolbar no-border-top>
+                <ion-toolbar>
                     <ion-segment>
                         <ion-segment-button (click)="sort(); orderIs = !orderIs" value="">
                             <ion-icon *ngIf="orderIs" name="arrow-dropup"></ion-icon>
@@ -66,6 +66,12 @@
         </ion-item-sliding>
     </ion-list>
 
+    <ion-infinite-scroll (ionInfinite)="doInfinite( $event )" *ngIf="page < totalPage">
+        <ion-infinite-scroll-content 
+            loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
     <ion-toolbar no-border-bottom>
         <ion-segment>
             <!-- <ion-segment-button (click)="prevPage();" [disabled]="!preKeys?.length">
@@ -79,11 +85,5 @@
             </ion-segment-button>
         </ion-segment>
     </ion-toolbar>
-
-    <ion-infinite-scroll (ionInfinite)="doInfinite( $event )" *ngIf="page < totalPage">
-        <ion-infinite-scroll-content 
-            loadingSpinner="bubbles" loadingText="Loading more data...">
-        </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
 
 </ion-content>
