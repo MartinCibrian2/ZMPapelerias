@@ -229,8 +229,8 @@ export class UsersPage implements OnInit
     }
 
     sort(){
-        this.descending = !this.descending;
-        this.order = this.descending ? 1 : -1;
+        this.descending    = !this.descending;
+        this.order         = this.descending ? 1 : -1;
     }
 
     doInfinite( infiniteScroll? ){

@@ -2,9 +2,9 @@ export class ClientModel
 {
     constructor(
         public _id: string,
-        public nombre: string,
+        public name: string,
         public rfc: string,
-        public tel: string,
+        public phone: string,
         public active: boolean
     ){}
 }

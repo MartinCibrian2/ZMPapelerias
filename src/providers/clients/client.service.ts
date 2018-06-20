@@ -1,85 +1,78 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-
-import { delay } from 'rxjs/operators';
 
 /* import moment from 'moment'; */
 
-import { PouchDbAdapter } from '../pouchdb/pouchdb.adapter';
-
 import { AppSettings } from '../../app/common/api.path';
 import { ClientModel } from '../../app/models/client.model';
+import { AuthenticationService } from '../authentication.service';
 
 
 @Injectable()
 
 export class ClientService
-{  // handler for the adapter class
-    private _pouchDbAdapter: PouchDbAdapter;
-    // rxjs observables to broadcast sync status
-    syncStatus: Observable<boolean>;
-    couchdbUp: Observable<boolean>;
-
-    public clientsUrl: string;
+{
+    public token: string;
+    public apiUrl: string;
     public clients: any;
-    // private pouchdbClients: any;
 
     constructor(
         private httpClient: HttpClient,
         private http: Http,
-        public appSettings: AppSettings
+        public appSettings: AppSettings,
+        private _authService: AuthenticationService
     ){
-        let databases      = this.appSettings.getDatabases();
-        this.clientsUrl    = databases.clients.database;
-
-        this._pouchDbAdapter    = new PouchDbAdapter( this.clientsUrl );
-        this.syncStatus         = this._pouchDbAdapter.syncStatus.asObservable();
-        this.couchdbUp          = this._pouchDbAdapter.couchDbUp.asObservable();
+        var currentUser    = this._authService.getToken();
+        this.token         = currentUser && currentUser["token"];
+        this.apiUrl    = appSettings.path_api;
     }
 
-    getClients( params: any ): Promise <any> {
-        // For all clients
-        //return Promise.resolve( this._pouchDbAdapter.getAllDocs( params ) );
-        // For active clients, the condition is active field iqual to true.
-        return new Promise( resolve => {
-            this._pouchDbAdapter._pouchDB
-            .query( function( doc, emit ){
-                    if( doc.active ){
-                        if( doc.active === true ){
-                            emit( doc.active );
-                        }
-                    }
-                }, {
-                    include_docs: true
-                }
-            )
-            .then( function( result ){
-                resolve( result );
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    getClients( token: string, params?: any ): Observable <any> {
+        if( params == null ){
+            params   = '';
+        } else {
+            // The params has to be sending by object and not like string.
+        }
+        let _headers    = new HttpHeaders()
+            .set('Accept', 'application/json');
+
+        _headers.set('Authorization', token );
+        // For clients
+        let _client$    = this
+            .httpClient
+            .post(
+                this.apiUrl + 'get-clients/0',
+                params,
+                { headers: _headers }
+            );
+
+        return _client$;
     }
 
-    post( _client ): Promise <any> {
-        _client    = new ClientModel( '', _client.nombre, _client.rfc, _client.tel, true );
+    add( token, _client ): Observable <any> {
+        _client    = new ClientModel( '', _client.name, _client.rfc, _client.phone, true );
 
-        return Promise.resolve( this._pouchDbAdapter.post( _client ));
+        let headers    = this.getHeaders({'Authorization': token });
+
+        let _client$    = this
+            .http
+            .post( this.apiUrl + 'register-client', _client, headers )
+            .map( res => res.json());
+
+        return _client$;
     }
 
-    put( _client ): Promise <any> {
-        let _rev    = _client._rev;
-        _client     = new ClientModel( _client._id, _client.nombre, _client.rfc, _client.tel, _client.active );
-        _client._rev    = _rev;
+    edit( _client, token ): Observable <any> {
+        let headers    = this.getHeaders({'Authorization': token });
 
-        return Promise.resolve( this._pouchDbAdapter.put( _client ));
-    }
+        let _client$    = this
+            .http
+            .post( this.apiUrl + 'update-client/' + _client.id, _client, headers )
+            .map( res => res.json() );
 
-    delete( _doc ): Promise <any> {
-        return Promise.resolve( this._pouchDbAdapter.delete( _doc ));
+        return _client$;
     }
 
     getCatalogClaveProdServs(): Observable<any> {
@@ -88,13 +81,16 @@ export class ClientService
         return this.httpClient.get( _urlJson );
     }
 
-    searchClientByString( texto ){
-        return Promise.resolve( this._pouchDbAdapter.getDocsByString( texto ) );
-    }
-    // Pending, I have developing this method
-    getClientsAsync( text ): Observable <any> {
-        return this._pouchDbAdapter.getDocsByStringObservable( text )
-        .pipe( delay( 2000 ));
+    getHeaders( params?: any ){
+        const headers    = new Headers( );
+        headers.append('Accept', 'application/json');
+        if( params !== null ){
+            for( var index in params ){
+                headers.append( index, params[ index ]);
+            }
+        }
+
+        return { headers: headers };
     }
 
 }

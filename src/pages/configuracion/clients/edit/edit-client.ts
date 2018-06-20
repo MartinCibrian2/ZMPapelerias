@@ -1,32 +1,43 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { NavController, NavParams, IonicPage, LoadingController, AlertController } from 'ionic-angular';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { ClientService } from '../../../../providers/clients/client.service';
 import { ClientsPage } from '../clients';
+import { AuthenticationService } from '../../../../providers/authentication.service';
+import { UploadService } from '../../../../providers/upload.service';
 
 @IonicPage()
 @Component({
   selector: 'page-client',
   templateUrl: '../add/add-client.html',
   providers: [
-      ClientService
+      ClientService,
+      UploadService
   ]
 })
 export class EditClientPage implements OnInit
 {
-    public title: string;
+    public titlePage: string;
+    public titleApp: string;
+    public token: string;
     // Form
     public clientForm: FormGroup;
     public item: any;
 
     constructor(
         public navParams: NavParams,
-        public navCtlr: NavController,
+        public navCtrl: NavController,
+        public loadingCtrl: LoadingController,
+        public alertCtrl: AlertController,
         public frmBuilder: FormBuilder,
+        private _authService: AuthenticationService,
+        private _uploadService: UploadService,
         private clientService: ClientService
     ){
-        this.title         = "Actualizar";
+        this.titleApp      = "ZMPapelerias";
+        this.titlePage     = "Registrar Usuario";
+        this.token         = this._authService.getToken();
         this.clientForm    = this.makeForm();
     }
 
@@ -35,22 +46,86 @@ export class EditClientPage implements OnInit
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad EditClientPage');
+        // console.log('ionViewDidLoad EditClientPage');
     }
 
     saveClient( ): void {
         if( this.clientForm.valid ){
-            var _doc   = this.clientForm.value;
+            var _doc       = this.clientForm.value;
+            _doc.active    = "true";
 
-            _doc.active    = true;
-            this.clientService
-            .put( _doc )
-            .then(( response ) => {
-                this.navCtlr.setRoot( ClientsPage );
-            })
-            .then(( error ) => {
-                console.log( error );
-            });
+            let load    = this.loadingCtrl.create();
+            load.present( load );
+
+            this
+            .clientService
+            .edit( _doc, this.token )
+            .subscribe(
+                response => {
+                    console.log( response )
+                    if( response.client ){
+                        let _client      = response.client;
+                        load.dismiss();
+                        this.showAlertCode( response );
+                        this.navCtrl.setRoot( ClientsPage );
+                        /* if( this.filesToUpload ){
+                            // Upload Image
+                            this._uploadService
+                            .makeFileRequest(
+                                'upload-image-client/' + _client['_id'],
+                                [],
+                                this.filesToUpload,
+                                this.token,
+                                'image'
+                            ).then(( result: any ) => {
+                                console.log( result );
+                                if( _doc['image'].length && result ){
+                                    this._uploadService
+                                    .removeFileAtt(
+                                        'remove-image-client/' + _client['_id'] +'/'+ _doc['image'],
+                                        this.token
+                                    ).subscribe(
+                                        ( _result: any ) => {
+                                            console.log( _result )
+                                            load.dismiss();
+                                            this.showAlertCode( response );
+                                            this.navCtrl.setRoot( ClientsPage );
+                                        }, error => {
+                                            load.dismiss();
+                                            this.showAlertCode( error );
+                                        }
+                                    );
+                                } else {
+                                    // It is new.
+                                    load.dismiss();
+                                    this.showAlertCode( response );
+                                    this.navCtrl.setRoot( ClientsPage );
+                                }
+
+                            })
+                            .catch(( error ) => {
+                                load.dismiss();
+                                this.showAlertCode( error );
+                            });
+                        } else {
+                            load.dismiss();
+                            this.showAlertCode( response );
+                            this.navCtrl.setRoot( ClientsPage );
+                        } */
+                    } else {
+                        load.dismiss();
+                        this.showAlertCode( response );
+                        this.navCtrl.setRoot( ClientsPage );
+                    }
+                },
+                error => {
+                    var errorMessage = <any>error;
+                    if( errorMessage != null ){
+                        load.dismiss();
+                        this.showAlertCode( error );
+                    }
+                }
+            );
         } else {
             // The form is does not valid.
         }
@@ -58,25 +133,29 @@ export class EditClientPage implements OnInit
         return;
     }
 
+    public filesToUpload: Array< File >;
+    fileChangeEvent( fileInput: any ){
+        console.log( fileInput )
+        this.filesToUpload = <Array< File >> fileInput.target.files;
+    }
+
     makeForm( ){
+        let data      = this.navParams.data;
         let _group    = {
-            'nombre':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
+            'id': ['', Validators.required ],
+            'name':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
             'rfc':  ['', [ Validators.required, Validators.pattern( /^[a-zA-Z0-9_ ]*$/ )]],
-            'tel':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]]
+            'phone':  ['', [ Validators.required, Validators.pattern( /^[0-9]{1,}$/ )]]
         };
 
-        if( Object.keys( this.navParams.data ).length ){
-            if( this.navParams.data.hasOwnProperty('item') ){
-                this.item    = this.navParams.data.item;
+        if( Object.keys( data ).length ){
+            if( data.hasOwnProperty('item') ){
+                this.item    = data.item;
                 Object
                 .keys( this.item )
                 .forEach(( _field ) => {
-                    //if( _group.hasOwnProperty( _field )){
-                        let _val    = this.item[ _field ];
-                        _group[ _field ]   = _val;
-                    /*} else {
-                        // The name field does not exist in form.
-                    }*/
+                    let _val    = this.item[ _field ];
+                    _group[ _field ]   = _val;
                 });
             } else {
                 // Do not sent data.
@@ -86,6 +165,28 @@ export class EditClientPage implements OnInit
         }
 
         return this.frmBuilder.group( _group );
+    }
+
+    showAlertCode( _body: any ){
+    let alert = this.alertCtrl.create({
+        title: _body.title,
+        subTitle: _body.message,
+        buttons: [{
+          text: _body.text,
+          handler: data => {
+                    if( _body.hasOwnProperty('callback')){
+                        _body.callback();
+                    }
+                }
+            }]
+        });
+    
+        alert.present();
+        alert.onDidDismiss(
+            data => {
+                console.log('Closed');
+                }
+        )
     }
 
 }

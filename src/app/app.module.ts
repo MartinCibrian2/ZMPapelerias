@@ -11,8 +11,6 @@ import { SelectSearchableModule } from 'ionic-select-searchable';
 // Import modules custom
 import { TabsPageModule } from '../pages/tabs/tabs.module';
 import { ConfiguracionPageModule } from '../pages/configuracion/configuracion.module';
-import { AddClientPageModule } from '../pages/configuracion/clients/add/add-client.module';
-import { EditClientPageModule } from '../pages/configuracion/clients/edit/edit-client.module';
 import { BuysPageModule } from '../pages/configuracion/buys/buys.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -20,7 +18,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { DatosVentasProvider } from '../providers/datos-ventas/datos-ventas';
 
 import { BillingPage } from '../pages/billing/billing';
-import { ClientsPage } from '../pages/configuracion/clients/clients';
 
 import { AuthGuard } from './common/auth.guard';
 import { AuthenticationService } from '../providers/authentication.service';
@@ -43,7 +40,6 @@ import { ReportesPageModule } from '../pages/reportes/reportes.module';
     MyApp,
     LoginPage,
     BillingPage,
-    ClientsPage,
 
     SearchPipe
   ],
@@ -63,8 +59,6 @@ import { ReportesPageModule } from '../pages/reportes/reportes.module';
     ComprasPageModule,
     ReportesPageModule,
     ConfiguracionPageModule,
-    AddClientPageModule,
-    EditClientPageModule,
     BuysPageModule
   ],
   bootstrap: [ IonicApp ],
@@ -73,8 +67,7 @@ import { ReportesPageModule } from '../pages/reportes/reportes.module';
     LoginPage,
     TabsPage,
 
-    BillingPage,
-    ClientsPage
+    BillingPage
   ],
   providers: [
     StatusBar,

@@ -13,11 +13,7 @@ import { AddClientPage } from '../configuracion/clients/add/add-client';
 import { ConfiguracionPage } from '../configuracion/configuracion';
 
 import sha256 from 'sha256';
-
-class Port {
-    public id: number;
-    public name: string;
-}
+import { AuthenticationService } from '../../providers/authentication.service';
 
 @IonicPage()
 @Component({
@@ -30,7 +26,8 @@ class Port {
   ]
 })
 
-export class BillingPage implements OnInit {
+export class BillingPage implements OnInit
+{
     public addClientPage = AddClientPage;
     public paramsClient  = { page: BillingPage };
     public tickets: any[] = new Array;
@@ -38,6 +35,9 @@ export class BillingPage implements OnInit {
     public waystopay: any[] = new Array;
     // Form
     public checkinForm: FormGroup;
+    public titlePage: string;
+    public titleApp: string;
+    public token: string;
 
     constructor(
         public navCtrl: NavController,
@@ -45,8 +45,12 @@ export class BillingPage implements OnInit {
         public frmBuilder: FormBuilder,
         private checkingService: CheckinService,
         private clientService: ClientService,
-        private waytopayService: WayToPayService
+        private waytopayService: WayToPayService,
+        private _authService: AuthenticationService
     ) {
+        this.titleApp      = "ZMPapelerias";
+        this.titlePage     = "Registrar factura";
+        this.token        = this._authService.getToken();
         this.checkinForm    = this.makeForm();
     }
 
@@ -82,7 +86,8 @@ export class BillingPage implements OnInit {
         event.component.isSearching = true;
 
         this.clientService
-        .getClientsAsync( text )
+        .getClients( this.token )
+        // .getClientsAsync( text )
         .subscribe( _clients => {
             event.component.items    = _clients.rows.map( row => {
                 return row.doc;
@@ -102,9 +107,9 @@ export class BillingPage implements OnInit {
 
     getClients(){
         this.clientService
-        .getClients( {} )
-        .then(( data ) => {
-            this.clients = [];
+        .getClients( this.token )
+        .subscribe(( data ) => {
+            this.clients    = [];
             data.rows.map(( row ) => {
                 this.clients.push( row.doc );
             });

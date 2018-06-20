@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, AlertController, ToastController }
     from 'ionic-angular';
 
 import { ClientService } from '../../../providers/clients/client.service';
+import { AuthenticationService } from '../../../providers/authentication.service';
+import { AppSettings } from '../../../app/common/api.path';
 
 import { AddClientPage } from './add/add-client';
 import { EditClientPage } from './edit/edit-client';
@@ -12,45 +14,50 @@ import { EditClientPage } from './edit/edit-client';
     selector: 'page-clients',
     templateUrl: 'clients.html',
     providers: [
-        ClientService
+        ClientService,
+        AuthenticationService
     ]
 })
 export class ClientsPage implements OnInit
 {
+    public titlePage: string;
+    public titleApp: string;
     public clients = [];
-    public _clients = [];
+    public token: string;
     public searching;
     public optionsResult: any;
+    public url: string;
+    // For sort list
+    public descending: boolean = false;
+    public order: number;
+    public column: string = 'name';
+    // For pagination by infiniteScroll
+    public page         = 1;
+    public perPage      = 0;
+    public totalData    = 0;
+    public totalPage    = 0;
 
-    // For sync
-    remoteCouchDbAddress: string;
-    syncStatus: boolean;
-    couchDbUp: boolean;
-
-    public addClientPage = AddClientPage;
-    public paramsClient  = { page: ClientsPage };
+    public addClientPage    = AddClientPage;
+    public paramsClient     = { page: ClientsPage };
 
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
-        private clientService: ClientService,
         public alertCtrl: AlertController,
-        public toastCtrl: ToastController
+        public toastCtrl: ToastController,
+        private clientService: ClientService,
+        private _authService: AuthenticationService,
+        private appSettings: AppSettings
     ){
-        this.clientService.syncStatus
-        .subscribe(( result ) => {
-            this.syncStatus    = result;
-        });
-        this.clientService.couchdbUp
-        .subscribe(( result ) => {
-            this.couchDbUp     = result;
-        });
+        this.url    = appSettings.path_api;
 
-        this.remoteCouchDbAddress    = this.clientService.clientsUrl;
+        this.titleApp     = "ZMPapelerias";
+        this.titlePage    = "Clientes";
+        this.token        = this._authService.getToken();
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad ClientsPage');
+        // console.log('ionViewDidLoad ClientsPage');
     }
 
     ngOnInit(): void {
@@ -59,7 +66,7 @@ export class ClientsPage implements OnInit
 
     searchClientByString( eve ){
         let val = eve.target.value;
-        this.clientService
+        /* this.clientService
         .searchClientByString( val )
         .then(( data: any ) => {
             if( data.length ){
@@ -70,63 +77,78 @@ export class ClientsPage implements OnInit
             } else {
                 // There are not data.
             }
-        });
+        }); */
     }
 
-    getClients(){
+    getClients( clean: boolean = true, params?: any ){
         this.clientService
-        .getClients( {} )
-        .then(( data ) => {
-            this.clients = [];
-            data.rows.map(( row ) => {
-                this.clients.push( row.doc );
-                //this._clients.push( row.doc );
-            });
-        });
+        .getClients( this.token, params )
+        .subscribe(
+            response => {
+                if( response.data.length ){
+                    this.perPage      = response.perPage;
+                    this.totalData    = response.totalData;
+                    this.totalPage    = response.totalPage;
+
+                    if( clean ){
+                        this.clients    = [];
+                        this.page       = 1;
+                    } else {
+                        // It continues the load.
+                    }
+
+                    response.data.map(( row ) => {
+                        this.clients.push( row );
+                    });
+                    this.sort();
+                } else {
+                    // It is empty.
+                }
+            }, error => {
+                console.log( <any> error )
+            }
+        );
     }
 
     deleteClient( item: any): void {
         this.optionsResult    = {
-            "message": item.nombre + " se ha eliminado",
+            "message": item.name + " se ha eliminado",
             "duration": 5000,
             "position": 'bottom'
         }
 
         let confirm = this.alertCtrl.create({
-            title: "Seguro de eliminar " + item.nombre + " ?",
-            message: "Si acepta eliminar " + item.nombre + " ya no podrá recuperarlo.",
+            title: "Seguro de eliminar " + item.name + " ?",
+            message: "Si acepta eliminar " + item.name + " ya no podrá recuperarlo.",
             buttons: [
                 {
                     text: 'Cancelar',
                     handler: () => {
-                        this.optionsResult.message    = "Se Canceló Eliminar " + item.nombre;
+                        this.optionsResult.message    = "Canceló Eliminar " + item.name;
                         this.presentToast( this.optionsResult );
                     }
                 }, {
                     text: 'Aceptar',
                     handler: () => {
                         // Action delete item.
-                        item.active    = false;
-                        this.clientService
-                        .put( item )
-                        .then(( response ) => {
-                            this.getClients();
-                            this.presentToast( this.optionsResult );
-                        })
-                        .catch(( error ) => {
-                            console.log( error );
-                        });
-                        // Delete forever.
-                        /* this.clientService
-                        .delete( item )
-                        .then(( response ) => {
-                             this.getClients();
-                             // this.navCtrl.popToRoot();
-                             this.presentToast( this.optionsResult );
-                        })
-                        .catch(( error ) => {
-                            console.log( error );
-                        }); */
+                        item.alive    = !item.alive;
+                        item.alive    = item.alive.toString();
+                        this
+                        .clientService
+                        .edit( item, this.token )
+                        .subscribe(
+                            response => {
+                                this.getClients();
+                                this.presentToast( this.optionsResult );
+                            },
+                            error => {
+                                console.log( error );
+                                var errorMessage    = <any>error;
+                                if( errorMessage != null ){
+                                    this.presentToast( errorMessage );
+                                }
+                            }
+                        );
                     }
                 }
             ]
@@ -154,30 +176,19 @@ export class ClientsPage implements OnInit
         toast.present();
     }
 
+    sort(){
+        this.descending    = !this.descending;
+        this.order         = this.descending ? 1 : -1;
+    }
+
+    doInfinite( infiniteScroll? ){
+        this.page    += 1;
+        setTimeout(( ) => {
+            this.getClients( false, {"skip": this.clients.length });
+
+            if( infiniteScroll )
+                infiniteScroll.complete();
+        }, 1000 );
+    }
+
 }
-
-
-
-
-    /* // Search in data exists in memory list.
-     searchItems( ev: any ){
-        // Reset items back to all of the items
-        this.clients    = this._clients;
-        // set val to the value of the searchbar
-        let val = ev.target.value;
-        // if the value is an empty string don't filter the items
-        if( val && val.trim() != '' ){
-            this.clients = this._clients.filter(( item ) => {
-                let _title    = this.existsWord( val, item.nombre ),
-                    _rfc      = this.existsWord( val, item.rfc );
-
-                _title    = _title || _rfc;
-
-                return _title;
-            })
-        }
-
-        existsWord( search: string, stack: any ){
-            return ( stack.toLowerCase().indexOf( search.toLowerCase() ) > -1 );
-        }
-    */

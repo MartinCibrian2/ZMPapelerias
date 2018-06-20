@@ -101,8 +101,6 @@ export class EditUserPage implements OnInit
                     if( response.user ){
                         this.user      = response.user;
                         if( this.filesToUpload ){
-                            let imageToRemove    = _doc.image;
-                            console.log( _doc, this.user )
                             // Upload Image
                             this._uploadService
                             .makeFileRequest(

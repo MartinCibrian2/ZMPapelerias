@@ -71,8 +71,8 @@ export class UserService
     }
 
     editUser( token, user ){
-        let params       = JSON.stringify( user ),
-            headers      = this.getHeaders();
+        let params     = JSON.stringify( user ),
+            headers    = this.getHeaders();
 
         headers.headers.append('Authorization', token );
 

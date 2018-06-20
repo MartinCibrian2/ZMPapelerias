@@ -1,7 +1,7 @@
 
 <ion-header>
   <ion-navbar>
-    <ion-title>{{ title}} Cliente - ZMPapelerias</ion-title>
+    <ion-title>{{ titlePage }} - {{ titleApp }}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -18,7 +18,7 @@
                     <ion-label stacked>
                         Cliente
                     </ion-label>
-                    <ion-input  formControlName="nombre" placeholder="Nombre de persona física o moral"></ion-input>
+                    <ion-input  formControlName="name" placeholder="Nombre de persona física o moral"></ion-input>
                 </ion-item>
             </ion-row>
 
@@ -35,7 +35,7 @@
                 <ion-item>
                     <!-- <ion-label stacked>Teléfono</ion-label> -->
                     <ion-label stacked>Teléfono</ion-label>
-                    <ion-input type="text" formControlName="tel" placeholder="Número teléfono" clearInput></ion-input>
+                    <ion-input type="text" formControlName="phone" placeholder="Número teléfono" clearInput></ion-input>
                 </ion-item>
             </ion-row>
 

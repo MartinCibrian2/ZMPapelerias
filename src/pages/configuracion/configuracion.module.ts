@@ -4,6 +4,7 @@ import { ConfiguracionPage } from './configuracion';
 
 import { ConfigsPageModule } from './configs/configs.module';
 import { UsersPageModule } from './users/users.module';
+import { ClientsPageModule } from './clients/clients.module';
 
 @NgModule({
     declarations: [
@@ -12,11 +13,13 @@ import { UsersPageModule } from './users/users.module';
     imports: [
         IonicPageModule.forChild( ConfiguracionPage ),
         ConfigsPageModule,
-        UsersPageModule
+        UsersPageModule,
+        ClientsPageModule
     ],
     exports: [
         ConfigsPageModule,
-        UsersPageModule
+        UsersPageModule,
+        ClientsPageModule
     ]
 })
 export class ConfiguracionPageModule {}

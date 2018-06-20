@@ -1,7 +1,7 @@
 
 <ion-header>
     <ion-navbar>
-        <ion-title>Clientes - ZMPapelerias</ion-title>
+        <ion-title>{{ titlePage }} - {{ titleApp }}</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -10,8 +10,16 @@
         <ion-row>
             <ion-col col-10>
                 <ion-searchbar (ionInput)="searchClientByString( $event )">
-                <!-- <ion-searchbar [(ngModel)]="searching"> -->
                 </ion-searchbar>
+
+                <ion-toolbar>
+                    <ion-segment>
+                        <ion-segment-button (click)="sort(); orderIs = !orderIs" value="">
+                            <ion-icon *ngIf="orderIs" name="arrow-dropup"></ion-icon>
+                            <ion-icon *ngIf="!orderIs" name="arrow-dropdown"></ion-icon>
+                        </ion-segment-button>
+                    </ion-segment>
+                </ion-toolbar>
             </ion-col>
             <ion-col col-2>
                 <button ion-button  [navPush]="addClientPage"
@@ -24,9 +32,9 @@
 
 
     <ion-list>
-        <ion-item-sliding *ngFor="let item of clients | search: searching">
+        <ion-item-sliding *ngFor="let item of clients | sort: { 'property': 'name', 'order': order }">
             <ion-item>
-                <h2>{{ item.nombre }}</h2>
+                <h2>{{ item.name }}</h2>
                 <p>{{ item.rfc }}</p>
             </ion-item>
             <ion-item-options>
@@ -44,11 +52,17 @@
         </ion-item-sliding>
     </ion-list>
 
-    <!-- <ion-list>
-        <button ion-item *ngFor="let item of clients | search: searching" 
-                (click)="openNavDetailsClient( item )" icon-start>
-        
-        {{ item.nombre }} <small>{{ item.rfc }}</small>
-        </button>
-    </ion-list> -->
+    <ion-infinite-scroll (ionInfinite)="doInfinite( $event )" *ngIf="page < totalPage">
+        <ion-infinite-scroll-content 
+            loadingSpinner="bubbles" loadingText="Loading more data...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <ion-toolbar no-border-bottom>
+        <ion-segment>
+            <ion-segment-button (click)="doInfinite( );" *ngIf="page < totalPage">
+                <ion-icon name="aperture"></ion-icon>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
 </ion-content>
