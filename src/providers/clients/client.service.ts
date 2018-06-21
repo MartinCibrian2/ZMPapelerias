@@ -75,6 +75,23 @@ export class ClientService
         return _client$;
     }
 
+    search( params: any, token: string ): Observable <any> {
+        let headers = this.getHeaders();
+            headers.headers.append('Authorization', token );
+
+        params    = ( params == null ) ? {} : params;
+        // For clients
+        let _clients$    = this
+            .http
+            .post(
+                this.apiUrl + 'searching-client',
+                params,
+                headers
+            ).map(( res: Response ) => { return res.json() });
+
+        return _clients$;
+    }
+
     getCatalogClaveProdServs(): Observable<any> {
         var _urlJson = '../../'+ this.appSettings._urlConfigs +'data/catalogs/clave-prod-serv.json';
 

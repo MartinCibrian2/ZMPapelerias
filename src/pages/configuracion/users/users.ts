@@ -32,7 +32,6 @@ export class UsersPage implements OnInit
     public optionsResult: any;
     public notice: string = '';
     public url: string;
-
     // For sort list
     public descending: boolean = false;
     public order: number;

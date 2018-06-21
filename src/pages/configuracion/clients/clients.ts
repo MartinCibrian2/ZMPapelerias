@@ -24,8 +24,8 @@ export class ClientsPage implements OnInit
     public titleApp: string;
     public clients = [];
     public token: string;
-    public searching;
     public optionsResult: any;
+    public notice: string = '';
     public url: string;
     // For sort list
     public descending: boolean = false;
@@ -65,19 +65,41 @@ export class ClientsPage implements OnInit
     }
 
     searchClientByString( eve ){
-        let val = eve.target.value;
-        /* this.clientService
-        .searchClientByString( val )
-        .then(( data: any ) => {
-            if( data.length ){
-                this.clients = [];
-                data.forEach(( row, i )=> {
-                    this.clients.push( row );
-                });
+        let _searching    = eve.target.value;
+
+        if(( _searching && _searching.trim() != '' ) || typeof _searching !== "undefined" ){
+            if( _searching.length > 2 ){
+                this.notice    = '';
+                let fields    = {
+                    name:    _searching,
+                    surname: _searching,
+                    email:   _searching
+                };
+
+                this.clientService
+                .search( fields, this.token )
+                .subscribe(
+                    ( response: any ) => {
+                        if( response.data.length ){
+                            this.clients    = [];
+                            response.data.forEach(( row )=> {
+                                this.clients.push( row );
+                            });
+                        } else {
+                            // There are not data.
+                            this.notice = 'No existe información!';
+                        }
+                    }, error => {
+                        console.log( error )
+                    }
+                );
             } else {
-                // There are not data.
+                this.notice    = 'Ingrese mas de 3 caracteres';
+                this.getClients();
             }
-        }); */
+        } else {
+            this.getClients();
+        }
     }
 
     getClients( clean: boolean = true, params?: any ){
@@ -100,7 +122,6 @@ export class ClientsPage implements OnInit
                     response.data.map(( row ) => {
                         this.clients.push( row );
                     });
-                    this.sort();
                 } else {
                     // It is empty.
                 }
