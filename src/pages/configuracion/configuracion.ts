@@ -28,6 +28,9 @@ export class ConfiguracionPage {
     }, {
       title: 'Usuarios',
       component: UsersPage
+    }, {
+      title: 'Configs',
+      component: ConfigsPage
     }
   ];
 

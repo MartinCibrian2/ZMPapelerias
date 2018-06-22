@@ -1,26 +1,26 @@
 
 <ion-header>
   <ion-navbar>
-    <ion-title>{{ title}} Compra - ZMPapelerias</ion-title>
+    <ion-title>{{ titlePage }} - {{ titleApp }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <!-- <form novalidate [formGroup]="configForm" (submit)="saveConfig()">
+    <form novalidate [formGroup]="configForm" (submit)="saveConfig()">
         <ion-grid>
             <ion-row>
                 <ion-col>
                     <ion-item>
                         <ion-label stacked>
-                            Producto
+                            Catálogo
                         </ion-label>
-                        <ion-input  formControlName="nombre" placeholder="Nombre del producto"></ion-input>
+                        <ion-input  formControlName="name" placeholder="Nombre del catálogo"></ion-input>
                     </ion-item>
-                    <ion-item *ngIf="configForm.get('nombre').errors && configForm.get('nombre').dirty">
-                        <p color="danger" *ngIf="configForm.get('nombre').hasError('required')">
+                    <ion-item *ngIf="configForm.get('name').errors && configForm.get('name').dirty">
+                        <p color="danger" *ngIf="configForm.get('name').hasError('required')">
                             Este campo es requerido
                         </p>
-                        <p color="danger" *ngIf="configForm.get('nombre').hasError('pattern')">
+                        <p color="danger" *ngIf="configForm.get('name').hasError('pattern')">
                             Nombre no valido
                         </p>
                     </ion-item>
@@ -31,7 +31,7 @@
                         <ion-label stacked>
                             Descripción
                         </ion-label>
-                        <ion-input  formControlName="descripcion" placeholder="Descripción del producto"></ion-input>
+                        <ion-textarea formControlName="description" placeholder="Descripción del catálogo"></ion-textarea>
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -43,5 +43,5 @@
                 </button>
             </ion-col>
         </ion-grid>
-    </form> -->
+    </form>
 </ion-content>

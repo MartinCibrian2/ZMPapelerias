@@ -7,25 +7,18 @@ import { Observable } from 'rxjs/Observable';
 
 import { AppSettings } from '../../app/common/api.path';
 import { ClientModel } from '../../app/models/client.model';
-import { AuthenticationService } from '../authentication.service';
-
 
 @Injectable()
 
 export class ClientService
 {
-    public token: string;
     public apiUrl: string;
-    public clients: any;
 
     constructor(
         private httpClient: HttpClient,
         private http: Http,
-        public appSettings: AppSettings,
-        private _authService: AuthenticationService
+        public appSettings: AppSettings
     ){
-        var currentUser    = this._authService.getToken();
-        this.token         = currentUser && currentUser["token"];
         this.apiUrl    = appSettings.path_api;
     }
 

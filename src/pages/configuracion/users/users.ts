@@ -11,8 +11,6 @@ import { AuthenticationService } from '../../../providers/authentication.service
 import { AddUserPage } from './add/add-user';
 import { EditUserPage } from './edit/edit-user';
 
-// import { SortPipe } from '../../../app/pipes/sort.pipe';
-
 @IonicPage()
 @Component({
     selector: 'page-users',

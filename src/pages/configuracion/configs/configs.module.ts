@@ -7,15 +7,17 @@ import { ConfigsService } from '../../../providers/configs/configs.service';
 import { ConfigsPage } from './configs';
 import { AddConfigPageModule } from './add/add-config.module';
 import { AddConfigPage } from './add/add-config';
+import { PipeModule } from '../../../app/pipes/pipe.module';
 
 @NgModule({
   declarations: [
      ConfigsPage
   ],
   imports: [
-    IonicPageModule.forChild( ConfigsPage),
+    IonicPageModule.forChild( ConfigsPage ),
     CatalogsPageModule,
-    AddConfigPageModule
+    AddConfigPageModule,
+    PipeModule
   ],
   entryComponents: [
     AddConfigPage,

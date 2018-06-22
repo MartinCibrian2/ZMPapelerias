@@ -8,6 +8,8 @@ import { ConfigsService } from '../../../providers/configs/configs.service';
 import { AddConfigPage } from './add/add-config';
 import { CatalogsPage } from './catalogs/catalogs';
 import { EditConfigPage } from './edit/edit-config';
+import { AppSettings } from '../../../app/common/api.path';
+import { AuthenticationService } from '../../../providers/authentication.service';
 //import { EditConfigPage } from './edit/edit-config';
 
 @IonicPage()
@@ -18,39 +20,45 @@ import { EditConfigPage } from './edit/edit-config';
         ConfigsService
     ]
 })
-export class ConfigsPage {
+export class ConfigsPage
+{
+    public titlePage: string;
+    public titleApp: string;
     public configs     = [];
     public catalogs    = [];
-    public searching;
+    public token: string;
     public optionsResult: any;
+    public notice: string = '';
+    public url: string;
+    // For sort list
+    public descending: boolean = false;
+    public order: number;
+    public column: string = 'name';
+    // For pagination by infiniteScroll
+    public page      = 1;
+    public perPage   = 0;
+    public totalData = 0;
+    public totalPage = 0;
 
     public addConfigPage     = AddConfigPage;
     public editConfigPage    = EditConfigPage;
     public catalogsPage      = CatalogsPage;
     public paramsConfig      = { page: ConfigsPage };
-    // For sync
-    remoteCouchDbAddress: string;
-    syncStatus: boolean;
-    couchDbUp: boolean;
 
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
-        private configService: ConfigsService,
-        private ngZone: NgZone,
         public alertCtrl: AlertController,
-        public toastCtrl: ToastController
+        public toastCtrl: ToastController,
+        private configService: ConfigsService,
+        private _authService: AuthenticationService,
+        private appSettings: AppSettings
     ){
-        /* this.configService.syncStatus
-        .subscribe(( result ) => {
-            this.syncStatus    = result;
-        });
-        this.configService.couchdbUp
-        .subscribe(( result ) => {
-            this.couchDbUp     = result;
-        }); */
-
-        //this.remoteCouchDbAddress    = this.configService.ConfigUrl;
+        this.titleApp     = "ZMPapelerias";
+        this.titlePage    = "Catalogos";
+        this.token        = this._authService.getToken();
+        
+        this.url    = appSettings.path_api;
     }
 
     ionViewDidLoad() {
@@ -61,87 +69,38 @@ export class ConfigsPage {
         this.getConfigs( );
     }
 
-    getConfigs(){
-        this.configService
-        .getConfigs( {} )
-        .subscribe(( data ) => {
-            this.catalogs    = [];
-            this.configs     = [];
-            Object.keys( data )
-            .forEach(( _catalog ) => {
-                this.catalogs.push( _catalog );
-                this.configs.push( data[ _catalog ]);
-            });
-        });
-    }
+    getConfigs( clean: boolean = true, params?: any ){
+        this.configService.get( this.token, params )
+        .subscribe(
+            response => {
+                if( response.data.length ){
+                    this.perPage      = response.perPage;
+                    this.totalData    = response.totalData;
+                    this.totalPage    = response.totalPage;
 
-    searchConfigByString( eve ){
-        let val = eve.target.value;
-        /* this.configService
-        .searchConfigByString( val )
-        .subscribe(( data ) => {
-            this.configs = data.rows.map( row => {
-                return row.doc;
-            });
-        }); */
-    }
-
-    deleteConfig( item: any): void {
-        /* this.optionsResult    = {
-            "message": item.nombre + " se ha eliminado",
-            "duration": 5000,
-            "position": 'bottom'
-        }
-
-        let confirm = this.alertCtrl.create({
-            title: "Seguro de eliminar " + item.nombre + " ?",
-            message: "Si acepta eliminar " + item.nombre + " ya no podrá recuperarlo.",
-            buttons: [
-                {
-                    text: 'Cancelar',
-                    handler: () => {
-                        this.optionsResult.message    = "Se Canceló Eliminar " + item.nombre;
-                        this.presentToast( this.optionsResult );
+                    if( clean ){
+                        this.configs    = [];
+                        this.page       = 1;
+                    } else {
+                        // It continues the load.
                     }
-                }, {
-                    text: 'Aceptar',
-                    handler: () => {
-                        // Action delete item.
-                        item.active    = false;
-                        this.configService
-                        .put( item )
-                        .subscribe(( response ) => {
-                            this.getConfigs();
-                            this.presentToast( this.optionsResult );
-                        },
-                        ( error ) => {
-                            console.log( error );
-                        });
-                     }
+
+                    response.data.map(( row ) => {
+                        this.configs.push( row );
+                    });
+                    this.sort();
+                } else {
+                    // It is empty.
                 }
-            ]
-        });
-        confirm.present(); */
+            }, error => {
+                console.log( <any> error )
+            }
+        );
     }
 
-    openNavPage( page, param ){
-        this.navCtrl.push( page, { catalog: param });
-    }
-
-    presentToast( _options: any ): void {
-        let _default    = {
-            message: 'Action completed',
-            duration: 3000
-        };
-
-        if( Object.keys( _options ).length ){
-            // Contains values.
-        } else {
-            _options    = Object.create( _default );
-        }
-
-        let toast = this.toastCtrl.create( _options );
-        toast.present();
+    sort(){
+        this.descending    = !this.descending;
+        this.order         = this.descending ? 1 : -1;
     }
 
 }

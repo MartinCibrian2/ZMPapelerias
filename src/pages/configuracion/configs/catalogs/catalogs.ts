@@ -76,11 +76,11 @@ export class CatalogsPage
             Decimales: 2,
             "Porcentaje variación": "35%"
         };
-        this.configService.post( _doc ).subscribe(( response ) => {
+        /* this.configService.post( _doc ).subscribe(( response ) => {
             console.log( response )
         }, ( error ) => {
             console.log( error )
-        });
+        }); */
     }
 
     searchByString( eve ){
