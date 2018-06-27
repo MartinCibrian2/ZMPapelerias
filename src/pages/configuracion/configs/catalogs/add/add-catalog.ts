@@ -5,6 +5,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ConfigsService } from '../../../../../providers/configs/configs.service';
 //import { CheckinService } from '../../../../providers/billing/checkin.service';
 import { CatalogsPage } from '../catalogs';
+import { AuthenticationService } from '../../../../../providers/authentication.service';
 
 @IonicPage()
 @Component({
@@ -16,7 +17,9 @@ import { CatalogsPage } from '../catalogs';
 })
 export class AddCatalogPage implements OnInit
 {
-    public title: string;
+    public titlePage: string;
+    public titleApp: string;
+    public token: string;
     // Form
     public catalogForm: FormGroup;
     public claveProdServs: any = new Array();
@@ -26,10 +29,13 @@ export class AddCatalogPage implements OnInit
         public navCtlr: NavController,
         public frmBuilder: FormBuilder,
         private catalogService: ConfigsService,
-        //private checkinService: CheckinService
+        //private checkinService: CheckinService,
+        private _authService: AuthenticationService
     ){
-        this.title         = "Registrar";
+        this.titleApp      = "ZMPapelerias";
+        this.titlePage     = "Registrar Catalogo";
         //this.catalogForm    = this.makeForm();
+        this.token         = this._authService.getToken();
     }
 
     ionViewDidLoad() {
@@ -63,7 +69,7 @@ export class AddCatalogPage implements OnInit
             _doc.active    = true;
 
             this.catalogService
-            .post( _doc )
+            .add( _doc, this.token )
             .subscribe(( response ) => {
                 let _page = this.navParams.data.page;
 

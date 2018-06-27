@@ -6,6 +6,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ConfigsService } from '../../../../providers/configs/configs.service';
 
 import { AddCatalogPage } from './add/add-catalog';
+import { AuthenticationService } from '../../../../providers/authentication.service';
 //import { EditcatalogPage } from './edit/edit-catalog';
 
 @IonicPage()
@@ -18,6 +19,9 @@ import { AddCatalogPage } from './add/add-catalog';
 })
 export class CatalogsPage 
 {
+    public titlePage: string;
+    public titleApp: string;
+    public token: string;
     public nameField: string;
     public catalogs    = [];
     public searching;
@@ -31,18 +35,12 @@ export class CatalogsPage
         public navParams: NavParams,
         private configService: ConfigsService,
         public alertCtrl: AlertController,
-        public toastCtrl: ToastController
+        public toastCtrl: ToastController,
+        private _authService: AuthenticationService
     ){
-        /* this.catalogService.syncStatus
-        .subscribe(( result ) => {
-            this.syncStatus    = result;
-        });
-        this.catalogService.couchdbUp
-        .subscribe(( result ) => {
-            this.couchDbUp     = result;
-        }); */
-
-        //this.remoteCouchDbAddress    = this.catalogService.ConfigUrl;
+        this.titleApp      = "ZMPapelerias";
+        this.titlePage     = "Registrar Catalogo";
+        this.token         = this._authService.getToken();
     }
 
     ionViewDidLoad() {
@@ -63,7 +61,7 @@ export class CatalogsPage
 
     getCatalog( _catalog: string ){
         this.configService
-        .getConfigs( {} )
+        .get( this.token )
         .subscribe(( data ) => {
             this.catalogs    = data[ _catalog ];
         });

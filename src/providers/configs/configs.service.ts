@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
@@ -54,6 +54,34 @@ export class ConfigsService
             .map( res => res.json());
 
         return _catalog$;
+    }
+
+    edit( _config, token ): Observable <any> {
+        let headers    = this.getHeaders({'Authorization': token });
+
+        let _config$    = this
+            .http
+            .post( this.apiUrl + 'update-config/' + _config.id, _config, headers )
+            .map( res => res.json() );
+
+        return _config$;
+    }
+
+    search( params: any, token: string ): Observable <any> {
+        let headers = this.getHeaders();
+            headers.headers.append('Authorization', token );
+
+        params    = ( params == null ) ? {} : params;
+        // For configs
+        let _configs$    = this
+            .http
+            .post(
+                this.apiUrl + 'searching-config',
+                params,
+                headers
+            ).map(( res: Response ) => { return res.json() });
+
+        return _configs$;
     }
 
     getHeaders( params?: any ){

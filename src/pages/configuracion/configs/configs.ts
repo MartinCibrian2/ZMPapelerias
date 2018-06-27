@@ -24,8 +24,7 @@ export class ConfigsPage
 {
     public titlePage: string;
     public titleApp: string;
-    public configs     = [];
-    public catalogs    = [];
+    public configs    = [];
     public token: string;
     public optionsResult: any;
     public notice: string = '';
@@ -70,7 +69,8 @@ export class ConfigsPage
     }
 
     getConfigs( clean: boolean = true, params?: any ){
-        this.configService.get( this.token, params )
+        this.configService
+        .get( this.token, params )
         .subscribe(
             response => {
                 if( response.data.length ){
@@ -98,9 +98,85 @@ export class ConfigsPage
         );
     }
 
+    deleteClient( item: any): void {
+        this.optionsResult    = {
+            "message": item.name + " se ha eliminado",
+            "duration": 5000,
+            "position": 'bottom'
+        }
+
+        let confirm = this.alertCtrl.create({
+            title: "Seguro de eliminar " + item.name + " ?",
+            message: "Si acepta eliminar " + item.name + " ya no podrá recuperarlo.",
+            buttons: [
+                {
+                    text: 'Cancelar',
+                    handler: () => {
+                        this.optionsResult.message    = "Canceló Eliminar " + item.name;
+                        this.presentToast( this.optionsResult );
+                    }
+                }, {
+                    text: 'Aceptar',
+                    handler: () => {
+                        // Action delete item.
+                        item.alive    = !item.alive;
+                        item.alive    = item.alive.toString();
+                        this
+                        .configService
+                        .edit( item, this.token )
+                        .subscribe(
+                            response => {
+                                this.getConfigs();
+                                this.presentToast( this.optionsResult );
+                            },
+                            error => {
+                                console.log( error );
+                                var errorMessage    = <any>error;
+                                if( errorMessage != null ){
+                                    this.presentToast( errorMessage );
+                                }
+                            }
+                        );
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    }
+
+    openNavDetailsClient( item ){
+        this.navCtrl.push( EditConfigPage, { item: item });
+    }
+
+    presentToast( _options: any ): void {
+        let _default    = {
+            message: 'Action completed',
+            duration: 3000
+        };
+
+        if( Object.keys( _options ).length ){
+            // Contains values.
+        } else {
+            _options    = Object.create( _default );
+        }
+
+        let toast = this.toastCtrl.create( _options );
+        toast.present();
+    }
+
     sort(){
         this.descending    = !this.descending;
         this.order         = this.descending ? 1 : -1;
+    }
+
+    doInfinite( infiniteScroll? ){
+        this.page    += 1;
+        setTimeout(( ) => {
+            this.getClients( false, {"skip": this.clients.length });
+
+            if( infiniteScroll )
+                infiniteScroll.complete();
+        }, 1000 );
     }
 
 }
